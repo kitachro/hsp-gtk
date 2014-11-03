@@ -1,7 +1,10 @@
 #packopt	name	"gtk3demo"
 #runtime	"hsp3c"
 
-#include "gh_myconst.hsp"
+#const	TRUE	1
+#const	FALSE	0
+#const	NULL	0
+
 #include "hspinet.as"
 #module
 #defcfunc u str str_	// shift-jis•¶Žš—ñ‚ðutf-8‚É•ÏŠ·
@@ -36,7 +39,7 @@
 
 	// set up vbox
 
-	gtk_vbox_new	FALSE@, 2
+	gtk_vbox_new	FALSE, 2
 	vbx	= stat
 
 	// set up menubar
@@ -61,7 +64,7 @@
 	actions	= stat
 
 	; File menu definition
-	gtk_action_new	"FileMenu", "_File", NULL@, NULL@
+	gtk_action_new	"FileMenu", "_File", NULL, NULL
 	gtk_action_group_add_action	actions, stat
 
 	; Open menu item definition
@@ -80,7 +83,7 @@
 
 	; build up menubar
 	gtk_ui_manager_insert_action_group	ui, actions, 0
-	gtk_ui_manager_add_ui_from_string	ui, varptr( menu_info ), -1, NULL@
+	gtk_ui_manager_add_ui_from_string	ui, varptr( menu_info ), -1, NULL
 	gtk_ui_manager_get_accel_group		ui
 	gtk_window_add_accel_group			win, stat
 	path	= "/Menubar"
@@ -89,7 +92,7 @@
 
 	// set up scrolled window
 
-	gtk_scrolled_window_new			NULL@, NULL@
+	gtk_scrolled_window_new			NULL, NULL
 	scw	= stat
 	gtk_scrolled_window_set_policy	scw, GTK_POLICY_AUTOMATIC@, GTK_POLICY_AUTOMATIC@
 
@@ -109,10 +112,10 @@
 	// build up gui
 
 	gtk_container_add	win, vbx
-	gtk_box_pack_start	vbx, menubar, FALSE@, FALSE@, 0
-	gtk_box_pack_start	vbx, scw, TRUE@, TRUE@, 0
+	gtk_box_pack_start	vbx, menubar, FALSE, FALSE, 0
+	gtk_box_pack_start	vbx, scw, TRUE, TRUE, 0
 	gtk_scrolled_window_add_with_viewport	scw, img
-	gtk_box_pack_start	vbx, btn, FALSE@, FALSE@, 0
+	gtk_box_pack_start	vbx, btn, FALSE, FALSE, 0
 
 	// start app
 

@@ -1,0 +1,29 @@
+#include "hscallbk.as"
+#uselib ""
+#func cb_window_delete_event ""
+
+#uselib "libgtk-3-0.dll"
+#func global gtk_init "gtk_init" sptr, sptr
+#func global gtk_window_new "gtk_window_new" int
+#const	GTK_WINDOW_TOPLEVEL	0
+#func global gtk_widget_show_all "gtk_widget_show_all" sptr
+#func global gtk_main "gtk_main"
+#func global gtk_main_quit "gtk_main_quit"
+#uselib "libgobject-2.0-0.dll"
+#define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+#func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+
+	gtk_init	argc, argv
+
+	gtk_window_new	GTK_WINDOW_TOPLEVEL
+	win	= stat
+	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
+	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), 0
+
+	gtk_widget_show_all	win
+	gtk_main
+	end
+
+*on_window_delete_event
+	gtk_main_quit
+	return

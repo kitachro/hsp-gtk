@@ -1,0 +1,2475 @@
+/***********************************************************
+
+** 自作アプリケーション用共通 定数マクロ **
+
+***********************************************************/
+/*
+%dll
+gh_myconst.hsp
+%author
+chrono
+%date
+2012/10/15
+%port
+Win
+%*/
+#ifndef	__GH_MYCONST__
+	#define	global	__GH_MYCONST__
+
+/*
+* -- よく使う数値 --
+ */
+
+/*
+* 真、偽、ヌル
+ */
+	#const	TRUE		1
+	#const	FALSE		0
+	#const	NULL		0
+/*
+%index
+TRUE
+真を表す定数
+%inst
+値: 1
+%type
+定数マクロ
+%href
+FALSE
+NULL
+;----------
+%index
+FALSE
+偽を表す定数
+%inst
+値: 0
+%type
+定数マクロ
+%href
+TRUE
+NULL
+;----------
+%index
+NULL
+ヌルポインタを表す定数
+%inst
+値: 0
+%type
+定数マクロ
+%href
+TRUE
+FALSE
+%*/
+
+/*
+* ファイルパスの最大長
+ */
+	#const	MAX_PATH	260
+/*
+%index
+MAX_PATH
+ファイルパスの最大長を表す定数
+%inst
+値: 260
+%type
+定数マクロ
+%*/
+
+/*
+* ウィンドウメッセージ関連 
+ */
+;	#const  WM_USER		0x0400
+	#const  WM_APP		0x8000
+	/* ユーザ定義メッセージの範囲（定数名はオリジナル） */
+	#const	WM_APP_START	WM_APP		// アプリケーション・プライベート
+	#const	WM_APP_END		0xbfff
+/*
+;%index
+;WM_USER
+;独自のウィンドウクラスの中でのみ自由に使えるメッセージの最小値
+;%inst
+;値: 0x0400
+;ユーザ定義メッセージのうち、独自のウィンドウクラスの中でのみ自由に使える範囲の値の最小値を表す定数です。最大値はWM_APP-1(0x7fff)です。
+;%type
+;定数マクロ
+;%href
+;WM_APP
+;WM_APP_START
+;WM_APP_END
+;----------
+%index
+WM_APP
+アプリケーション独自メッセージの最小値
+%inst
+値: 0x8000
+ユーザ定義メッセージのうち、アプリケーションが自由に使える範囲の値の最小値を表す定数です。最大値は0xbfffです。
+%type
+定数マクロ
+%href
+;WM_USER
+WM_APP_START
+WM_APP_END
+;----------
+%index
+WM_APP_START
+アプリケーション独自メッセージの最小値
+%inst
+値: 0x8000
+WM_APPの別名です。
+%type
+定数マクロ
+%href
+;WM_USER
+WM_APP
+WM_APP_END
+;----------
+%index
+WM_APP_END
+アプリケーション独自メッセージの最大値
+%inst
+値: 0xbfff
+ユーザ定義メッセージのうち、アプリケーションが自由に使える範囲の値の最大値を表す定数です。
+%type
+定数マクロ
+%href
+;WM_USER
+WM_APP
+WM_APP_START
+%*/
+
+/*
+*	-- よく使う文字列 --
+ */
+
+/*
+* 起動ディレクトリパス
+ */
+	MYDIR	= dir_cur
+/*
+%index
+MYDIR
+起動ディレクトリパス文字列
+%inst
+gh_mydef.hspがインクルードされた場所が実行された時点でのdir_curの内容が代入されている変数です。
+%type
+ユーザ定義変数
+%*/
+
+/*
+* ダイアログキャプション用文字列
+ */
+	#define	DLG_TITLE_RESULT	"処理結果"
+	#define	DLG_TITLE_INFORM	"確認"
+	#define	DLG_TITLE_ERR		"エラー"
+/*
+%index
+DLG_TITLE_RESULT
+ダイアログキャプション用文字列 : 処理結果
+%inst
+値: "処理結果"
+%type
+定数マクロ
+%href
+DLG_TITLE_ERR
+DLG_TITLE_INFORM
+;----------
+%index
+DLG_TITLE_INFORM
+ダイアログキャプション用文字列 : 確認
+%inst
+値: "確認"
+%type
+定数マクロ
+%href
+DLG_TITLE_RESULT
+DLG_TITLE_ERR
+;----------
+%index
+DLG_TITLE_ERR
+ダイアログキャプション用文字列 : エラー
+%inst
+値: "エラー"
+%type
+定数マクロ
+%href
+DLG_TITLE_RESULT
+DLG_TITLE_INFORM
+%*/
+
+;/*
+;* メッセージ用文字列
+; */
+;	#define	MES_ERR		"エラー"
+;	#define	MES_QUIT	"を終了します。"
+;	#define	MES_FAIL	"に失敗しました。"
+;/*
+;%index
+;MES_ERR
+;メッセージ文字列 : エラー
+;%inst
+;値: "エラー"
+;%type
+;定数マクロ
+;%href
+;MES_QUIT
+;MES_FAIL
+;;----------
+;%index
+;MES_QUIT
+;メッセージ文字列 : 終了
+;%inst
+;値: "を終了します。"
+;%type
+;定数マクロ
+;%href
+;MES_ERR
+;MES_FAIL
+;;----------
+;%index
+;MES_FAIL
+;メッセージ文字列 : 失敗
+;%inst
+;値: "に失敗しました。"
+;%type
+;定数マクロ
+;%href
+;MES_ERR
+;MES_QUIT
+;%*/
+
+/*
+* 引用符
+ */
+	#define	DQUOTE	"\""
+	#define	SQUOTE	"'"
+	#define	BQUOTE	"`"
+/*
+%index
+DQUOTE
+ダブルクォート文字
+%inst
+値: "\""
+%type
+定数マクロ
+%href
+SQUOTE
+BQUOTE
+;----------
+%index
+SQUOTE
+シングルクォート文字
+%inst
+値: "'"
+%type
+定数マクロ
+%href
+DQUOTE
+BQUOTE
+;----------
+%index
+BQUOTE
+バッククォート文字
+%inst
+値: "`"
+%type
+定数マクロ
+%href
+DQUOTE
+SQUOTE
+%*/
+
+/*
+* 改行コード
+ */
+	#define	CRLF	"\n"
+/*
+%index
+CRLF
+改行コード文字列
+%inst
+値: "\n"
+%type
+定数マクロ
+%*/
+
+/*
+* パスのフォルダ区切り文字
+ */
+	#define	CHAR_DIR	"\\"
+/*
+%index
+CHAR_DIR
+パスのフォルダ区切り文字
+%inst
+値: "\\"
+%type
+定数マクロ
+%*/
+
+/*
+* パスのカレントフォルダ文字
+ */
+	#define	CHAR_CURDIR	"."
+/*
+%index
+CHAR_CURDIR
+パスのカレントフォルダ文字
+%inst
+値: "."
+%type
+定数マクロ
+%*/
+
+/*
+* タブ文字
+ */
+	#define	CHAR_TAB	"\t"
+/*
+%index
+CHAR_TAB
+タブ文字
+%inst
+値: "\t"
+%type
+定数マクロ
+%*/
+
+/*
+* フォント名
+ */
+	#define	MS_UI_GOTHIC	"ms ui gothic"
+/*
+%index
+MS_UI_GOTHIC
+フォント名: MS UI Gothic
+%inst
+値: "ms ui gothic"
+%type
+定数マクロ
+%href
+MS_GOTHIC
+MS_MINCHO
+%*/
+	#define	MS_GOTHIC	"ＭＳ ゴシック"
+/*
+%index
+MS_GOTHIC
+フォント名: MS ゴシック
+%inst
+値: "ＭＳ ゴシック"
+%type
+定数マクロ
+%href
+MS_UI_GOTHIC
+MS_MINCHO
+%*/
+	#define	MS_MINCHO	"ＭＳ 明朝"
+/*
+%index
+MS_MINCHO
+フォント名: MS 明朝
+%inst
+値: "ＭＳ 明朝"
+%type
+定数マクロ
+%href
+MS_UI_GOTHIC
+MS_GOTHIC
+%*/
+
+/*
+* -- HSP命令パラメータ・戻り値 --
+ */
+
+/*
+* noteinfo
+ */
+	#const	NOTEINFO_CNT_LINE	0	; 
+	#const	NOTEINFO_CNT_BYTE	1	; 
+/*
+%index
+NOTEINFO_CNT_LINE
+noteinfo命令パラメータ : 行数
+%inst
+値: 0
+%type
+定数マクロ
+%href
+NOTEINFO_CNT_BYTE
+;----------
+%index
+NOTEINFO_CNT_BYTE
+noteinfo命令パラメータ : バイト数
+%inst
+値: 1
+%type
+定数マクロ
+%href
+NOTEINFO_CNT_LINE
+*/
+
+/*
+* sortnote
+ */
+	#const	SORTNOTE_ASCENDING	0	; 昇順
+	#const	SORTNOTE_DESCENDING	1	; 降順
+
+/*
+* dialog
+ */
+	#const	DLG_TYPE_STD			0	// 標準＋[OK]
+	#const	DLG_TYPE_ALERT			1	// 警告＋[OK]
+	#const	DLG_TYPE_STD_YESNO		2	// 標準＋[はい][いいえ]
+	#const	DLG_TYPE_ALERT_YESNO	3	// 警告＋[はい][いいえ]
+	#const	DLG_TYPE_FILE_OPEN		16	// ファイルOPEN(開く)
+	#const	DLG_TYPE_FILE_SAVE		17	// ファイルSAVE(保存)
+	#const	DLG_TYPE_COLOR_PAL		32	// カラー選択(固定色)
+	#const	DLG_TYPE_COLOR_RGB		33	// カラー選択(RGBを自由に選択)
+	#const	DLG_RESULT_OK			1	// result[OK]
+	#const	DLG_RESULT_YES			6	// result[Yes]
+	#const	DLG_RESULT_NO			7	// result[No]
+/*
+%index
+DLG_TYPE_STD
+dialog命令パラメータ : 標準＋[OK]
+%inst
+値: 0
+%type
+定数マクロ
+%href
+DLG_TYPE_ALERT
+DLG_TYPE_STD_YESNO
+DLG_TYPE_ALERT_YESNO
+DLG_TYPE_FILE_OPEN
+DLG_TYPE_FILE_SAVE
+DLG_TYPE_COLOR_PAL
+DLG_TYPE_COLOR_RGB
+DLG_RESULT_OK
+DLG_RESULT_YES
+DLG_RESULT_NO
+;----------
+%index
+DLG_TYPE_ALERT
+dialog命令パラメータ : 警告＋[OK]
+%inst
+値: 1
+%type
+定数マクロ
+%href
+DLG_TYPE_STD
+DLG_TYPE_STD_YESNO
+DLG_TYPE_ALERT_YESNO
+DLG_TYPE_FILE_OPEN
+DLG_TYPE_FILE_SAVE
+DLG_TYPE_COLOR_PAL
+DLG_TYPE_COLOR_RGB
+DLG_RESULT_OK
+DLG_RESULT_YES
+DLG_RESULT_NO
+;----------
+%index
+DLG_TYPE_STD_YESNO
+dialog命令パラメータ : 標準＋[はい][いいえ]
+%inst
+値: 2
+%type
+定数マクロ
+%href
+DLG_TYPE_STD
+DLG_TYPE_ALERT
+DLG_TYPE_ALERT_YESNO
+DLG_TYPE_FILE_OPEN
+DLG_TYPE_FILE_SAVE
+DLG_TYPE_COLOR_PAL
+DLG_TYPE_COLOR_RGB
+DLG_RESULT_OK
+DLG_RESULT_YES
+DLG_RESULT_NO
+;----------
+%index
+DLG_TYPE_ALERT_YESNO
+dialog命令パラメータ : 警告＋[はい][いいえ]
+%inst
+値: 3
+%type
+定数マクロ
+%href
+DLG_TYPE_STD
+DLG_TYPE_ALERT
+DLG_TYPE_STD_YESNO
+DLG_TYPE_FILE_OPEN
+DLG_TYPE_FILE_SAVE
+DLG_TYPE_COLOR_PAL
+DLG_TYPE_COLOR_RGB
+DLG_RESULT_OK
+DLG_RESULT_YES
+DLG_RESULT_NO
+;----------
+%index
+DLG_TYPE_FILE_OPEN
+dialog命令パラメータ : ファイルOPEN(開く)
+%inst
+値: 16
+%type
+定数マクロ
+%href
+DLG_TYPE_STD
+DLG_TYPE_ALERT
+DLG_TYPE_STD_YESNO
+DLG_TYPE_ALERT_YESNO
+DLG_TYPE_FILE_SAVE
+DLG_TYPE_COLOR_PAL
+DLG_TYPE_COLOR_RGB
+DLG_RESULT_OK
+DLG_RESULT_YES
+DLG_RESULT_NO
+;----------
+%index
+DLG_TYPE_FILE_SAVE
+dialog命令パラメータ : ファイルSAVE(保存)
+%inst
+値: 17
+%type
+定数マクロ
+%href
+DLG_TYPE_STD
+DLG_TYPE_ALERT
+DLG_TYPE_STD_YESNO
+DLG_TYPE_ALERT_YESNO
+DLG_TYPE_FILE_OPEN
+DLG_TYPE_COLOR_PAL
+DLG_TYPE_COLOR_RGB
+DLG_RESULT_OK
+DLG_RESULT_YES
+DLG_RESULT_NO
+;----------
+%index
+DLG_TYPE_COLOR_PAL
+dialog命令パラメータ : カラー選択(固定色)
+%inst
+値: 32
+%type
+定数マクロ
+%href
+DLG_TYPE_STD
+DLG_TYPE_ALERT
+DLG_TYPE_STD_YESNO
+DLG_TYPE_ALERT_YESNO
+DLG_TYPE_FILE_OPEN
+DLG_TYPE_FILE_SAVE
+DLG_TYPE_COLOR_RGB
+DLG_RESULT_OK
+DLG_RESULT_YES
+DLG_RESULT_NO
+;----------
+%index
+DLG_TYPE_COLOR_RGB
+dialog命令パラメータ : カラー選択(RGBを自由に選択)
+%inst
+値: 33
+%type
+定数マクロ
+%href
+DLG_TYPE_STD
+DLG_TYPE_ALERT
+DLG_TYPE_STD_YESNO
+DLG_TYPE_ALERT_YESNO
+DLG_TYPE_FILE_OPEN
+DLG_TYPE_FILE_SAVE
+DLG_TYPE_COLOR_PAL
+DLG_RESULT_OK
+DLG_RESULT_YES
+DLG_RESULT_NO
+;----------
+%index
+DLG_RESULT_OK
+dialog命令戻り値 : OK
+%inst
+値: 1
+%type
+定数マクロ
+%href
+DLG_TYPE_STD
+DLG_TYPE_ALERT
+DLG_TYPE_STD_YESNO
+DLG_TYPE_ALERT_YESNO
+DLG_TYPE_FILE_OPEN
+DLG_TYPE_FILE_SAVE
+DLG_TYPE_COLOR_PAL
+DLG_TYPE_COLOR_RGB
+DLG_RESULT_YES
+DLG_RESULT_NO
+;----------
+%index
+DLG_RESULT_YES
+dialog命令戻り値 : Yes
+%inst
+値: 6
+%type
+定数マクロ
+%href
+DLG_TYPE_STD
+DLG_TYPE_ALERT
+DLG_TYPE_STD_YESNO
+DLG_TYPE_ALERT_YESNO
+DLG_TYPE_FILE_OPEN
+DLG_TYPE_FILE_SAVE
+DLG_TYPE_COLOR_PAL
+DLG_TYPE_COLOR_RGB
+DLG_RESULT_OK
+DLG_RESULT_NO
+;----------
+%index
+DLG_RESULT_NO
+dialog命令戻り値 : No
+%inst
+値: 7
+%type
+定数マクロ
+%href
+DLG_TYPE_STD
+DLG_TYPE_ALERT
+DLG_TYPE_STD_YESNO
+DLG_TYPE_ALERT_YESNO
+DLG_TYPE_FILE_OPEN
+DLG_TYPE_FILE_SAVE
+DLG_TYPE_COLOR_PAL
+DLG_TYPE_COLOR_RGB
+DLG_RESULT_OK
+DLG_RESULT_YES
+%*/
+
+/*
+* dirlist
+ */
+	#define	DIRLIST_MASK_ALL		"*.*"
+	#const	DIRLIST_MODE_ALL		0	// すべてのファイル
+	#const	DIRLIST_MODE_FILE		1	// ディレクトリを除くすべてのファイル
+	#const	DIRLIST_MODE_NOTSYS		2	// 隠し属性・システム属性を除くすべてのファイル
+	#const	DIRLIST_MODE_NOTDIRSYS	3	// ディレクトリ・隠し属性・システム属性以外のすべてのファイル
+	#const	DIRLIST_MODE_DIR		5	// ディレクトリのみ
+	#const	DIRLIST_MODE_SYS		6	// 隠し属性・システム属性ファイルのみ
+	#const	DIRLIST_MODE_DIRSYS		7	// ディレクトリと隠し属性・システム属性ファイルのみ
+/*
+%index
+DIRLIST_MASK_ALL
+dirlist命令パラメータ : ファイルマスク : すべて
+%inst
+値: "*.*"
+%type
+定数マクロ
+%href
+DIRLIST_MODE_ALL
+DIRLIST_MODE_FILE
+DIRLIST_MODE_NOTSYS
+DIRLIST_MODE_NOTDIRSYS
+DIRLIST_MODE_DIR
+DIRLIST_MODE_SYS
+DIRLIST_MODE_DIRSYS
+;----------
+%index
+DIRLIST_MODE_ALL
+dirlist命令パラメータ : モード : すべてのファイル
+%inst
+値: 0
+%type
+定数マクロ
+%href
+DIRLIST_MASK_ALL
+DIRLIST_MODE_FILE
+DIRLIST_MODE_NOTSYS
+DIRLIST_MODE_NOTDIRSYS
+DIRLIST_MODE_DIR
+DIRLIST_MODE_SYS
+DIRLIST_MODE_DIRSYS
+;----------
+%index
+DIRLIST_MODE_FILE
+dirlist命令パラメータ : モード : ディレクトリを除くすべてのファイル
+%inst
+値: 1
+%type
+定数マクロ
+%href
+DIRLIST_MASK_ALL
+DIRLIST_MODE_ALL
+DIRLIST_MODE_NOTSYS
+DIRLIST_MODE_NOTDIRSYS
+DIRLIST_MODE_DIR
+DIRLIST_MODE_SYS
+DIRLIST_MODE_DIRSYS
+;----------
+%index
+DIRLIST_MODE_NOTSYS
+dirlist命令パラメータ : モード : 隠し属性・システム属性を除くすべてのファイル
+%inst
+値: 2
+%type
+定数マクロ
+%href
+DIRLIST_MASK_ALL
+DIRLIST_MODE_ALL
+DIRLIST_MODE_FILE
+DIRLIST_MODE_NOTDIRSYS
+DIRLIST_MODE_DIR
+DIRLIST_MODE_SYS
+DIRLIST_MODE_DIRSYS
+;----------
+%index
+DIRLIST_MODE_NOTDIRSYS
+dirlist命令パラメータ : モード : ディレクトリ・隠し属性・システム属性以外のすべてのファイル
+%inst
+値: 3
+%type
+定数マクロ
+%href
+DIRLIST_MASK_ALL
+DIRLIST_MODE_ALL
+DIRLIST_MODE_FILE
+DIRLIST_MODE_NOTSYS
+DIRLIST_MODE_DIR
+DIRLIST_MODE_SYS
+DIRLIST_MODE_DIRSYS
+;----------
+%index
+DIRLIST_MODE_DIR
+dirlist命令パラメータ : モード : ディレクトリのみ
+%inst
+値: 5
+%type
+定数マクロ
+%href
+DIRLIST_MASK_ALL
+DIRLIST_MODE_ALL
+DIRLIST_MODE_FILE
+DIRLIST_MODE_NOTSYS
+DIRLIST_MODE_NOTDIRSYS
+DIRLIST_MODE_SYS
+DIRLIST_MODE_DIRSYS
+;----------
+%index
+DIRLIST_MODE_SYS
+dirlist命令パラメータ : モード : 隠し属性・システム属性ファイルのみ
+%inst
+値: 6
+%type
+定数マクロ
+%href
+DIRLIST_MASK_ALL
+DIRLIST_MODE_ALL
+DIRLIST_MODE_FILE
+DIRLIST_MODE_NOTSYS
+DIRLIST_MODE_NOTDIRSYS
+DIRLIST_MODE_DIR
+DIRLIST_MODE_DIRSYS
+;----------
+%index
+DIRLIST_MODE_DIRSYS
+dirlist命令パラメータ : モード : ディレクトリと隠し属性・システム属性ファイルのみ
+%inst
+値: 7
+%type
+定数マクロ
+%href
+DIRLIST_MASK_ALL
+DIRLIST_MODE_ALL
+DIRLIST_MODE_FILE
+DIRLIST_MODE_NOTSYS
+DIRLIST_MODE_NOTDIRSYS
+DIRLIST_MODE_DIR
+DIRLIST_MODE_SYS
+%*/
+
+/*
+* dirlist2h
+ */
+	#const	DIRLIST2H_PATH	1
+	#const	DIRLIST2H_NAME	2
+	#const	DIRLIST2H_SIZE	4
+	#const	DIRLIST2H_DATE	8
+	#const	DIRLIST2H_TIME	16
+	#const	DIRLIST2H_DIR	128
+/*
+%index
+DIRLIST2H_PATH
+dirlist2h命令パラメータ : リストフラグ : カレントからの相対パスによるファイル名
+%inst
+値: 1
+%type
+定数マクロ
+%href
+DIRLIST2H_NAME
+DIRLIST2H_SIZE
+DIRLIST2H_DATE
+DIRLIST2H_TIME
+DIRLIST2H_DIR
+;----------
+%index
+DIRLIST2H_NAME
+dirlist2h命令パラメータ : リストフラグ : パス名を除いたファイル名
+%inst
+値: 2
+%type
+定数マクロ
+%href
+DIRLIST2H_PATH
+DIRLIST2H_SIZE
+DIRLIST2H_DATE
+DIRLIST2H_TIME
+DIRLIST2H_DIR
+;----------
+%index
+DIRLIST2H_SIZE
+dirlist2h命令パラメータ : リストフラグ : ファイルのサイズ
+%inst
+値: 4
+%type
+定数マクロ
+%href
+DIRLIST2H_PATH
+DIRLIST2H_NAME
+DIRLIST2H_DATE
+DIRLIST2H_TIME
+DIRLIST2H_DIR
+;----------
+%index
+DIRLIST2H_DATE
+dirlist2h命令パラメータ : リストフラグ : ファイルの更新日付
+%inst
+値: 8
+%type
+定数マクロ
+%href
+DIRLIST2H_PATH
+DIRLIST2H_NAME
+DIRLIST2H_SIZE
+DIRLIST2H_TIME
+DIRLIST2H_DIR
+;----------
+%index
+DIRLIST2H_TIME
+dirlist2h命令パラメータ : リストフラグ : ファイルの更新時間
+%inst
+値: 16
+%type
+定数マクロ
+%href
+DIRLIST2H_PATH
+DIRLIST2H_NAME
+DIRLIST2H_SIZE
+DIRLIST2H_DATE
+DIRLIST2H_DIR
+;----------
+%index
+DIRLIST2H_DIR
+dirlist2h命令パラメータ : リストフラグ : カレントからの相対パス名のみ
+%inst
+値: 128
+%type
+定数マクロ
+%href
+DIRLIST2H_PATH
+DIRLIST2H_NAME
+DIRLIST2H_SIZE
+DIRLIST2H_DATE
+DIRLIST2H_TIME
+%*/
+
+/*
+* getpath
+ */
+	#const	GETPATH_COPY		0	// コピー
+	#const	GETPATH_NAME		1	// 拡張子を除くファイル名
+	#const	GETPATH_EXT			2	// 拡張子のみ(.???)
+	#const	GETPATH_REMDIR		8	// ディレクトリ情報を取り除く
+	#const	GETPATH_LOWCASE		16	// 文字列を小文字に変換する
+	#const	GETPATH_DIR			32	// ディレクトリ情報のみ
+/*
+%index
+GETPATH_COPY
+getpath命令パラメータ : コピー
+%inst
+値: 0
+%type
+定数マクロ
+%href
+GETPATH_NAME
+GETPATH_EXT
+GETPATH_REMDIR
+GETPATH_LOWCASE
+GETPATH_DIR
+;----------
+%index
+GETPATH_NAME
+getpath命令パラメータ : 拡張子を除くファイル名
+%inst
+値: 1
+%type
+定数マクロ
+%href
+GETPATH_COPY
+GETPATH_EXT
+GETPATH_REMDIR
+GETPATH_LOWCASE
+GETPATH_DIR
+;----------
+%index
+GETPATH_EXT
+getpath命令パラメータ : 拡張子のみ(.???)
+%inst
+値: 2
+%type
+定数マクロ
+%href
+GETPATH_COPY
+GETPATH_NAME
+GETPATH_REMDIR
+GETPATH_LOWCASE
+GETPATH_DIR
+;----------
+%index
+GETPATH_REMDIR
+getpath命令パラメータ : ディレクトリ情報を取り除く
+%inst
+値: 8
+%type
+定数マクロ
+%href
+GETPATH_COPY
+GETPATH_NAME
+GETPATH_EXT
+GETPATH_LOWCASE
+GETPATH_DIR
+;----------
+%index
+GETPATH_LOWCASE
+getpath命令パラメータ : 文字列を小文字に変換する
+%inst
+値: 16
+%type
+定数マクロ
+%href
+GETPATH_COPY
+GETPATH_NAME
+GETPATH_EXT
+GETPATH_REMDIR
+GETPATH_DIR
+;----------
+%index
+GETPATH_DIR
+getpath命令パラメータ : ディレクトリ情報のみ
+%inst
+値: 32
+%type
+定数マクロ
+%href
+GETPATH_COPY
+GETPATH_NAME
+GETPATH_EXT
+GETPATH_REMDIR
+GETPATH_LOWCASE
+%*/
+
+/*
+* vartype
+ */
+	#const	VARTYPE_LABEL	1	// ラベル型
+	#const	VARTYPE_STR		2	// 文字列型
+	#const	VARTYPE_FLOAT	3	// 実数型
+	#const	VARTYPE_INT		4	// 整数型
+	#const	VARTYPE_MOD		5	// モジュール型
+	#const	VARTYPE_COM		6	// COMオブジェクト型
+/*
+%index
+VARTYPE_LABEL
+vartype命令戻り値 : ラベル型
+%inst
+値: 1
+%type
+定数マクロ
+%href
+VARTYPE_STR
+VARTYPE_FLOAT
+VARTYPE_INT
+VARTYPE_MOD
+VARTYPE_COM
+;----------
+%index
+VARTYPE_STR
+vartype命令戻り値 : 文字列型
+%inst
+値: 2
+%type
+定数マクロ
+%href
+VARTYPE_LABEL
+VARTYPE_FLOAT
+VARTYPE_INT
+VARTYPE_MOD
+VARTYPE_COM
+;----------
+%index
+VARTYPE_FLOAT
+vartype命令戻り値 : 実数型
+%inst
+値: 3
+%type
+定数マクロ
+%href
+VARTYPE_LABEL
+VARTYPE_STR
+VARTYPE_INT
+VARTYPE_MOD
+VARTYPE_COM
+;----------
+%index
+VARTYPE_INT
+vartype命令戻り値 : 整数型
+%inst
+値: 4
+%type
+定数マクロ
+%href
+VARTYPE_LABEL
+VARTYPE_STR
+VARTYPE_FLOAT
+VARTYPE_MOD
+VARTYPE_COM
+;----------
+%index
+VARTYPE_MOD
+vartype命令戻り値 : モジュール型
+%inst
+値: 5
+%type
+定数マクロ
+%href
+VARTYPE_LABEL
+VARTYPE_STR
+VARTYPE_FLOAT
+VARTYPE_INT
+VARTYPE_COM
+;----------
+%index
+VARTYPE_COM
+vartype命令戻り値 : COMオブジェクト型
+%inst
+値: 6
+%type
+定数マクロ
+%href
+VARTYPE_LABEL
+VARTYPE_STR
+VARTYPE_FLOAT
+VARTYPE_INT
+VARTYPE_MOD
+%*/
+
+/*
+* exec
+ */
+	#const	EXEC_MODE_NORMAL	0	// 通常
+	#const	EXEC_MODE_MINIMIZE	2	// 最小化モード
+	#const	EXEC_MODE_ASSOC		16	// 関連付けされたアプリケーション
+	#const	EXEC_MODE_PRINT		32	// 指定したファイルを印刷
+/*
+%index
+EXEC_MODE_NORMAL
+exec命令パラメータ : 通常
+%inst
+値: 0
+%type
+定数マクロ
+%href
+EXEC_MODE_MINIMIZE
+EXEC_MODE_ASSOC
+EXEC_MODE_PRINT
+;----------
+%index
+EXEC_MODE_MINIMIZE
+exec命令パラメータ : 最小化モード
+%inst
+値: 2
+%type
+定数マクロ
+%href
+EXEC_MODE_NORMAL
+EXEC_MODE_ASSOC
+EXEC_MODE_PRINT
+;----------
+%index
+EXEC_MODE_ASSOC
+exec命令パラメータ : 関連付けされたアプリケーション
+%inst
+値: 16
+%type
+定数マクロ
+%href
+EXEC_MODE_NORMAL
+EXEC_MODE_MINIMIZE
+EXEC_MODE_PRINT
+;----------
+%index
+EXEC_MODE_PRINT
+exec命令パラメータ : 指定したファイルを印刷
+%inst
+値: 32
+%type
+定数マクロ
+%href
+EXEC_MODE_NORMAL
+EXEC_MODE_MINIMIZE
+EXEC_MODE_ASSOC
+%*/
+
+/*
+* gettime
+ */
+	#const	GETTIME_YEAR		0
+	#const	GETTIME_MONTH		1
+	#const	GETTIME_DOW			2
+	#const	GETTIME_DAY			3
+	#const	GETTIME_HOUR		4
+	#const	GETTIME_MINUTE		5
+	#const	GETTIME_SECOND		6
+	#const	GETTIME_MILISEC		7
+/*
+%index
+GETTIME_YEAR
+gettime命令パラメータ : 
+%inst
+値: 0
+%type
+定数マクロ
+%href
+GETTIME_MONTH
+GETTIME_DOW
+GETTIME_DAY
+GETTIME_HOUR
+GETTIME_MINUTE
+GETTIME_SECOND
+GETTIME_MILISEC
+;----------
+%index
+GETTIME_MONTH
+gettime命令パラメータ : 
+%inst
+値: 1
+%type
+定数マクロ
+%href
+GETTIME_YEAR
+GETTIME_DOW
+GETTIME_DAY
+GETTIME_HOUR
+GETTIME_MINUTE
+GETTIME_SECOND
+GETTIME_MILISEC
+;----------
+%index
+GETTIME_DOW
+gettime命令パラメータ : 曜日
+%inst
+値: 2
+%type
+定数マクロ
+%href
+GETTIME_YEAR
+GETTIME_MONTH
+GETTIME_DAY
+GETTIME_HOUR
+GETTIME_MINUTE
+GETTIME_SECOND
+GETTIME_MILISEC
+;----------
+%index
+GETTIME_DAY
+gettime命令パラメータ : 
+%inst
+値: 3
+%type
+定数マクロ
+%href
+GETTIME_YEAR
+GETTIME_MONTH
+GETTIME_DOW
+GETTIME_HOUR
+GETTIME_MINUTE
+GETTIME_SECOND
+GETTIME_MILISEC
+;----------
+%index
+GETTIME_HOUR
+gettime命令パラメータ : 
+%inst
+値: 4
+%type
+定数マクロ
+%href
+GETTIME_YEAR
+GETTIME_MONTH
+GETTIME_DOW
+GETTIME_DAY
+GETTIME_MINUTE
+GETTIME_SECOND
+GETTIME_MILISEC
+;----------
+%index
+GETTIME_MINUTE
+gettime命令パラメータ : 
+%inst
+値: 5
+%type
+定数マクロ
+%href
+GETTIME_YEAR
+GETTIME_MONTH
+GETTIME_DOW
+GETTIME_DAY
+GETTIME_HOUR
+GETTIME_SECOND
+GETTIME_MILISEC
+;----------
+%index
+GETTIME_SECOND
+gettime命令パラメータ : 
+%inst
+値: 6
+%type
+定数マクロ
+%href
+GETTIME_YEAR
+GETTIME_MONTH
+GETTIME_DOW
+GETTIME_DAY
+GETTIME_HOUR
+GETTIME_MINUTE
+GETTIME_MILISEC
+;----------
+%index
+GETTIME_MILISEC
+gettime命令パラメータ : ミリセカンド
+%inst
+値: 7
+%type
+定数マクロ
+%href
+GETTIME_YEAR
+GETTIME_MONTH
+GETTIME_DOW
+GETTIME_DAY
+GETTIME_HOUR
+GETTIME_MINUTE
+GETTIME_SECOND
+%*/
+
+/*
+* gsel
+ */
+	#const	GSEL_SELECT			0
+	#const	GSEL_ACTIVE			1
+	#const	GSEL_FOREGROUND		2
+	#const	GSEL_HIDE			-1
+/*
+%index
+GSEL_SELECT
+gsel命令パラメータ : 
+%inst
+値: 0
+%type
+定数マクロ
+%href
+GSEL_ACTIVE
+GSEL_FOREGROUND
+GSEL_HIDE
+;----------
+%index
+GSEL_ACTIVE
+gsel命令パラメータ : 
+%inst
+値: 1
+%type
+定数マクロ
+%href
+GSEL_SELECT
+GSEL_FOREGROUND
+GSEL_HIDE
+;----------
+%index
+GSEL_FOREGROUND
+gsel命令パラメータ : 
+%inst
+値: 2
+%type
+定数マクロ
+%href
+GSEL_SELECT
+GSEL_ACTIVE
+GSEL_HIDE
+;----------
+%index
+GSEL_HIDE
+gsel命令パラメータ : 
+%inst
+値: -1
+%type
+定数マクロ
+%href
+GSEL_SELECT
+GSEL_ACTIVE
+GSEL_FOREGROUND
+%*/
+
+/*
+* sysexit
+ */
+	#const	SYSEXIT_LOGOFF		0
+	#const	SYSEXIT_REBOOT		1
+	#const	SYSEXIT_SHUTDOWN	2
+	#const	SYSEXIT_POWEROFF	3
+/*
+%index
+SYSEXIT_LOGOFF
+sysexit命令パラメータ : 
+%inst
+値: 0
+%type
+定数マクロ
+%href
+SYSEXIT_REBOOT
+SYSEXIT_SHUTDOWN
+SYSEXIT_POWEROFF
+;----------
+%index
+SYSEXIT_REBOOT
+sysexit命令パラメータ : 
+%inst
+値: 1
+%type
+定数マクロ
+%href
+SYSEXIT_LOGOFF
+SYSEXIT_SHUTDOWN
+SYSEXIT_POWEROFF
+;----------
+%index
+SYSEXIT_SHUTDOWN
+sysexit命令パラメータ : 
+%inst
+値: 2
+%type
+定数マクロ
+%href
+SYSEXIT_LOGOFF
+SYSEXIT_REBOOT
+SYSEXIT_POWEROFF
+;----------
+%index
+SYSEXIT_POWEROFF
+sysexit命令パラメータ : 
+%inst
+値: 3
+%type
+定数マクロ
+%href
+SYSEXIT_LOGOFF
+SYSEXIT_REBOOT
+SYSEXIT_SHUTDOWN
+%*/
+
+/*
+* fxdir
+ */
+	#const	FXDIR_WINTEMP		-2
+	#const	FXDIR_WINSYS		-1
+	#const	FXDIR_PROGRAMS		2
+	#const	FXDIR_MYDOCS		5	
+	#const	FXDIR_FAVORITES		6
+	#const	FXDIR_STARTUP		7
+	#const	FXDIR_RECENTDOCS	8
+	#const	FXDIR_SENDTO		9
+	#const	FXDIR_STARTMENU		11
+	#const	FXDIR_DESKTOP		16
+	#const	FXDIR_TEMPLATE		21
+	#const	FXDIR_APPDATA		26
+	#const	FXDIR_PRINTER		27
+	#const	FXDIR_INETCACHE		32
+	#const	FXDIR_INETCOOKIE	33
+	#const	FXDIR_INETHISTORY	34
+/*
+%index
+FXDIR_WINTEMP
+fxdir命令パラメータ : Windowsのテンポラリ(一時)フォルダ
+%inst
+値: -2
+%type
+定数マクロ
+%href
+FXDIR_WINSYS
+FXDIR_PROGRAMS
+FXDIR_MYDOCS
+FXDIR_FAVORITES
+FXDIR_STARTUP
+FXDIR_RECENTDOCS
+FXDIR_SENDTO
+FXDIR_STARTMENU
+FXDIR_DESKTOP
+FXDIR_TEMPLATE
+FXDIR_APPDATA
+FXDIR_PRINTER
+FXDIR_INETCACHE
+FXDIR_INETCOOKIE
+FXDIR_INETHISTORY
+;----------
+%index
+FXDIR_WINSYS
+fxdir命令パラメータ : Windowsのシステム(System)フォルダ
+%inst
+値: -1
+%type
+定数マクロ
+%href
+FXDIR_WINTEMP
+FXDIR_PROGRAMS
+FXDIR_MYDOCS
+FXDIR_FAVORITES
+FXDIR_STARTUP
+FXDIR_RECENTDOCS
+FXDIR_SENDTO
+FXDIR_STARTMENU
+FXDIR_DESKTOP
+FXDIR_TEMPLATE
+FXDIR_APPDATA
+FXDIR_PRINTER
+FXDIR_INETCACHE
+FXDIR_INETCOOKIE
+FXDIR_INETHISTORY
+;----------
+%index
+FXDIR_PROGRAMS
+fxdir命令パラメータ : スタートメニュー「プログラム」グループのフォルダ
+%inst
+値: 2
+%type
+定数マクロ
+%href
+FXDIR_WINTEMP
+FXDIR_WINSYS
+FXDIR_MYDOCS
+FXDIR_FAVORITES
+FXDIR_STARTUP
+FXDIR_RECENTDOCS
+FXDIR_SENDTO
+FXDIR_STARTMENU
+FXDIR_DESKTOP
+FXDIR_TEMPLATE
+FXDIR_APPDATA
+FXDIR_PRINTER
+FXDIR_INETCACHE
+FXDIR_INETCOOKIE
+FXDIR_INETHISTORY
+;----------
+%index
+FXDIR_MYDOCS
+fxdir命令パラメータ : 「マイドキュメント」のフォルダ
+%inst
+値: 5
+%type
+定数マクロ
+%href
+FXDIR_WINTEMP
+FXDIR_WINSYS
+FXDIR_PROGRAMS
+FXDIR_FAVORITES
+FXDIR_STARTUP
+FXDIR_RECENTDOCS
+FXDIR_SENDTO
+FXDIR_STARTMENU
+FXDIR_DESKTOP
+FXDIR_TEMPLATE
+FXDIR_APPDATA
+FXDIR_PRINTER
+FXDIR_INETCACHE
+FXDIR_INETCOOKIE
+FXDIR_INETHISTORY
+;----------
+%index
+FXDIR_FAVORITES
+fxdir命令パラメータ : 「お気に入り」のあるフォルダ
+%inst
+値: 6
+%type
+定数マクロ
+%href
+FXDIR_WINTEMP
+FXDIR_WINSYS
+FXDIR_PROGRAMS
+FXDIR_MYDOCS
+FXDIR_STARTUP
+FXDIR_RECENTDOCS
+FXDIR_SENDTO
+FXDIR_STARTMENU
+FXDIR_DESKTOP
+FXDIR_TEMPLATE
+FXDIR_APPDATA
+FXDIR_PRINTER
+FXDIR_INETCACHE
+FXDIR_INETCOOKIE
+FXDIR_INETHISTORY
+;----------
+%index
+FXDIR_STARTUP
+fxdir命令パラメータ : 「スタートアップ」フォルダ
+%inst
+値: 7
+%type
+定数マクロ
+%href
+FXDIR_WINTEMP
+FXDIR_WINSYS
+FXDIR_PROGRAMS
+FXDIR_MYDOCS
+FXDIR_FAVORITES
+FXDIR_RECENTDOCS
+FXDIR_SENDTO
+FXDIR_STARTMENU
+FXDIR_DESKTOP
+FXDIR_TEMPLATE
+FXDIR_APPDATA
+FXDIR_PRINTER
+FXDIR_INETCACHE
+FXDIR_INETCOOKIE
+FXDIR_INETHISTORY
+;----------
+%index
+FXDIR_RECENTDOCS
+fxdir命令パラメータ : 「最近使った書類」フォルダ
+%inst
+値: 8
+%type
+定数マクロ
+%href
+FXDIR_WINTEMP
+FXDIR_WINSYS
+FXDIR_PROGRAMS
+FXDIR_MYDOCS
+FXDIR_FAVORITES
+FXDIR_STARTUP
+FXDIR_SENDTO
+FXDIR_STARTMENU
+FXDIR_DESKTOP
+FXDIR_TEMPLATE
+FXDIR_APPDATA
+FXDIR_PRINTER
+FXDIR_INETCACHE
+FXDIR_INETCOOKIE
+FXDIR_INETHISTORY
+;----------
+%index
+FXDIR_SENDTO
+fxdir命令パラメータ : 「送る」(SendTo)のフォルダ
+%inst
+値: 9
+%type
+定数マクロ
+%href
+FXDIR_WINTEMP
+FXDIR_WINSYS
+FXDIR_PROGRAMS
+FXDIR_MYDOCS
+FXDIR_FAVORITES
+FXDIR_STARTUP
+FXDIR_RECENTDOCS
+FXDIR_STARTMENU
+FXDIR_DESKTOP
+FXDIR_TEMPLATE
+FXDIR_APPDATA
+FXDIR_PRINTER
+FXDIR_INETCACHE
+FXDIR_INETCOOKIE
+FXDIR_INETHISTORY
+;----------
+%index
+FXDIR_STARTMENU
+fxdir命令パラメータ : スタートメニューのフォルダ
+%inst
+値: 11
+%type
+定数マクロ
+%href
+FXDIR_WINTEMP
+FXDIR_WINSYS
+FXDIR_PROGRAMS
+FXDIR_MYDOCS
+FXDIR_FAVORITES
+FXDIR_STARTUP
+FXDIR_RECENTDOCS
+FXDIR_SENDTO
+FXDIR_DESKTOP
+FXDIR_TEMPLATE
+FXDIR_APPDATA
+FXDIR_PRINTER
+FXDIR_INETCACHE
+FXDIR_INETCOOKIE
+FXDIR_INETHISTORY
+;----------
+%index
+FXDIR_DESKTOP
+fxdir命令パラメータ : デスクトップのフォルダ
+%inst
+値: 16
+%type
+定数マクロ
+%href
+FXDIR_WINTEMP
+FXDIR_WINSYS
+FXDIR_PROGRAMS
+FXDIR_MYDOCS
+FXDIR_FAVORITES
+FXDIR_STARTUP
+FXDIR_RECENTDOCS
+FXDIR_SENDTO
+FXDIR_STARTMENU
+FXDIR_TEMPLATE
+FXDIR_APPDATA
+FXDIR_PRINTER
+FXDIR_INETCACHE
+FXDIR_INETCOOKIE
+FXDIR_INETHISTORY
+;----------
+%index
+FXDIR_TEMPLATE
+fxdir命令パラメータ : テンプレート(Template)フォルダ
+%inst
+値: 21
+%type
+定数マクロ
+%href
+FXDIR_WINTEMP
+FXDIR_WINSYS
+FXDIR_PROGRAMS
+FXDIR_MYDOCS
+FXDIR_FAVORITES
+FXDIR_STARTUP
+FXDIR_RECENTDOCS
+FXDIR_SENDTO
+FXDIR_STARTMENU
+FXDIR_DESKTOP
+FXDIR_APPDATA
+FXDIR_PRINTER
+FXDIR_INETCACHE
+FXDIR_INETCOOKIE
+FXDIR_INETHISTORY
+;----------
+%index
+FXDIR_APPDATA
+fxdir命令パラメータ : ApplicationDataフォルダ
+%inst
+値: 26
+%type
+定数マクロ
+%href
+FXDIR_WINTEMP
+FXDIR_WINSYS
+FXDIR_PROGRAMS
+FXDIR_MYDOCS
+FXDIR_FAVORITES
+FXDIR_STARTUP
+FXDIR_RECENTDOCS
+FXDIR_SENDTO
+FXDIR_STARTMENU
+FXDIR_DESKTOP
+FXDIR_TEMPLATE
+FXDIR_PRINTER
+FXDIR_INETCACHE
+FXDIR_INETCOOKIE
+FXDIR_INETHISTORY
+;----------
+%index
+FXDIR_PRINTER
+fxdir命令パラメータ : プリンタデバイスフォルダ
+%inst
+値: 27
+%type
+定数マクロ
+%href
+FXDIR_WINTEMP
+FXDIR_WINSYS
+FXDIR_PROGRAMS
+FXDIR_MYDOCS
+FXDIR_FAVORITES
+FXDIR_STARTUP
+FXDIR_RECENTDOCS
+FXDIR_SENDTO
+FXDIR_STARTMENU
+FXDIR_DESKTOP
+FXDIR_TEMPLATE
+FXDIR_APPDATA
+FXDIR_INETCACHE
+FXDIR_INETCOOKIE
+FXDIR_INETHISTORY
+;----------
+%index
+FXDIR_INETCACHE
+fxdir命令パラメータ : Internet キャッシュフォルダ
+%inst
+値: 32
+%type
+定数マクロ
+%href
+FXDIR_WINTEMP
+FXDIR_WINSYS
+FXDIR_PROGRAMS
+FXDIR_MYDOCS
+FXDIR_FAVORITES
+FXDIR_STARTUP
+FXDIR_RECENTDOCS
+FXDIR_SENDTO
+FXDIR_STARTMENU
+FXDIR_DESKTOP
+FXDIR_TEMPLATE
+FXDIR_APPDATA
+FXDIR_PRINTER
+FXDIR_INETCOOKIE
+FXDIR_INETHISTORY
+;----------
+%index
+FXDIR_INETCOOKIE
+fxdir命令パラメータ : Internet Cookiesフォルダ
+%inst
+値: 33
+%type
+定数マクロ
+%href
+FXDIR_WINTEMP
+FXDIR_WINSYS
+FXDIR_PROGRAMS
+FXDIR_MYDOCS
+FXDIR_FAVORITES
+FXDIR_STARTUP
+FXDIR_RECENTDOCS
+FXDIR_SENDTO
+FXDIR_STARTMENU
+FXDIR_DESKTOP
+FXDIR_TEMPLATE
+FXDIR_APPDATA
+FXDIR_PRINTER
+FXDIR_INETCACHE
+FXDIR_INETHISTORY
+;----------
+%index
+FXDIR_INETHISTORY
+fxdir命令パラメータ : Internet 履歴フォルダ
+%inst
+値: 34
+%type
+定数マクロ
+%href
+FXDIR_WINTEMP
+FXDIR_WINSYS
+FXDIR_PROGRAMS
+FXDIR_MYDOCS
+FXDIR_FAVORITES
+FXDIR_STARTUP
+FXDIR_RECENTDOCS
+FXDIR_SENDTO
+FXDIR_STARTMENU
+FXDIR_DESKTOP
+FXDIR_TEMPLATE
+FXDIR_APPDATA
+FXDIR_PRINTER
+FXDIR_INETCACHE
+FXDIR_INETCOOKIE
+%*/
+
+/*
+* stick
+ */
+	#const	STICK_LEFT		1
+	#const	STICK_UP		2
+	#const	STICK_RIGHT		4
+	#const	STICK_DOWN		8
+	#const	STICK_SPACE		16
+	#const	STICK_ENTER		32
+	#const	STICK_CTRL		64
+	#const	STICK_ESC		128
+	#const	STICK_LBUTTON	256
+	#const	STICK_RBUTTON	512
+	#const	STICK_TAB		1024
+/*
+%index
+STICK_LEFT
+stick命令パラメータ : 
+%inst
+値: 1
+%type
+定数マクロ
+%href
+STICK_UP
+STICK_RIGHT
+STICK_DOWN
+STICK_SPACE
+STICK_ENTER
+STICK_CTRL
+STICK_ESC
+STICK_LBUTTON
+STICK_RBUTTON
+STICK_TAB
+;----------
+%index
+STICK_UP
+stick命令パラメータ : 
+%inst
+値: 2
+%type
+定数マクロ
+%href
+STICK_LEFT
+STICK_RIGHT
+STICK_DOWN
+STICK_SPACE
+STICK_ENTER
+STICK_CTRL
+STICK_ESC
+STICK_LBUTTON
+STICK_RBUTTON
+STICK_TAB
+;----------
+%index
+STICK_RIGHT
+stick命令パラメータ : 
+%inst
+値: 4
+%type
+定数マクロ
+%href
+STICK_LEFT
+STICK_UP
+STICK_DOWN
+STICK_SPACE
+STICK_ENTER
+STICK_CTRL
+STICK_ESC
+STICK_LBUTTON
+STICK_RBUTTON
+STICK_TAB
+;----------
+%index
+STICK_DOWN
+stick命令パラメータ : 
+%inst
+値: 8
+%type
+定数マクロ
+%href
+STICK_LEFT
+STICK_UP
+STICK_RIGHT
+STICK_SPACE
+STICK_ENTER
+STICK_CTRL
+STICK_ESC
+STICK_LBUTTON
+STICK_RBUTTON
+STICK_TAB
+;----------
+%index
+STICK_SPACE
+stick命令パラメータ : 
+%inst
+値: 16
+%type
+定数マクロ
+%href
+STICK_LEFT
+STICK_UP
+STICK_RIGHT
+STICK_DOWN
+STICK_ENTER
+STICK_CTRL
+STICK_ESC
+STICK_LBUTTON
+STICK_RBUTTON
+STICK_TAB
+;----------
+%index
+STICK_ENTER
+stick命令パラメータ : 
+%inst
+値: 32
+%type
+定数マクロ
+%href
+STICK_LEFT
+STICK_UP
+STICK_RIGHT
+STICK_DOWN
+STICK_SPACE
+STICK_CTRL
+STICK_ESC
+STICK_LBUTTON
+STICK_RBUTTON
+STICK_TAB
+;----------
+%index
+STICK_CTRL
+stick命令パラメータ : 
+%inst
+値: 64
+%type
+定数マクロ
+%href
+STICK_LEFT
+STICK_UP
+STICK_RIGHT
+STICK_DOWN
+STICK_SPACE
+STICK_ENTER
+STICK_ESC
+STICK_LBUTTON
+STICK_RBUTTON
+STICK_TAB
+;----------
+%index
+STICK_ESC
+stick命令パラメータ : 
+%inst
+値: 128
+%type
+定数マクロ
+%href
+STICK_LEFT
+STICK_UP
+STICK_RIGHT
+STICK_DOWN
+STICK_SPACE
+STICK_ENTER
+STICK_CTRL
+STICK_LBUTTON
+STICK_RBUTTON
+STICK_TAB
+;----------
+%index
+STICK_LBUTTON
+stick命令パラメータ : 
+%inst
+値: 256
+%type
+定数マクロ
+%href
+STICK_LEFT
+STICK_UP
+STICK_RIGHT
+STICK_DOWN
+STICK_SPACE
+STICK_ENTER
+STICK_CTRL
+STICK_ESC
+STICK_RBUTTON
+STICK_TAB
+;----------
+%index
+STICK_RBUTTON
+stick命令パラメータ : 
+%inst
+値: 512
+%type
+定数マクロ
+%href
+STICK_LEFT
+STICK_UP
+STICK_RIGHT
+STICK_DOWN
+STICK_SPACE
+STICK_ENTER
+STICK_CTRL
+STICK_ESC
+STICK_LBUTTON
+STICK_TAB
+;----------
+%index
+STICK_TAB
+stick命令パラメータ : 
+%inst
+値: 1024
+%type
+定数マクロ
+%href
+STICK_LEFT
+STICK_UP
+STICK_RIGHT
+STICK_DOWN
+STICK_SPACE
+STICK_ENTER
+STICK_CTRL
+STICK_ESC
+STICK_LBUTTON
+STICK_RBUTTON
+%*/
+
+/*
+* noteadd
+ */
+	#const	NOTEADD_INSERT		0
+	#const	NOTEADD_OVERWRITE	1
+/*
+%index
+NOTEADD_INSERT
+noteadd命令パラメータ : 上書きモード指定 : 追加
+%inst
+値: 0
+%type
+定数マクロ
+%href
+NOTEADD_OVERWRITE
+;----------
+%index
+NOTEADD_OVERWRITE
+noteadd命令パラメータ : 上書きモード指定 : 上書き
+%inst
+値: 1
+%type
+定数マクロ
+%href
+NOTEADD_INSERT
+%*/
+
+/*
+* regkey
+ */
+	#const	REGKEY_HKEY_CURRENT_USER		0
+	#const	REGKEY_HKEY_LOCAL_MACHINE		1
+	#const	REGKEY_HKEY_USERS				2
+	#const	REGKEY_HKEY_CLASSES_ROOT		3
+;	#const	REGKEY_HKEY_DYN_DATA			4	; win95/98のみ
+;	#const	REGKEY_HKEY_PERFORMANCE_DATA	5	; win ntのみ
+	#const	REGKEY_READ		0
+	#const	REGKEY_CREATE	1
+	#const	REGKEY_OK		0
+/*
+%index
+REGKEY_HKEY_CURRENT_USER
+regkey命令パラメータ : キーグループ : 
+%inst
+値: 0
+%type
+定数マクロ
+%href
+REGKEY_HKEY_LOCAL_MACHINE
+REGKEY_HKEY_USERS
+REGKEY_HKEY_CLASSES_ROOT
+REGKEY_READ
+REGKEY_CREATE
+REGKEY_OK
+;----------
+%index
+REGKEY_HKEY_LOCAL_MACHINE
+regkey命令パラメータ : キーグループ : 
+%inst
+値: 1
+%type
+定数マクロ
+%href
+REGKEY_HKEY_CURRENT_USER
+REGKEY_HKEY_USERS
+REGKEY_HKEY_CLASSES_ROOT
+REGKEY_READ
+REGKEY_CREATE
+REGKEY_OK
+;----------
+%index
+REGKEY_HKEY_USERS
+regkey命令パラメータ : キーグループ : 
+%inst
+値: 2
+%type
+定数マクロ
+%href
+REGKEY_HKEY_CURRENT_USER
+REGKEY_HKEY_LOCAL_MACHINE
+REGKEY_HKEY_CLASSES_ROOT
+REGKEY_READ
+REGKEY_CREATE
+REGKEY_OK
+;----------
+%index
+REGKEY_HKEY_CLASSES_ROOT
+regkey命令パラメータ : キーグループ : 
+%inst
+値: 3
+%type
+定数マクロ
+%href
+REGKEY_HKEY_CURRENT_USER
+REGKEY_HKEY_LOCAL_MACHINE
+REGKEY_HKEY_USERS
+REGKEY_READ
+REGKEY_CREATE
+REGKEY_OK
+;----------
+%index
+REGKEY_READ
+regkey命令パラメータ : 操作モード : 既存キー
+%inst
+値: 0
+%type
+定数マクロ
+%href
+REGKEY_HKEY_CURRENT_USER
+REGKEY_HKEY_LOCAL_MACHINE
+REGKEY_HKEY_USERS
+REGKEY_HKEY_CLASSES_ROOT
+REGKEY_CREATE
+REGKEY_OK
+;----------
+%index
+REGKEY_CREATE
+regkey命令パラメータ : 操作モード : 新規作成
+%inst
+値: 1
+%type
+定数マクロ
+%href
+REGKEY_HKEY_CURRENT_USER
+REGKEY_HKEY_LOCAL_MACHINE
+REGKEY_HKEY_USERS
+REGKEY_HKEY_CLASSES_ROOT
+REGKEY_READ
+REGKEY_OK
+;----------
+%index
+REGKEY_OK
+regkey命令戻り値 : 成功
+%inst
+値: 0
+%type
+定数マクロ
+%href
+REGKEY_HKEY_CURRENT_USER
+REGKEY_HKEY_LOCAL_MACHINE
+REGKEY_HKEY_USERS
+REGKEY_HKEY_CLASSES_ROOT
+REGKEY_READ
+REGKEY_CREATE
+%*/
+
+/*
+* getreg/setreg
+ */
+	#const	GETREG_TYPE_INT		0
+	#const	GETREG_TYPE_STR		1
+	#const	GETREG_TYPE_BIN		2
+/*
+%index
+GETREG_TYPE_INT
+getreg/setreg命令パラメータ : レジストリデータタイプ : 数値(32bit)
+%inst
+値: 0
+%type
+定数マクロ
+%href
+GETREG_TYPE_STR
+GETREG_TYPE_BIN
+;----------
+%index
+GETREG_TYPE_STR
+getreg/setreg命令パラメータ : レジストリデータタイプ : 文字列
+%inst
+値: 1
+%type
+定数マクロ
+%href
+GETREG_TYPE_INT
+GETREG_TYPE_BIN
+;----------
+%index
+GETREG_TYPE_BIN
+getreg/setreg命令パラメータ : レジストリデータタイプ : バイナリデータ
+%inst
+値: 2
+%type
+定数マクロ
+%href
+GETREG_TYPE_INT
+GETREG_TYPE_STR
+%*/
+
+/*
+* chgdisp
+ */
+	#const	CHGDISP_PREV	0
+	#const	CHGDISP_FULLCLR	1
+	#const	CHGDISP_PALLET	2
+	#const	CHGDISP_OK		0
+	#const	CHGDISP_SIZEOK	1
+	#const	CHGDISP_ERROR	2
+/*
+%index
+CHGDISP_PREV
+chgdisp命令パラメータ : 変更モード : 最初の状態(変更前)
+%inst
+値: 0
+%type
+定数マクロ
+%href
+CHGDISP_FULLCLR
+CHGDISP_PALLET
+CHGDISP_OK
+CHGDISP_SIZEOK
+CHGDISP_ERROR
+;----------
+%index
+CHGDISP_FULLCLR
+chgdisp命令パラメータ : 変更モード : フルカラーモード
+%inst
+値: 1
+%type
+定数マクロ
+%href
+CHGDISP_PREV
+CHGDISP_PALLET
+CHGDISP_OK
+CHGDISP_SIZEOK
+CHGDISP_ERROR
+;----------
+%index
+CHGDISP_PALLET
+chgdisp命令パラメータ : 変更モード : パレットモード
+%inst
+値: 2
+%type
+定数マクロ
+%href
+CHGDISP_PREV
+CHGDISP_FULLCLR
+CHGDISP_OK
+CHGDISP_SIZEOK
+CHGDISP_ERROR
+;----------
+%index
+CHGDISP_OK
+chgdisp命令戻り値 : 正常に解像度が設定された
+%inst
+値: 0
+%type
+定数マクロ
+%href
+CHGDISP_PREV
+CHGDISP_FULLCLR
+CHGDISP_PALLET
+CHGDISP_SIZEOK
+CHGDISP_ERROR
+;----------
+%index
+CHGDISP_SIZEOK
+chgdisp命令戻り値 : カラーモードの変更はできなかったが、解像度の変更は正常に行なわれた
+%inst
+値: 1
+%type
+定数マクロ
+%href
+CHGDISP_PREV
+CHGDISP_FULLCLR
+CHGDISP_PALLET
+CHGDISP_OK
+CHGDISP_ERROR
+;----------
+%index
+CHGDISP_ERROR
+chgdisp命令戻り値 : 解像度の変更ができなかった
+%inst
+値: 2
+%type
+定数マクロ
+%href
+CHGDISP_PREV
+CHGDISP_FULLCLR
+CHGDISP_PALLET
+CHGDISP_OK
+CHGDISP_SIZEOK
+%*/
+
+/*
+* aplsel/aplobj
+ */
+	#const	APLSEL_OK				0
+	#const	APLSEL_ERR				1
+/*
+%index
+APLSEL_OK
+aplsel/aplobj命令戻り値 : 成功
+%inst
+値: 0
+%type
+定数マクロ
+%href
+APLSEL_ERR
+;----------
+%index
+APLSEL_ERR
+aplsel/aplobj命令戻り値 : 失敗
+%inst
+値: 1
+%type
+定数マクロ
+%href
+APLSEL_OK
+%*/
+
+/*
+* onclick
+ */
+	#const	ONCLICK_IPARAM_LEFT		0
+	#const	ONCLICK_IPARAM_RIGHT	3
+/*
+%index
+ONCLICK_IPARAM_LEFT
+onclick命令戻り値 : iparam : 左ボタン
+%inst
+値: 0
+%type
+定数マクロ
+%href
+ONCLICK_IPARAM_RIGHT
+;----------
+%index
+ONCLICK_IPARAM_RIGHT
+onclick命令戻り値 : iparam : 右ボタン
+%inst
+値: 3
+%type
+定数マクロ
+%href
+ONCLICK_IPARAM_LEFT
+%*/
+
+/*
+* picload
+ */
+	#const	PICLOAD_WIN_INIT	0
+	#const	PICLOAD_WIN_KEEP	1
+/*
+%index
+PICLOAD_WIN_INIT
+picload命令パラメータ : 画像ロードモード : ウィンドウを初期化してロード
+%inst
+値: 0
+%type
+定数マクロ
+%href
+PICLOAD_WIN_KEEP
+;----------
+%index
+PICLOAD_WIN_KEEP
+picload命令パラメータ : 画像ロードモード : 現在の画面の上にロード
+%inst
+値: 1
+%type
+定数マクロ
+%href
+PICLOAD_WIN_INIT
+%*/
+
+/*
+* instr
+ */
+	#const	INSTR_NOTFOUND		-1
+/*
+%index
+INSTR_NOTFOUND
+instr命令戻り値 : 指定した文字列が見つからなかった
+%inst
+値: -1
+%type
+定数マクロ
+%*/
+
+/*
+* netinit
+ */
+	#const	NETINIT_OK		0
+/*
+%index
+NETINIT_OK
+netinit命令戻り値 : 正常終了
+%inst
+値: 0
+%type
+定数マクロ
+%*/
+
+/*
+* strtrim
+ */
+	#const	STRTRIM_BOTH	0
+/*
+%index
+STRTRIM_BOTH
+strtrim命令 第2パラメータ : 両端にある指定文字を除去する(デフォルト)
+%inst
+値: 0
+%type
+定数マクロ
+%href
+STRTRIM_LEFT
+STRTRIM_RIGHT
+STRTRIM_ALL
+%*/
+	#const	STRTRIM_LEFT	1
+/*
+%index
+STRTRIM_LEFT
+strtrim命令 第2パラメータ : 左端にある指定文字を除去する
+%inst
+値: 1
+%type
+定数マクロ
+%href
+STRTRIM_BOTH
+STRTRIM_RIGHT
+STRTRIM_ALL
+%*/
+	#const	STRTRIM_RIGHT	2
+/*
+%index
+STRTRIM_RIGHT
+strtrim命令 第2パラメータ : 右端にある指定文字を除去する(デフォルト)
+%inst
+値: 2
+%type
+定数マクロ
+%href
+STRTRIM_BOTH
+STRTRIM_LEFT
+STRTRIM_ALL
+%*/
+	#const	STRTRIM_ALL		3
+/*
+%index
+STRTRIM_ALL
+strtrim命令 第2パラメータ : すべての指定文字を除去する
+%inst
+値: 3
+%type
+定数マクロ
+%href
+STRTRIM_BOTH
+STRTRIM_LEFT
+STRTRIM_RIGHT
+%*/
+
+/*
+* exist
+ */
+	#const	EXIST_NOTEXIST	-1
+/*
+%index
+EXIST_NOTEXIST
+exist命令 戻り値 : 引数に指定されたファイルは存在しない
+%inst
+値: 0
+%type
+定数マクロ
+%href
+%*/
+#endif

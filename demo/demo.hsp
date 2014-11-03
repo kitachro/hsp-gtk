@@ -63,18 +63,18 @@
 	gtk_action_group_new	"filemenu"
 	actions	= stat
 
-	; File menu definition
+	; set up File menu
 	gtk_action_new	"FileMenu", "_File", NULL, NULL
 	gtk_action_group_add_action	actions, stat
 
-	; Open menu item definition
+	; set up Open menu item
 	gtk_action_new		"Open", "_Open", "Open an image", GTK_STOCK_OPEN@
 	action_file_open	= stat
 	setcallbk			cbcmdopen, cb_cmd_open, *cmd_open
 	g_signal_connect	action_file_open, "activate", varptr( cbcmdopen ), 0
 	gtk_action_group_add_action_with_accel	actions, action_file_open, "<control>O"
 
-	; Quit menu item definition
+	; set up Quit menu item
 	gtk_action_new		"Quit", "_Quit", "Quit this program", GTK_STOCK_QUIT@
 	action_file_quit	= stat
 	setcallbk			cbcmdquit, cb_cmd_quit, *cmd_quit

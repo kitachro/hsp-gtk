@@ -1,105 +1,105 @@
-# ���̕����ɂ���
+# この文書について
 
-�o�[�W����:
+バージョン:
 : 1.0
 
-�ŏI�X�V��:
-: 2014�N�@���@��
+最終更新日:
+: 2014年　月　日
 
-���C�Z���X:
+ライセンス:
 : GNU Free Documentation License 1.3 with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts
 
-�@���̕����́AHSP3��GTK+3�A�v���P�[�V�������������@���w�Ԃ��߂̃`���[�g���A���ł��BHSP3�ɂ��Ă͂ЂƂƂ���̒m��������l��ΏۂƂ��Ă��܂��B
+　この文書は、HSP3でGTK+3アプリケーションを書く方法を学ぶためのチュートリアルです。HSP3についてはひととおりの知識がある人を対象としています。
 
-�@���̃`���[�g���A���́AGTK+3�ł����Ƃ��d�v�ȃN���X�⃁�\�b�h�ɂ��Ă͐������Ă��܂����AAPI���t�@���X�ł͂���܂���BAPI�̏ڍׂȐ�����[GTK+ 3 Reference Manual](http://developer.gnome.org/gtk3/stable/)�Ŋm�F���ĉ������B
+　このチュートリアルは、GTK+3でもっとも重要なクラスやメソッドについては説明していますが、APIリファレスではありません。APIの詳細な説明は[GTK+ 3 Reference Manual](http://developer.gnome.org/gtk3/stable/)で確認して下さい。
 
-�@���̕����́A[The Python GTK+ 3 Tutorial](http://python-gtk-3-tutorial.readthedocs.org/en/latest/index.html)�̃y�[�W�����[https://github.com/sebp/PyGObject-Tutorial](https://github.com/sebp/PyGObject-Tutorial)�ɂ���f�[�^���x�[�X�ɍ쐬���܂����B
+　この文書は、[The Python GTK+ 3 Tutorial](http://python-gtk-3-tutorial.readthedocs.org/en/latest/index.html)のページおよび[https://github.com/sebp/PyGObject-Tutorial](https://github.com/sebp/PyGObject-Tutorial)にあるデータをベースに作成しました。
 
-# �ڎ�
+# 目次
 
-## 1. �J�����̏���
-### 1.1. GTK+3�̓���ƃC���X�g�[��
-### 1.2. �R�[���o�b�N�֐������v���O�C���̓���ƃC���X�g�[��
-## 2. �͂��߂̈��
-### 2.1. �����Ƃ��V���v����GTK+3�v���O����
-### 2.2. �E�B���h�E��Button�E�B�W�F�b�g��z�u����
-## 3. GTK+3�̊�b
-### 3.1. ���C�����[�v�ƃV�O�i��
-### 3.2. �E�B�W�F�b�g�̃v���p�e�B
-## 4. ������ɂ���
-## 5. ���C�A�E�g�R���e�i
-## 6. ���x���iLabel�j
-## 7. �G���g���iEntry�j
-## 8. �{�^���iButton�j
-## 9. �v���O���X�o�[�iProgressBar�j
-## 10. �X�s�i�[�iSpinner�j
-## 11. �c���[�r���[�ƃ��X�g�r���[�iTreeView�j
-## 12. �Z�������_���iCellRenderer�j
-## 13. �R���{�{�b�N�X�iComboBox�j
-## 14. �A�C�R���r���[�iIconView�j
-## 15. �e�L�X�g�G�f�B�^�iTextView�j
-## 16. ���j���[�iMenu�j
-## 17. �_�C�A���O�iDialog�j
-## 18. �N���b�v�{�[�h�iClipboard�j
-## 19. �h���b�O�A���h�h���b�v
-## 20. Glade�C���^�[�t�F�[�X�f�U�C�i�[��GtkBuilder�N���X
-## 21. �I�u�W�F�N�g
-## 22. �X�g�b�N�A�C�e���iStockItem�j
+## 1. 開発環境の準備
+### 1.1. GTK+3の入手とインストール
+### 1.2. コールバック関数実装プラグインの入手とインストール
+## 2. はじめの一歩
+### 2.1. もっともシンプルなGTK+3プログラム
+### 2.2. ウィンドウにButtonウィジェットを配置する
+## 3. GTK+3の基礎
+### 3.1. メインループとシグナル
+### 3.2. ウィジェットのプロパティ
+## 4. 文字列について
+## 5. レイアウトコンテナ
+## 6. ラベル（Label）
+## 7. エントリ（Entry）
+## 8. ボタン（Button）
+## 9. プログレスバー（ProgressBar）
+## 10. スピナー（Spinner）
+## 11. ツリービューとリストビュー（TreeView）
+## 12. セルレンダラ（CellRenderer）
+## 13. コンボボックス（ComboBox）
+## 14. アイコンビュー（IconView）
+## 15. テキストエディタ（TextView）
+## 16. メニュー（Menu）
+## 17. ダイアログ（Dialog）
+## 18. クリップボード（Clipboard）
+## 19. ドラッグアンドドロップ
+## 20. GladeインターフェースデザイナーとGtkBuilderクラス
+## 21. オブジェクト
+## 22. ストックアイテム（StockItem）
 
 ==========
 
-# 3. GTK+�̊�b
+# 3. GTK+の基礎
 
-�@���̏͂ł́AGTK+�ɂ����ē��ɏd�v��2�̊T�O�ɂ��Đ������܂��B
+　この章では、GTK+において特に重要な2つの概念について説明します。
 
-## 3.1. ���C�����[�v�ƃV�O�i��
+## 3.1. メインループとシグナル
 
-�@���̑�����GUI�c�[���L�b�g�Ɠ������AGTK+�̓C�x���g�쓮�̃v���O���~���O���f�����̗p���Ă��܂��B�v���O�����̃��[�U�[���������Ă��Ȃ����ɂ́A���C�����[�v�������J��Ԃ���AGTK+�̓��[�U�[�̓��͂�҂��Ă��邾���ł����A�ЂƂ��у��[�U�[�ɂ���ĉ��炩�̑��삪�s����ƁA���C�����[�v����������m����GTK+�ɃC�x���g�ievent�j�������܂��B
+　他の多くのGUIツールキットと同じく、GTK+はイベント駆動のプログラミングモデルを採用しています。プログラムのユーザーが何もしていない時には、メインループがただ繰り返され、GTK+はユーザーの入力を待っているだけですが、ひとたびユーザーによって何らかの操作が行われると、メインループがそれを感知してGTK+にイベント（event）が送られます。
 
-�@�C�x���g�͂��ꂪ�N�������E�B�W�F�b�g�iwidget�BGTK+���񋟂���v���O�������i�B�Ⴆ��Window��Button�j�ɓ`�����A�E�B�W�F�b�g�̓C�x���g�̎�ނɉ����ĂЂƂȏ�̃V�O�i���isignal�j�𔭐������܂��B�v���O�����̓V�O�i���ɂ���āu�������N�������v���Ƃ�m�邱�Ƃ��ł��A���̃V�O�i���Ɋ֘A�t����ꂽ�iconnect���ꂽ�j�֐�������΂�������s���܂��B���̊֐��̂��Ƃ��R�[���o�b�N�icallback�j�֐��Ƃ����܂��B
+　イベントはそれが起こったウィジェット（widget。GTK+が提供するプログラム部品。例えばWindowやButton）に伝えられ、ウィジェットはイベントの種類に応じてひとつ以上のシグナル（signal）を発生させます。プログラムはシグナルによって「何かが起こった」ことを知ることができ、そのシグナルに関連付けられた（connectされた）関数があればそれを実行します。この関数のことをコールバック（callback）関数といいます。
 
-�@���Ȃ݂ɁA���́u�R�[���o�b�N�֐��v�Ƃ������O�́AC����i�⓯���@�\���g���邻�̑��̌���j�̌���@�\�ɒ��ڂ����ꍇ�̌Ăѕ��ł��BGTK+�𗘗p�����v���O�������ł̖����ɒ��ڂ����ꍇ�́A�V�O�i���n���h���ihandler�j�ƌĂ΂�܂��B
+　ちなみに、この「コールバック関数」という名前は、C言語（や同じ機能が使えるその他の言語）の言語機能に着目した場合の呼び方です。GTK+を利用したプログラム内での役割に着目した場合は、シグナルハンドラ（handler）と呼ばれます。
 
-�@�R�[���o�b�N�֐��ł͒ʏ�A�V�O�i���̎�ށi���v���O�����ŉ����N���������j�ɉ������������s���܂��B�Ⴆ�΁A�t�@�C�����J�����߂̃{�^���iButton�j�������ꂽ�iclicked�j�̂ł���΁A�t�@�C���I���_�C�A���O�iFileChooserDialog�j��\���������Ǝv�����Ƃ������ł��傤�B�K�v�ȏ������s������A�R�[���o�b�N�֐���return�����ƁA�Ăу��C�����[�v�ɖ߂�AGTK+�͑ҋ@��ԂɂȂ�܂��B
+　コールバック関数では通常、シグナルの種類（＝プログラムで何が起こったか）に応じた処理を行います。例えば、ファイルを開くためのボタン（Button）が押された（clicked）のであれば、ファイル選択ダイアログ（FileChooserDialog）を表示したいと思うことが多いでしょう。必要な処理を行った後、コールバック関数がreturnされると、再びメインループに戻り、GTK+は待機状態になります。
 
-�@���ɁA�R�[���o�b�N�֐��̃V�O�i���ւ̊֘A�t���iconnect�j�ɂ��āA�X�N���v�g�̏����������Đ������܂��B
+　次に、コールバック関数のシグナルへの関連付け（connect）について、スクリプトの書式を挙げて説明します。
 
     g_signal_connect widget, "signal", varptr( callback ), varptr( data )
 
-�@�֘A�t����`g_signal_connect`�֐��ōs���܂��B
+　関連付けは`g_signal_connect`関数で行います。
 
-�@�����ɂ��Đ�������ƁA`widget`�ɂ͍쐬�ς݂̃E�B�W�F�b�g�̃C���X�^���X���w�肵�܂��B�E�B�W�F�b�g�̃C���X�^���X�Ƃ́A�E�B�W�F�b�g���쐬����֐��̖߂�l�ł��B
+　引数について説明すると、`widget`には作成済みのウィジェットのインスタンスを指定します。ウィジェットのインスタンスとは、ウィジェットを作成する関数の戻り値です。
 
-�@`"signal"`�͊֘A�t���������V�O�i���̖��O�ł��B�V�O�i�����́A���̌��ƂȂ�C�x���g��\�����̂ɂȂ��Ă��邱�Ƃ������ł��B�N����C�x���g�i���󂯎���V�O�i���j�̓E�B�W�F�b�g���Ƃɂ��炩���ߌ��܂��Ă���A�Ⴆ�΃{�^���iButton�j�E�B�W�F�b�g�ł���΁Aclicked�V�O�i���Ɋ֐���connect����ꍇ�����|�I�ɑ����ł��傤�Bclicked�V�O�i���́A�E�B�W�F�b�g���N���b�N���ꂽ���ɔ������܂��B
+　`"signal"`は関連付けしたいシグナルの名前です。シグナル名は、その元となるイベントを表すものになっていることが多いです。起こるイベント（＝受け取れるシグナル）はウィジェットごとにあらかじめ決まっており、例えばボタン（Button）ウィジェットであれば、clickedシグナルに関数をconnectする場合が圧倒的に多いでしょう。clickedシグナルは、ウィジェットがクリックされた時に発生します。
 
-�@`callback`�́A�R�[���o�b�N�֐������v���O�C��hscallbk.dll��setcallbk���߂̈����Ɏw�肵���R�[���o�b�N�^�̕ϐ��ł��Bhscallbk.dll���g�p�����ꍇ�A�R�[���o�b�N�֐��̓��x���Ŏn�܂�return���߂ŏI��邱�ƂɂȂ�܂����A���ɐ��������ʂ�A���̃��x����return�̊ԂɁA�C�x���g���N���������Ɏ��s�������������L�q���܂��B
+　`callback`は、コールバック関数実装プラグインhscallbk.dllのsetcallbk命令の引数に指定したコールバック型の変数です。hscallbk.dllを使用した場合、コールバック関数はラベルで始まりreturn命令で終わることになりますが、既に説明した通り、このラベルとreturnの間に、イベントが起こった時に実行したい処理を記述します。
 
-�@`data`�ɂ́A�R�[���o�b�N�֐����Ăяo�����Ɉ����Ƃ��ēn�������e�[�^���������ϐ����ЂƂw��ł��܂��B�R�[���o�b�N�֐����Ŏ󂯎�鎞�_�ł̓|�C���^�ɂȂ��Ă��܂��̂Œ��ӂ��Ă��������B���̃|�C���^��2�Ԗڂ̈����Ƃ��Ď󂯎�邱�Ƃ��ł��܂��B���ɓn�������e�[�^���Ȃ��ꍇ�ɂ́A`varptr( data )`�̑����`0`���w�肵�Ă��������B
+　`data`には、コールバック関数を呼び出す時に引数として渡したいテータが入った変数をひとつ指定できます。コールバック関数内で受け取る時点ではポインタになっていますので注意してください。このポインタは2番目の引数として受け取ることができます。特に渡したいテータがない場合には、`varptr( data )`の代わりに`0`を指定してください。
 
-�@�Â��āA�V�O�i���ƃR�[���o�b�N�֐��̊֘A�t�����폜������@�ɂ��Đ������܂��B
+　つづいて、シグナルとコールバック関数の関連付けを削除する方法について説明します。
 
     g_signal_connect widget, "signal", varptr( callback ), varptr( data )
     handler_id = stat
     
     g_signal_handler_disconnect widget, handler_id
 
-�@��ɐ�������g_signal_connect�֐��̖߂�l���֘A�t���̎��ʔԍ��ɂȂ��Ă��܂��̂ŁA���̒l�������Ƃ���g_signal_handler_disconnect�֐������s���邱�Ƃɂ���āA�֘A�t�����폜���邱�Ƃ��ł��܂��B�֐������s�������_�Ŏ��ʔԍ��͖����ɂȂ�܂��B
+　先に説明したg_signal_connect関数の戻り値が関連付けの識別番号になっていますので、その値を引数としてg_signal_handler_disconnect関数を実行することによって、関連付けを削除することができます。関数を実行した時点で識別番号は無効になります。
 
-�@���炩�̗��R�Ŋ֘A�t���̎��ʔԍ��𗘗p�ł��Ȃ��ꍇ�́Ag_signal_handlers_disconnect_matched�Ƃ����֐��ŁA�Ⴆ�΁A����̃R�[���o�b�N�֐��ւ̊֘A�t�������ׂč폜����ȂǂƂ��������Ƃ��ł��܂��B�ڂ�����[GTK+ 3 Reference Manual](http://developer.gnome.org/gtk3/stable/)�Ȃǂ��Q�l�ɂ��Ă��������B
+　何らかの理由で関連付けの識別番号を利用できない場合は、g_signal_handlers_disconnect_matchedという関数で、例えば、特定のコールバック関数への関連付けをすべて削除するなどといったこともできます。詳しくは[GTK+ 3 Reference Manual](http://developer.gnome.org/gtk3/stable/)などを参考にしてください。
 
-�@�Ō�ɁAGTK+�ɂ�����V�O�i���ƃR�[���o�b�N�֐��i�V�O�i���n���h���j�̓T�^�I�ȗ��p��ɂ��Đ������āA���̐߂��I���܂��B
+　最後に、GTK+におけるシグナルとコールバック関数（シグナルハンドラ）の典型的な利用例について説明して、この節を終わります。
 
-�@�����Ă���GTK+�A�v���P�[�V�����́A�g�b�v���x���E�B���h�E��destroy�V�O�i���ɁAgtk_main_quit�֐����Ăяo���������܂ރV�O�i���n���h����connect���Ă��܂��B
+　たいていのGTK+アプリケーションは、トップレベルウィンドウのdestroyシグナルに、gtk_main_quit関数を呼び出す処理を含むシグナルハンドラをconnectしています。
 
-�@�v���O���}����������̂ɂ͗��R������A������destroy�V�O�i���̃f�t�H���g�̃n���h���̎d�l�ɂ���܂��B�f�t�H���g�n���h���Ƃ́A�v���O���}�������I��connect����n���h���Ƃ͕ʂɁA�����ʂ�f�t�H���g��connect����Ă���n���h���̂��Ƃł��B
+　プログラマがそうするのには理由があり、原因はdestroyシグナルのデフォルトのハンドラの仕様にあります。デフォルトハンドラとは、プログラマが明示的にconnectするハンドラとは別に、文字通りデフォルトでconnectされているハンドラのことです。
 
-�@����destroy�V�O�i���̃f�t�H���g�n���h�����ł́A�g�b�v���x���E�B���h�E���j�������i���������ォ��폜����A�v���O�����̃��[�U�[�͂������v���O���}��������p�ł��Ȃ��Ȃ�j�̂ł����A�n���h���𔲂�������A�v���O�����̃��C�����[�v�͉�葱���܂��B
+　このdestroyシグナルのデフォルトハンドラ内では、トップレベルウィンドウが破棄される（＝メモリ上から削除され、プログラムのユーザーはもちろんプログラマからも利用できなくなる）のですが、ハンドラを抜けた後も、プログラムのメインループは回り続けます。
 
-�@�܂�A�v���O�����͓���������ɂ�������炸�A�v���O�����̃��[�U�[���v���O�������I�������i���Ȃ��Ȃ��Ă��܂��Ƃ������Ƃł��B�����ł����h�����߂ɁA���C�����[�v���甲���邽�߂�gtk_main_quit�֐����Ăяo���V�O�i���n���h����connect����K�v������Ƃ����킯�ł��Bgtk_main_quit�֐����Ăяo���ӔC�̓v���O���}�ɂ���܂��B
+　つまり、プログラムは動き続けるにもかかわらず、プログラムのユーザーがプログラムを終了する手段がなくなってしまうということです。そこでこれを防ぐために、メインループから抜けるためのgtk_main_quit関数を呼び出すシグナルハンドラをconnectする必要があるというわけです。gtk_main_quit関数を呼び出す責任はプログラマにあります。
 
-�@gtk_main_quit�֐��ɂ���ă��C�����[�v�𔲂���ƁA�v���O�����̎��s�ʒu��gtk_main�֐��̌Ăяo���̒���ɖ߂�܂��B�ʏ킻�̌��ɂ�HSP��end���߂������ăv���O�������I�������܂��B
+　gtk_main_quit関数によってメインループを抜けると、プログラムの実行位置はgtk_main関数の呼び出しの直後に戻ります。通常その後ろにはHSPのend命令を書いてプログラムを終了させます。
 
-## 3.2. �E�B�W�F�b�g�̃v���p�e�B
+## 3.2. ウィジェットのプロパティ
 
 ==========
 

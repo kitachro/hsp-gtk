@@ -13,7 +13,7 @@
 
 　このチュートリアルは、GTK+3でもっとも重要なクラスやメソッドについては説明していますが、APIリファレスではありません。APIの詳細な説明は[GTK+ 3 Reference Manual](http://developer.gnome.org/gtk3/stable/)で確認して下さい。
 
-　この文書は、[The Python GTK+ 3 Tutorial](http://python-gtk-3-tutorial.readthedocs.org/en/latest/index.html)のページおよび[https://github.com/sebp/PyGObject-Tutorial](https://github.com/sebp/PyGObject-Tutorial)にあるデータをベースに作成しました。
+　この文書は、[The Python GTK+ 3 Tutorial](http://python-gtk-3-tutorial.readthedocs.org/en/latest/index.html)のページの内容、および[https://github.com/sebp/PyGObject-Tutorial](https://github.com/sebp/PyGObject-Tutorial)にあるデータをベースに作成しました。
 
 # 目次
 
@@ -58,7 +58,7 @@
 
 　イベントはそれが起こったウィジェット（widget。GTK+が提供するプログラム部品。例えばWindowやButton）に伝えられ、ウィジェットはイベントの種類に応じてひとつ以上のシグナル（signal）を発生させます。プログラムはシグナルによって「何かが起こった」ことを知ることができ、そのシグナルに関連付けられた（connectされた）関数があればそれを実行します。この関数のことをコールバック（callback）関数といいます。
 
-　ちなみに、この「コールバック関数」という名前は、C言語（や同じ機能が使えるその他の言語）の言語機能に着目した場合の呼び方です。GTK+を利用したプログラム内での役割に着目した場合は、シグナルハンドラ（handler）と呼ばれます。
+　この「コールバック関数」という名前は、C言語（や同じ機能が使えるその他の言語）の言語機能に着目した場合の呼び方です。GTK+を利用したプログラム内での役割に着目した場合は、シグナルハンドラ（signal handler）と呼ばれます。
 
 　コールバック関数では通常、シグナルの種類（＝プログラムで何が起こったか）に応じた処理を行います。例えば、ファイルを開くためのボタン（Button）が押された（clicked）のであれば、ファイル選択ダイアログ（FileChooserDialog）を表示したいと思うことが多いでしょう。必要な処理を行った後、コールバック関数がreturnされると、再びメインループに戻り、GTK+は待機状態になります。
 
@@ -83,7 +83,7 @@
     
     g_signal_handler_disconnect widget, handler_id
 
-　先に説明したg_signal_connect関数の戻り値が関連付けの識別番号になっていますので、その値を引数としてg_signal_handler_disconnect関数を実行することによって、関連付けを削除することができます。関数を実行した時点で識別番号は無効になります。
+　先に説明したg_signal_connect関数の戻り値が関連付けの識別番号になっていますので、その値を引数としてg_signal_handler_disconnect関数を実行することによって、関連付けを削除することができます。g_signal_handler_disconnectを実行した時点で識別番号は無効になります。
 
 　何らかの理由で関連付けの識別番号を利用できない場合は、g_signal_handlers_disconnect_matchedという関数で、例えば、特定のコールバック関数への関連付けをすべて削除するなどといったこともできます。詳しくは[GTK+ 3 Reference Manual](http://developer.gnome.org/gtk3/stable/)などを参考にしてください。
 

@@ -48,6 +48,70 @@
 
 ==========
 
+# 2. はじめの一歩
+
+　この章では、ごくシンプルなサンプルプログラムのスクリプトを挙げて、それについて解説します。もしこの章の内容がわかりにくいと感じた場合は、次の章を読んだ後に再度読み直すと、より確実に理解できるでしょう。
+
+## 2.1. もっともシンプルなGTK+3プログラム
+
+　まずは、できる限りもっとも短いGTK+3プログラムのスクリプトを示します。このスクリプトを実行すると、縦横200ピクセルの大きさの空のウィンドウが表示されます。ウィンドウを閉じると、プログラムは終了します。
+
+    #include "hscallbk.as"
+    #uselib ""
+    #func cb_window_destroy ""
+    
+    #uselib "libgtk-3-0.dll"
+    #func global gtk_init "gtk_init" sptr, sptr
+    #func global gtk_window_new "gtk_window_new" int
+    #const	GTK_WINDOW_TOPLEVEL	0
+    #func global gtk_widget_show_all "gtk_widget_show_all" sptr
+    #func global gtk_main "gtk_main"
+    #func global gtk_main_quit "gtk_main_quit"
+    #uselib "libgobject-2.0-0.dll"
+    #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+    #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+    
+    	gtk_init	0, 0
+    
+    	gtk_window_new	GTK_WINDOW_TOPLEVEL
+    	win	= stat
+    	setcallbk	cbwindowdestroy, cb_window_destroy, *on_window_destroy
+    	g_signal_connect	win, "destroy", varptr( cbwindowdestroy ), 0
+    
+    	gtk_widget_show_all	win
+    	gtk_main
+    	end
+    
+    *on_window_destroy
+    	gtk_main_quit
+    	return
+
+　以後、パートごとにスクリプトの内容について説明していきます。
+
+    #include "hscallbk.as"
+    #uselib ""
+    #func cb_window_destroy ""
+
+　まず冒頭は、hscallbk.dllを利用してコールバック関数を使えるようにするためのコードです。書き方については、hscallbk.dllのreadmeを参照してください。今回のプログラムでは、ウィンドウが破棄されるときに実行する処理をコールバック関数として書く必要があるので、cb_window_destroyという名前を使っています。
+
+　次の、
+
+    #uselib "libgtk-3-0.dll"
+
+から
+
+    #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+
+までの部分は、GTK+3を構成するDLLの関数を使えるようにするためのコードです。分量的に全体の半分近くを占める長さですが、他のプログラムでも再利用できる部分です。
+
+　#uselib命令と#func命令の行は、HSPから一般的なDLLを利用するためのコードとしてはありふれたものなので、その意味では難しいことはないと思います。
+
+　#const命令と#define命令の行は、GTK+3のアーカイブに添付されているヘッダファイルの内容をHSP向けに書き直したものです。
+
+## 2.2. ウィンドウにButtonウィジェットを配置する
+
+==========
+
 # 3. GTK+の基礎
 
 　この章では、GTK+において特に重要な2つの概念について説明します。

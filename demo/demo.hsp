@@ -104,7 +104,7 @@
 	btn	= stat
 
 	setcallbk			cbbuttonclicked, cb_button_clicked, *on_button_clicked
-	g_signal_connect	btn, "clicked", varptr(cbbuttonclicked), 0
+	g_signal_connect	btn, "clicked", varptr( cbbuttonclicked ), 0
 
 	// build up gui
 

@@ -1,4 +1,3 @@
-;! test
 #include "hscallbk.as"
 #uselib ""
 #func cb_window_delete_event ""

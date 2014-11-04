@@ -1,7 +1,7 @@
 ;! test
 #include "hscallbk.as"
 #uselib ""
-#func cb_window_destroy ""
+#func cb_window_delete_event ""
 
 #uselib "libgtk-3-0.dll"
 #func global gtk_init "gtk_init" sptr, sptr
@@ -18,13 +18,13 @@
 
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
-	setcallbk	cbwindowdestroy, cb_window_destroy, *on_window_destroy
-	g_signal_connect	win, "destroy", varptr( cbwindowdestroy ), 0
+	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
+	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), 0
 
 	gtk_widget_show_all	win
 	gtk_main
 	end
 
-*on_window_destroy
+*on_window_delete_event
 	gtk_main_quit
 	return

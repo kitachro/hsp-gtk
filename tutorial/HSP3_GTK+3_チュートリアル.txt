@@ -9,7 +9,7 @@
 ライセンス:
 : GNU Free Documentation License 1.3 with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts
 
-　この文書は、HSP3でGTK+3アプリケーションを書く方法を学ぶためのチュートリアルです。HSP3についてはひととおりの知識がある人を対象としています。
+　この文書は、HSP3でGTK+3アプリケーションを書く方法を学ぶためのチュートリアルです。主に、既にHSPが使える人向けのものになります。
 
 　このチュートリアルは、GTK+3でもっとも重要なクラスやメソッドについては説明していますが、APIリファレスではありません。APIの詳細な説明は[GTK+ 3 Reference Manual](http://developer.gnome.org/gtk3/stable/)で確認して下さい。
 
@@ -45,6 +45,22 @@
 ## 20. GladeインターフェースデザイナーとGtkBuilderクラス
 ## 21. オブジェクト
 ## 22. ストックアイテム（StockItem）
+
+==========
+
+# 1. 開発環境の準備
+
+## 1.1. GTK+3の入手とインストール
+
+　このチュートリアルでは、[The GTK+ Project](http://www.gtk.org/)で公開されているall-in-one bundleアーカイブのGTK+3を動作確認に利用しています。ダウンロードは、Downloadのページからリンクされている、32bitもしくは64bit Windows用アーカイブのページで行えます。アーカイブはただのzipファイルなので、ダウンロード後、解凍してください。
+
+　アーカイブに含まれるファイルの中で、HSPスクリプトのデバッグ実行、およびスクリプトから作った実行ファイルの動作に必ず必要なのは、binフォルダにあるDLLファイルです。これらのDLLファイルをすべて、HSP用プラグインを使う時と同じようにHSPのインストールフォルダにコピーしてください。
+
+　実行ファイルの動作に必要なDLLは、スクリプトから利用したものとそれらが依存しているDLLになります。DLLの依存関係を調べるには、Dependency Walkerというフリーウェアが便利です。Dependency Walkerは、他にもDLLに含まれている関数名を表示したり、その一覧をクリップボードにコピーできたりするのでおすすめです。
+
+　また、GTK+3のアーカイブのDLL以外のファイルもプログラミングに役立ちますので、捨てずにアーカイブのフォルダごと任意の場所に移動しておいてください。さらにこれらのファイル内のテキストを一気に全文検索できるソフトウェアを用意しておくと、プログラミングが捗ると思います。
+
+## 1.2. コールバック関数実装プラグインの入手とインストール
 
 ==========
 
@@ -92,17 +108,20 @@
     #uselib ""
     #func cb_window_delete_event ""
 
-　まず冒頭は、hscallbk.dllを利用してコールバック関数を使えるようにするためのコードです。書き方については、hscallbk.dllのreadmeを参照してください。今回のプログラムでは、delete-eventシグナルが発生した時に実行する処理をコールバック関数として書く必要があるので、cb_window_delete_eventという名前を使っています。
-
-　次の、
+　まず冒頭は、hscallbk.dllを利用してコールバック関数を使えるようにするためのコードです。]書き方については、hscallbk.dllのreadmeを参照してください。[今回のプログラムでは、ウィンドウでdelete-eventシグナルが発生した時に実行する処理をコールバック関数として書く必要があるので、cb_window_delete_eventという名前を使っています。
 
     #uselib "libgtk-3-0.dll"
-
-から
-
+    #func global gtk_init "gtk_init" sptr, sptr
+    #func global gtk_window_new "gtk_window_new" int
+    #const	GTK_WINDOW_TOPLEVEL	0
+    #func global gtk_widget_show_all "gtk_widget_show_all" sptr
+    #func global gtk_main "gtk_main"
+    #func global gtk_main_quit "gtk_main_quit"
+    #uselib "libgobject-2.0-0.dll"
+    #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
     #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
 
-までの部分は、GTK+3を構成するDLLの関数を使えるようにするためのコードです。分量的に全体の半分近くを占める長さですが、他のプログラムでも再利用できる部分です。
+　この部分は、GTK+3を構成するDLLの関数を使えるようにするためのコードです。分量的に全体の半分近くを占める長さですが、他のプログラムでも再利用できる部分です。
 
 　#uselib命令と#func命令の行は、HSPから一般的なDLLを利用するためのコードとしてはありふれたものなので、その意味では難しいことはないと思います。
 
@@ -132,9 +151,9 @@
 
 　関連付けは`g_signal_connect`関数で行います。
 
-　引数について説明すると、`widget`には作成済みのウィジェットのインスタンスを指定します。ウィジェットのインスタンスとは、ウィジェットを作成する関数の戻り値です。
+　ひとつ目の引数の`widget`には作成済みのウィジェットのインスタンスを指定します。ウィジェットのインスタンスとは、ウィジェットを作成する関数の戻り値（stat）です。
 
-　`"signal"`は関連付けしたいシグナルの名前です。シグナル名は、その元となるイベントを表すものになっていることが多いです。起こるイベント（＝受け取れるシグナル）はウィジェットごとにあらかじめ決まっており、例えばボタン（Button）ウィジェットであれば、clickedシグナルに関数をconnectする場合が圧倒的に多いでしょう。clickedシグナルは、ウィジェットがクリックされた時に発生します。
+　次の`"signal"`は関連付けしたいシグナルの名前です。シグナル名は、その元となるイベントを表すものになっていることが多いです。起こるイベント（＝受け取れるシグナル）はウィジェットごとにあらかじめ決まっており、例えばボタン（Button）ウィジェットであれば、clickedシグナルに関数をconnectする場合が圧倒的に多いでしょう。clickedシグナルは、ウィジェットがクリックされた時に発生します。
 
 　`callback`は、コールバック関数実装プラグインhscallbk.dllのsetcallbk命令の引数に指定したコールバック型の変数です。hscallbk.dllを使用した場合、コールバック関数はラベルで始まりreturn命令で終わることになりますが、既に説明した通り、このラベルとreturnの間に、イベントが起こった時に実行したい処理を記述します。
 

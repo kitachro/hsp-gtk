@@ -11,7 +11,7 @@
 
 　この文書は、HSP3でGTK+3アプリケーションを書く方法を学ぶためのチュートリアルです。主に、既にHSPが使える人向けのものになります。
 
-　このチュートリアルは、GTK+3でもっとも重要なクラスやメソッドについては説明していますが、APIリファレスではありません。APIの詳細な説明は[GTK+ 3 Reference Manual](http://developer.gnome.org/gtk3/stable/)で確認して下さい。
+　このチュートリアルは、GTK+3でもっとも重要なクラスやメソッドについては説明していますが、APIリファレスではありません。APIの詳細については[GTK+ 3 Reference Manual](http://developer.gnome.org/gtk3/stable/)で確認して下さい。
 
 　この文書は、[The Python GTK+ 3 Tutorial](http://python-gtk-3-tutorial.readthedocs.org/en/latest/index.html)のページの内容、および[https://github.com/sebp/PyGObject-Tutorial](https://github.com/sebp/PyGObject-Tutorial)にあるデータをベースに作成しました。
 
@@ -112,7 +112,7 @@
     #uselib ""
     #func cb_window_delete_event ""
 
-　まず冒頭は、hscallbk.dllを利用してコールバック関数を使えるようにするためのコードです。]書き方については、hscallbk.dllのreadmeを参照してください。[今回のプログラムでは、ウィンドウでdelete-eventシグナルが発生した時に実行する処理をコールバック関数として書く必要があるので、cb_window_delete_eventという名前を使っています。
+　まず冒頭は、hscallbk.dllを利用してコールバック関数を使えるようにするためのコードです。書き方については、hscallbk.dllのreadmeを参照してください。今回のプログラムでは、ウィンドウでdelete-eventシグナルが発生した時に実行する処理をコールバック関数として書く必要があるので、cb_window_delete_eventという名前を使っています。
 
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
@@ -127,9 +127,13 @@
 
 　この部分は、GTK+3を構成するDLLの関数を使えるようにするためのコードです。分量的に全体の半分近くを占める長さですが、他のプログラムでも再利用できる部分です。
 
-　#uselib命令と#func命令の行は、HSPから一般的なDLLを利用するためのコードとしてはありふれたものなので、その意味では難しいことはないと思います。
+　#uselib命令と#func命令の行は、HSPから一般的なDLLを利用するためのコードとしてはありふれたものなので、その意味では難しいことはないと思います。DLLの関数を直接呼び出しますので、[GTK+ 3 Reference Manual](http://developer.gnome.org/gtk3/stable/)に載っている関数名がそのまま使えます。引数の型についても、リファレンスで調べて指定しています。
 
-　#const命令と#define命令の行は、GTK+3のアーカイブに添付されているヘッダファイルの内容をHSP向けに書き直したものです。
+　#const命令と#define命令の行は、GTK+3のアーカイブに添付されているC言語用ヘッダファイルの内容をHSP向けに書き直したものです。
+
+　GTK_WINDOW_TOPLEVEL定数は、リファレンスには載っていますが値は書かれていないので、アーカイブ内のファイルを全文検索して定義を見つけました。値さえわかれば、マクロは絶対に必要なものではありませんが、毎度、調べたり思い出したりする手間を考えれば、（再利用することを前提に）書いておくのが得策です。
+
+　g_signal_connect関数は、こちらもリファレンスには載っていますが、DLLには実装されておらずマクロで定義されていたので、こちらもHSPで書き直してやる必要がありました。このマクロについても、g_signal_connect_data関数を使うのが面倒でなければ、省略してしまってもかまいませんが、まあ書いておいた方がいいのではないかと思います。
 
 ## 2.2. ウィンドウにButtonウィジェットを配置する
 

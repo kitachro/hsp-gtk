@@ -58,7 +58,7 @@
 
     #include "hscallbk.as"
     #uselib ""
-    #func cb_window_destroy ""
+    #func cb_window_delete_event ""
     
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
@@ -75,14 +75,14 @@
     
     	gtk_window_new	GTK_WINDOW_TOPLEVEL
     	win	= stat
-    	setcallbk	cbwindowdestroy, cb_window_destroy, *on_window_destroy
-    	g_signal_connect	win, "destroy", varptr( cbwindowdestroy ), 0
+    	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
+    	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), 0
     
     	gtk_widget_show_all	win
     	gtk_main
     	end
     
-    *on_window_destroy
+    *on_window_delete_event
     	gtk_main_quit
     	return
 
@@ -90,9 +90,9 @@
 
     #include "hscallbk.as"
     #uselib ""
-    #func cb_window_destroy ""
+    #func cb_window_delete_event ""
 
-　まず冒頭は、hscallbk.dllを利用してコールバック関数を使えるようにするためのコードです。書き方については、hscallbk.dllのreadmeを参照してください。今回のプログラムでは、ウィンドウが破棄されるときに実行する処理をコールバック関数として書く必要があるので、cb_window_destroyという名前を使っています。
+　まず冒頭は、hscallbk.dllを利用してコールバック関数を使えるようにするためのコードです。書き方については、hscallbk.dllのreadmeを参照してください。今回のプログラムでは、delete-eventシグナルが発生した時に実行する処理をコールバック関数として書く必要があるので、cb_window_delete_eventという名前を使っています。
 
 　次の、
 

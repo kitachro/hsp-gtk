@@ -1,3 +1,8 @@
+/*
+	Copyright (c) 2014 chrono
+	This software is released under the MIT License.
+	http://opensource.org/licenses/mit-license.php
+*/
 #ifndef	__LIBGLIB_200__
 #define	global	__LIBGLIB_200__
 

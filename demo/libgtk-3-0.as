@@ -1,3 +1,8 @@
+/*
+	Copyright (c) 2014 chrono
+	This software is released under the MIT License.
+	http://opensource.org/licenses/mit-license.php
+*/
 #ifndef	__LIBGTK_30__
 #define	global	__LIBGTK_30__
 

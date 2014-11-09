@@ -127,7 +127,7 @@
 
 # 3. はじめの一歩
 
-　この章では、ごくシンプルなサンプルプログラムのスクリプトを挙げて、それについて解説します。もしこの章の内容がわかりにくいと感じた場合は、次の章を読んだ後に再度読み直すと、より確実に理解できるでしょう。
+　この章では、ごくシンプルなサンプルプログラムのスクリプトを挙げて、それについて解説します。
 
 ## 3.1. もっともシンプルなGTK+3プログラム
 
@@ -209,8 +209,6 @@
 	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), 0
 
 　hscallbk.dllのsetcallbk命令で、*on_window_delete_eventラベルで始まるサブルーチンをコールバック関数として呼び出せるようにした上で、g_signal_connect関数で、サブルーチンをGTK+のdelete-eventシグナルに関連付け（connect）しています。
-
-　シグナルとコールバック関数の関連付けについては、次の章で詳しく説明しています。
 
 	gtk_widget_show_all	win
 

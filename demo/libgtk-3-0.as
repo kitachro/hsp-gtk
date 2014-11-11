@@ -306,7 +306,7 @@
 ;#func global gtk_button_get_focus_on_click "" 
 ;#func global gtk_button_get_image "" 
 ;#func global gtk_button_get_image_position "" 
-;#func global gtk_button_get_label "" 
+#func global gtk_button_get_label "gtk_button_get_label" sptr
 ;#func global gtk_button_get_relief "" 
 ;#func global gtk_button_get_type "" 
 ;#func global gtk_button_get_use_stock "" 
@@ -314,15 +314,15 @@
 ;#func global gtk_button_leave "" 
 ;#func global gtk_button_new "" 
 ;#func global gtk_button_new_from_stock "" 
-#func global gtk_button_new_with_label "gtk_button_new_with_label" str
-;#func global gtk_button_new_with_mnemonic "" 
+#func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
+#func global gtk_button_new_with_mnemonic "gtk_button_new_with_mnemonic" sptr 
 ;#func global gtk_button_pressed "" 
 ;#func global gtk_button_released "" 
 ;#func global gtk_button_set_alignment "" 
 ;#func global gtk_button_set_focus_on_click "" 
 ;#func global gtk_button_set_image "" 
 ;#func global gtk_button_set_image_position "" 
-;#func global gtk_button_set_label "" 
+#func global gtk_button_set_label "gtk_button_set_label" sptr, sptr 
 ;#func global gtk_button_set_relief "" 
 ;#func global gtk_button_set_use_stock "" 
 ;#func global gtk_button_set_use_underline "" 

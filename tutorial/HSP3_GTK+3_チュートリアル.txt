@@ -1,19 +1,25 @@
 # この文書について
 
+公開者:
+: chrono (<https://github.com/kitachro>)
+
 バージョン:
-: 0.3.2
+: 0.3.3
 
 最終更新日:
-: 2014年11月12日
+: 2014年11月13日
 
 ライセンス（Copyright）:
 : GNU Free Documentation License 1.3 with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts
 
-　この文書は、HSP3でGTK+3アプリケーションを書く方法を学ぶためのチュートリアルです。主に、既にHSPが使える人向けのものです。
 
-　このチュートリアルは、GTK+3でもっとも重要なクラスや関数については説明していますが、APIリファレスではありません。APIの詳細については[GTK+ 3 Reference Manual](http://developer.gnome.org/gtk3/stable/)で確認して下さい。
+　この文書は、HSP3でGTK+3アプリケーションを書く方法を学ぶためのチュートリアルです。既にHSPが使える人向けです。
 
-　この文書は、[The Python GTK+ 3 Tutorial](http://python-gtk-3-tutorial.readthedocs.org/en/latest/index.html)のページをベースに作成しました。
+　このチュートリアルは、GTK+3で特に重要なクラスや関数については説明していますが、APIリファレスではありません。APIの詳細については[GTK+ 3 Reference Manual](http://developer.gnome.org/gtk3/stable/)で確認して下さい。
+
+　この文書は、[The Python GTK+ 3 Tutorial](http://python-gtk-3-tutorial.readthedocs.org/en/latest/index.html)のページをベースに作成しました。著者は、Sebastian Polsterl氏、dharmatech氏、Tshepang Lekhonkhobe氏、Jim Zhang氏、vaporup氏、以下の方々です。正確な著者情報については、随時変化しているため、<https://github.com/sebp/PyGObject-Tutorial>のサイトにて確認して下さい。
+
+　この文書の透過的複製物は<https://github.com/kitachro/hsp-gtk>にて公開しています。
 
 # 目次
 
@@ -60,6 +66,7 @@
 
 　また、GTK+3のアーカイブのDLL以外のファイルもプログラミングに役立ちますので、捨てずにアーカイブのフォルダごと任意の場所に移動しておいてください。さらにこれらのファイル内のテキストを一気に全文検索できるソフトウェアを用意しておくと、プログラミングが捗ります。
 
+
 ## 1.2. コールバック関数実装プラグインの入手
 
 　HSPからGTK+を利用するには、HSPでコールバック関数という機能を使えるようにする必要があるのですが、これを実現してくれるのが、ちょくとさんによって公開されているHSP拡張プラグインのhscallbk.dllです。
@@ -73,6 +80,7 @@
 　この章では、GTK+において特に重要な2つの概念について説明します。
 
 　この章で挙げているスクリプトの断片は、それだけで実行することはできません。プログラムとして動作するサンプルスクリプトは、3章で挙げています。
+
 
 ## 2.1. ウィジェットのプロパティ
 
@@ -97,11 +105,12 @@
 
 　gtk_button_new_with_label関数を使う場合には、引数にボタンに表示したい文字列（または文字列へのポインタ）を指定します。生成されたウィジェットが戻り値として返されるのは、gtk_button_new関数と同じです。
 
+
 ## 2.2. メインループとシグナル
 
 　他の多くのGUIツールキットと同じく、GTK+はイベント駆動のプログラミングモデルを採用しています。プログラムのユーザが何もしていない時には、メインループ（ユーザの操作を待つための無限ループ）が繰り返され、GTK+はただ待機しているだけですが、ひとたびユーザによって何らかの操作が行われると、GTK+にイベント（event）が送られます。このイベントを待つという状態は、HSPのstop命令を実行した時と同じようなものです。
 
-　イベントはそれが起こったウィジェットに伝えられ、ウィジェットはイベントの種類に応じて一つ以上のシグナル（signal）を発生させます。プログラムはシグナルによって「何かが起こった」ことを知ることができ、そのシグナルに関連付けられた（connectされた）関数があればそれを実行します。この関数のことをコールバック（callback）関数といいます。
+　イベントはそれが起こったウィジェットに伝えられ、ウィジェットはイベントの種類に応じて1つ以上のシグナル（signal）を発生させます。プログラムはシグナルによって「何かが起こった」ことを知ることができ、そのシグナルに関連付けられた（connectされた）関数があればそれを実行します。この関数のことをコールバック（callback）関数といいます。
 
 　この「コールバック関数」という名前は、C言語（や同じ機能が使えるその他の言語）の言語機能に着目した場合の呼び方です。GTK+を利用したプログラム内での役割に着目した場合は、シグナルハンドラ（signal handler）と呼ばれます。
 
@@ -113,13 +122,13 @@
 
 　関連付けは`g_signal_connect`関数で行います。
 
-　一つ目の引数の`widget`には、生成済みのウィジェット（インスタンス）を指定します。前節で説明したように、ウィジェットを生成する関数の戻り値（stat）がインスタンスを表す値になっていますので、それを利用します。
+　1つ目の引数の`widget`には、生成済みのウィジェット（インスタンス）を指定します。前節で説明したように、ウィジェットを生成する関数の戻り値（stat）がインスタンスを表す値になっていますので、それを利用します。
 
 　次の`"signal"`は関連付けしたいシグナルの名前です。シグナル名は、その元となるイベントを表すものになっていることが多いです。起こるイベント（＝受け取れるシグナル）は、プロパティと同じようにウィジェットごとにあらかじめ決まっており、例えば、Buttonウィジェットであれば、clickedシグナルに関数をconnectする場合が圧倒的に多いでしょう。clickedシグナルは、ウィジェットがクリックされた時に発生します。
 
 　`callback`は、コールバック関数実装プラグインhscallbk.dllのsetcallbk命令の引数に指定したコールバック型の変数です。hscallbk.dllを使用した場合、コールバック関数はラベルで始まりreturn命令で終わることになりますが、既に説明した通り、このラベルとreturnの間に、イベントが起こった時に実行したい処理を記述します。
 
-　`data`には、コールバック関数を呼び出す時に引数として渡したいテータが入った変数を一つ指定できます。`g_signal_connect`関数には、そのポインタを渡します。このポインタは、コールバック関数の2番目の引数として受け取ることができます。特に渡したいテータがない場合には、`varptr( data )`の代わりに`0`を指定してください。
+　`data`には、コールバック関数を呼び出す時に引数として渡したいテータが入った変数を1つ指定できます。`g_signal_connect`関数には、そのポインタを渡します。このポインタは、コールバック関数の2番目の引数として受け取ることができます（一部、引数を利用できないコールバック関数もあります）。特に渡したいテータがない場合には、`varptr( data )`の代わりに`0`を指定してください。3章の2節で挙げているサンプルプログラムで、この引数の使用例を見ることができます。
 
 　つづいて、シグナルとコールバック関数の関連付けを削除する方法について説明します。
 
@@ -130,11 +139,11 @@
 
 　先に説明したg_signal_connect関数の戻り値が関連付けの識別番号になっていますので、その値を引数としてg_signal_handler_disconnect関数を実行することによって、関連付けを削除することができます。g_signal_handler_disconnectを実行した時点で識別番号は無効になります。
 
-　何らかの理由で関連付けの識別番号を利用できない場合は、g_signal_handlers_disconnect_matchedという関数で、例えば、特定のコールバック関数への関連付けをすべて削除するなどといったこともできます。詳しくは[GTK+ 3 Reference Manual](http://developer.gnome.org/gtk3/stable/)などを参考にしてください。
+　何らかの理由で関連付けの識別番号を利用できない場合は、g_signal_handlers_disconnect_matchedという関数で、例えば、特定のコールバック関数への関連付けをすべて削除するなどといったことができます。詳しくは[GTK+ 3 Reference Manual](http://developer.gnome.org/gtk3/stable/)などを参考にしてください。
 
 　最後に、GTK+におけるシグナルとコールバック関数（シグナルハンドラ）のよくある利用例について説明して、この節を終わります。
 
-　たいていのGTK+アプリケーションは、トップレベルウィンドウのdelete-eventシグナルに、gtk_main_quit関数を呼び出す処理を含むシグナルハンドラをconnectしています。delete-eventシグナルは、プログラムのユーザがウィンドウを閉じようとした時、例えばクローズボタンを押した時などに発生するシグナルです。
+　たいていのGTK+アプリケーションは、トップレベルウィンドウ（＝デスクトップ画面に単独で存在できるウィンドウ）のdelete-eventシグナルに、gtk_main_quit関数を呼び出す処理を含むシグナルハンドラをconnectしています。delete-eventシグナルは、プログラムのユーザがウィンドウを閉じようとした時、例えばクローズボタンを押した時などに発生するシグナルです。
 
 　プログラマが上記のようなdelete-eventシグナルのハンドラをconnectするのには理由があり、原因はdelete-eventシグナルのデフォルトのハンドラの仕様にあります。デフォルトハンドラとは、プログラマが明示的にconnectするハンドラとは別に、文字通りデフォルトでconnectされているハンドラのことです。
 
@@ -151,6 +160,7 @@
 # 3. はじめの一歩
 
 　この章では、ごくシンプルなサンプルプログラムのスクリプトを挙げて、それについて解説します。
+
 
 ## 3.1. もっともシンプルなGTK+3プログラム
 
@@ -211,7 +221,7 @@
 
 　#const命令と#define命令の行は、GTK+3のアーカイブに添付されているC言語用ヘッダファイルの内容をHSP向けに書き直したものです。
 
-　GTK_WINDOW_TOPLEVEL定数は、[GTK+ 3 Reference Manual](http://developer.gnome.org/gtk3/stable/)には載っていますが値は書かれていないので、アーカイブ内のファイルを全文検索して定義を見つけました。値さえわかれば、マクロは絶対に必要なものではありませんが、毎度、調べたり思い出したりする手間を考えれば、（再利用することを前提に）書いておくのが得策です。
+　GTK_WINDOW_TOPLEVEL定数は、[GTK+ 3 Reference Manual](http://developer.gnome.org/gtk3/stable/)には載っていますが値は書かれていないので、GTK+3のアーカイブ内のファイルを全文検索して定義を見つけました。値さえわかれば、マクロは絶対に必要なものではありませんが、毎度、調べたり思い出したりする手間を考えれば、（再利用することを前提に）書いておくのが得策です。
 
 　g_signal_connect関数も、[GTK+ 3 Reference Manual](http://developer.gnome.org/gtk3/stable/)には載っていますが、DLLには実装されておらずマクロで定義されていたので、こちらもHSPで書き直してやる必要がありました。このマクロについても、g_signal_connect_data関数を使うのが面倒でなければ、省略してしまってもかまいませんが、まあ書いておいた方が楽かなと思います。
 
@@ -246,7 +256,89 @@
 
 　最後は、g_signal_connect関数でdelete-eventシグナルに関連付けしたサブルーチンです。gtk_main_quit関数を実行すると、メインループから抜けてgtk_main関数からreturnすることができます。
 
+
 ## 3.2. ウィンドウにButtonウィジェットを配置する
+
+　つづいて、もう1つ、トップレベルウィンドウにウィジェットを1つ置いてそれを動作させるプログラムを挙げます。
+
+    #include "hscallbk.as"
+    #uselib ""
+    #func cb_window_delete_event ""
+    #func cb_button_clicked "" int, int
+    
+    #uselib "libgtk-3-0.dll"
+    #func global gtk_init "gtk_init" sptr, sptr
+    #func global gtk_window_new "gtk_window_new" int
+    #const	GTK_WINDOW_TOPLEVEL	0
+    #func global gtk_widget_show_all "gtk_widget_show_all" sptr
+    #func global gtk_main "gtk_main"
+    #func global gtk_main_quit "gtk_main_quit"
+    #func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
+    #func global gtk_container_add "gtk_container_add" sptr, sptr
+    #uselib "libgobject-2.0-0.dll"
+    #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+    #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+    ;#func global g_signal_handler_disconnect "g_signal_handler_disconnect" sptr, int 
+    ;#func global g_signal_handlers_disconnect_matched "g_signal_handlers_disconnect_matched" sptr, int, int, int, sptr, sptr, sptr
+    ;#const	G_SIGNAL_MATCH_FUNC	(1 << 3)
+    
+    	gtk_init	0, 0
+    
+    	gtk_window_new	GTK_WINDOW_TOPLEVEL
+    	win	= stat
+    	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
+    	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), 0
+    
+    	gtk_button_new_with_label	"Click Here"
+    	btn	= stat
+    	setcallbk	cbbuttonclicked, cb_button_clicked, *on_button_clicked
+    	msg = "Hello World"
+    	g_signal_connect	btn, "clicked", varptr( cbbuttonclicked ), varptr( msg )
+    ;id = stat
+    ;g_signal_handler_disconnect btn, id
+    ;g_signal_handlers_disconnect_matched btn, G_SIGNAL_MATCH_FUNC, 0, 0, 0, varptr( cbbuttonclicked ), 0
+    
+    	gtk_container_add	win, btn
+    	gtk_widget_show_all	win
+    	gtk_main
+    	end
+    
+    *on_window_delete_event
+    	gtk_main_quit
+    	return
+    
+    *on_button_clicked
+    	dupptr	cbdata, callbkarg( 1 ), 20, 2
+    	mes		cbdata
+    	return
+
+　前節と2章で既に説明した内容は省略します。
+
+　まず、上記のスクリプトの中でコメントアウトされている部分ですが、これは、2章で説明したシグナルとコールバック関数の関連付けを削除するためのコードです。動作を確認したい場合に適宜有効にして実行してください。
+
+    	msg = "Hello World"
+    	g_signal_connect	btn, "clicked", varptr( cbbuttonclicked ), varptr( msg )
+    
+    （中略）
+    
+    *on_button_clicked
+    	dupptr	cbdata, callbkarg( 1 ), 20, 2
+    	mes		cbdata
+    	return
+
+　上記は、生成したボタンに対して、clickedシグナルとコールバック関数を関連付けている処理と、コールバック関数本体の部分です。2章で説明した、コールバック関数の引数を介してデータを受け渡しする例になっています。
+
+　ここでは、コールバック関数の引数として文字列変数のポインタを受け取っています。ポインタなので、HSPで中身のデータを扱うには、dupptr命令でそのポインタが指す変数を作ってやる必要があります。dupptr命令では、3番目の引数として「クローン元のメモリサイズ」を指定しますが、今回の例では、g_signal_connect関数の引数に指定した変数のサイズになります。ただし文字列変数の場合は、ある程度大きな数値を指定してしまっても大丈夫なようです。
+
+　実際、HSPでわざわざコールバック関数の引数を介してデータをやりとりする必要がどれだけあるかはわかりませんが、g_signal_connect関数の機能の一部として説明しました。ちなみに、コールバック関数の1番目の引数には、シグナルが発生したウィジェットインスタンスが代入されています。
+
+    gtk_container_add	win, btn
+
+　最後に、ウィンドウにボタンを追加している部分について説明します。
+
+　GTK+のWindowウィジェットに他のウィジェットを子として追加するには、gtk_container_add関数を使います。2つのウィジェットのインスタンスを引数として指定します。
+
+　Windowウィジェットに複数のウィジェットを詰め込む方法については5章で説明します。
 
 ==========
 

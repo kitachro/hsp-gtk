@@ -12,10 +12,10 @@
 
 #include "hspinet.as"
 #module
-#defcfunc u str str_	// shift-jis•¶Žš—ñ‚ðutf-8‚É•ÏŠ·
-	from	= str_
-	nkfcnv@	ret, from, "Sw"
-	return	ret
+#defcfunc u str chars_	// shift-jis•¶Žš—ñ‚ðutf-8‚É•ÏŠ·
+	chars	= chars_
+	nkfcnv@	chars, chars, "Sw"
+	return	chars
 #global
 
 #include "libgtk-3-0.as"

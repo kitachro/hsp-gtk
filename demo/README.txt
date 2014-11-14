@@ -1,6 +1,6 @@
-HSP3‚Å‘‚¢‚½ƒfƒ‚ƒvƒƒOƒ‰ƒ€“I‚ÈGTK+3ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Å‚·B
+HSP3ã§æ›¸ã„ãŸãƒ‡ãƒ¢ãƒ—ãƒ­ã‚°ãƒ©ãƒ çš„ãªGTK+3ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã§ã™ã€‚
 
-“®ìŠÂ‹«‚É‚Â‚¢‚Ä‚ÍA../tutorial/HSP3_GTK+3_ƒ`ƒ…[ƒgƒŠƒAƒ‹.txt
-‚ðŽQÆ‚µ‚Ä‚­‚¾‚³‚¢B
+å‹•ä½œç’°å¢ƒã«ã¤ã„ã¦ã¯ã€../tutorial/HSP3_GTK+3_ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«.txt
+ã‚’å‚ç…§ã—ã¦ãã ã•ã„ã€‚
 
-ƒ\[ƒXƒXƒNƒŠƒvƒg‚ÍMITƒ‰ƒCƒZƒ“ƒX‚Ì”ÍˆÍ“à‚ÅŽ©—R‚É—˜—p‚µ‚Ä‚­‚¾‚³‚¢B
+ã‚½ãƒ¼ã‚¹ã‚¹ã‚¯ãƒªãƒ—ãƒˆã¯MITãƒ©ã‚¤ã‚»ãƒ³ã‚¹ã®ç¯„å›²å†…ã§è‡ªç”±ã«åˆ©ç”¨ã—ã¦ãã ã•ã„ã€‚

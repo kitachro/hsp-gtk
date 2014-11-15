@@ -1187,7 +1187,7 @@
 ;#func global gtk_handle_box_set_shadow_type "" 
 ;#func global gtk_handle_box_set_snap_edge "" 
 ;#func global gtk_hbox_get_type "" 
-;#func global gtk_hbox_new "" 
+#func global gtk_hbox_new "gtk_hbox_new" int, int
 ;#func global gtk_hbutton_box_get_layout_default "" 
 ;#func global gtk_hbutton_box_get_spacing_default "" 
 ;#func global gtk_hbutton_box_get_type "" 
@@ -3880,15 +3880,6 @@
 #enum	GTK_POLICY_ALWAYS = 0
 #enum	GTK_POLICY_AUTOMATIC
 #enum	GTK_POLICY_NEVER
-
-;// GtkActionEntry
-;#const	COUNT_MEMBER_GTKACTIONENTRY		6	; HSP専用
-;#const	INDEX_MEMBER_GTKACTIONENTRY_NAME		0	; HSP専用
-;#const	INDEX_MEMBER_GTKACTIONENTRY_STOCKID		1	; HSP専用
-;#const	INDEX_MEMBER_GTKACTIONENTRY_LABEL		2	; HSP専用
-;#const	INDEX_MEMBER_GTKACTIONENTRY_ACCEL		3	; HSP専用
-;#const	INDEX_MEMBER_GTKACTIONENTRY_TOOLTIP		4	; HSP専用
-;#const	INDEX_MEMBER_GTKACTIONENTRY_CALLBACK	5	; HSP専用
 
 // GtkStockItem
 #define	GTK_STOCK_OPEN	"gtk-open"

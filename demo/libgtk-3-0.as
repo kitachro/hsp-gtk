@@ -2609,7 +2609,7 @@
 ;#func global gtk_submenu_direction_get_type "" 
 ;#func global gtk_submenu_placement_get_type "" 
 ;#func global gtk_table_attach "" 
-;#func global gtk_table_attach_defaults "" 
+#func global gtk_table_attach_defaults "gtk_table_attach_defaults" sptr, sptr, int, int, int, int
 ;#func global gtk_table_get_col_spacing "" 
 ;#func global gtk_table_get_default_col_spacing "" 
 ;#func global gtk_table_get_default_row_spacing "" 
@@ -2617,7 +2617,7 @@
 ;#func global gtk_table_get_row_spacing "" 
 ;#func global gtk_table_get_size "" 
 ;#func global gtk_table_get_type "" 
-;#func global gtk_table_new "" 
+#func global gtk_table_new "gtk_table_new" int, int, int
 ;#func global gtk_table_resize "" 
 ;#func global gtk_table_set_col_spacing "" 
 ;#func global gtk_table_set_col_spacings "" 

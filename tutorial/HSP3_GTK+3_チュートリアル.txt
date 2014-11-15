@@ -4,10 +4,10 @@
 : chrono (<https://github.com/kitachro>)
 
 バージョン:
-: 0.4.0
+: 0.5.0
 
 最終更新日:
-: 2014年11月13日
+: 2014年11月16日
 
 ライセンス（Copyright）:
 : GNU Free Documentation License 1.3 with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts

@@ -1525,23 +1525,23 @@
 ;#func global gtk_label_get_use_markup "" 
 ;#func global gtk_label_get_use_underline "" 
 ;#func global gtk_label_get_width_chars "" 
-;#func global gtk_label_new "" 
-;#func global gtk_label_new_with_mnemonic "" 
+#func global gtk_label_new "gtk_label_new" sptr
+#func global gtk_label_new_with_mnemonic "gtk_label_new_with_mnemonic" sptr
 ;#func global gtk_label_parse_uline "" 
 ;#func global gtk_label_select_region "" 
 ;#func global gtk_label_set_angle "" 
 ;#func global gtk_label_set_attributes "" 
 ;#func global gtk_label_set_ellipsize "" 
-;#func global gtk_label_set_justify "" 
+#func global gtk_label_set_justify "gtk_label_set_justify" sptr, int
 ;#func global gtk_label_set_label "" 
-;#func global gtk_label_set_line_wrap "" 
+#func global gtk_label_set_line_wrap "gtk_label_set_line_wrap" sptr, int
 ;#func global gtk_label_set_line_wrap_mode "" 
-;#func global gtk_label_set_markup "" 
+#func global gtk_label_set_markup "gtk_label_set_markup" sptr, sptr
 ;#func global gtk_label_set_markup_with_mnemonic "" 
 ;#func global gtk_label_set_max_width_chars "" 
-;#func global gtk_label_set_mnemonic_widget "" 
+#func global gtk_label_set_mnemonic_widget "gtk_label_set_mnemonic_widget" sptr, sptr
 ;#func global gtk_label_set_pattern "" 
-;#func global gtk_label_set_selectable "" 
+#func global gtk_label_set_selectable "gtk_label_set_selectable" sptr, int
 ;#func global gtk_label_set_single_line_mode "" 
 ;#func global gtk_label_set_text "" 
 ;#func global gtk_label_set_text_with_mnemonic "" 
@@ -3880,6 +3880,12 @@
 #enum	GTK_POLICY_ALWAYS = 0
 #enum	GTK_POLICY_AUTOMATIC
 #enum	GTK_POLICY_NEVER
+
+// GtkJustification
+#enum GTK_JUSTIFY_LEFT = 0
+#enum GTK_JUSTIFY_RIGHT
+#enum GTK_JUSTIFY_CENTER
+#enum GTK_JUSTIFY_FILL
 
 // GtkStockItem
 #define	GTK_STOCK_OPEN	"gtk-open"

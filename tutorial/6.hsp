@@ -12,8 +12,6 @@
 #include "hscallbk.as"
 #uselib ""
 #func cb_window_delete_event ""
-;#func cb_button1_clicked "" int, int
-;#func cb_button2_clicked "" int, int
 
 #uselib "libgtk-3-0.dll"
 #func global gtk_init "gtk_init" sptr, sptr

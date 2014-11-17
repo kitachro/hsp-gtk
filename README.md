@@ -12,4 +12,4 @@
 
 ## tutorialディレクトリについて
 
-　[The Python GTK+ 3 Tutorial](http://python-gtk-3-tutorial.readthedocs.org/en/latest/index.html)をベースに作成した、HSP3でGTK+3アプリケーションを書く方法を学ぶためのチュートリアルテキストを置いています。でんでんマークダウンで書かれています。
+　[The Python GTK+ 3 Tutorial](http://python-gtk-3-tutorial.readthedocs.org/en/latest/index.html)をベースに作成した、HSP3でGTK+3アプリケーションを書く方法を学ぶためのチュートリアルテキストを置いています。

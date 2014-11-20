@@ -55,6 +55,7 @@
 
 	gtk_init	0, 0
 
+	// set up window
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	gtk_window_set_title	win, "Entry Demo"
@@ -62,16 +63,20 @@
 	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
 	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), 0
 
+	// set up vbox
 	gtk_vbox_new	FALSE, 6
 	vbox	= stat
 
+	// set up entry
 	gtk_entry_new
 	ety	= stat
 	gtk_entry_set_text	ety, "Hello, World"
 
+	// set up hbox
 	gtk_hbox_new	FALSE, 6
 	hbox	= stat
 
+	// set up check buttons
 	gtk_check_button_new_with_label	"Editable"
 	cbtn1	= stat
 	gtk_toggle_button_set_active	cbtn1, TRUE
@@ -97,6 +102,7 @@
 	setcallbk	cbcbtn4toggled, cb_cbtn4_toggled, *on_cbtn4_toggled
 	g_signal_connect	cbtn4, "toggled", varptr( cbcbtn4toggled ), 0
 
+	// build up gui
 	gtk_box_pack_start	hbox, cbtn1, TRUE, TRUE, 0
 	gtk_box_pack_start	hbox, cbtn2, TRUE, TRUE, 0
 	gtk_box_pack_start	hbox, cbtn3, TRUE, TRUE, 0
@@ -105,6 +111,7 @@
 	gtk_box_pack_start	vbox, hbox, TRUE, TRUE, 0
 	gtk_container_add	win, vbox
 
+	// start app
 	gtk_widget_show_all	win
 	gtk_main
 	end

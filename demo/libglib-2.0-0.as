@@ -1092,7 +1092,7 @@
 ;#func global g_source_is_destroyed ""
 ;#func global g_source_new ""
 ;#func global g_source_ref ""
-;#func global g_source_remove ""
+#func global g_source_remove "g_source_remove" int
 ;#func global g_source_remove_by_funcs_user_data ""
 ;#func global g_source_remove_by_user_data ""
 ;#func global g_source_remove_child_source ""
@@ -1310,7 +1310,7 @@
 ;#func global g_time_zone_new_utc ""
 ;#func global g_time_zone_ref ""
 ;#func global g_time_zone_unref ""
-;#func global g_timeout_add ""
+#func global g_timeout_add "g_timeout_add" int, sptr, sptr
 ;#func global g_timeout_add_full ""
 ;#func global g_timeout_add_seconds ""
 ;#func global g_timeout_add_seconds_full ""

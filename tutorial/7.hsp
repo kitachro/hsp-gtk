@@ -1,0 +1,155 @@
+#const	FALSE	0
+#const	TRUE	1
+
+#include "hspinet.as"
+#module
+#defcfunc u str chars_	// shift-jis•¶Žš—ñ‚ðutf-8‚É•ÏŠ·
+	chars	= chars_
+	nkfcnv@	chars, chars, "Sw"
+	return	chars
+#global
+
+#include "hscallbk.as"
+#uselib ""
+#func cb_window_delete_event ""
+#func cb_cbtn1_toggled ""
+#func cb_cbtn2_toggled ""
+#func cb_cbtn3_toggled ""
+#func cb_cbtn4_toggled ""
+#func cb_do_pulse ""
+
+#uselib "libgtk-3-0.dll"
+#func global gtk_init "gtk_init" sptr, sptr
+#func global gtk_window_new "gtk_window_new" int
+#const	GTK_WINDOW_TOPLEVEL	0
+#func global gtk_window_set_title "gtk_window_set_title" sptr, sptr
+#func global gtk_container_add "gtk_container_add" sptr, sptr
+#func global gtk_widget_set_size_request "gtk_widget_set_size_request" sptr, int, int
+#func global gtk_widget_show_all "gtk_widget_show_all" sptr
+#func global gtk_main "gtk_main"
+#func global gtk_main_quit "gtk_main_quit"
+#func global gtk_vbox_new "gtk_vbox_new" int, int
+#func global gtk_hbox_new "gtk_hbox_new" int, int
+#func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
+#func global gtk_entry_new "gtk_entry_new" 
+#func global gtk_entry_set_text "gtk_entry_set_text" sptr, sptr
+#func global gtk_entry_set_visibility "gtk_entry_set_visibility" sptr, int
+#func global gtk_entry_set_icon_from_stock "gtk_entry_set_icon_from_stock" sptr, int, sptr
+#func global gtk_entry_set_progress_pulse_step "gtk_entry_set_progress_pulse_step" sptr, double
+#func global gtk_entry_progress_pulse "gtk_entry_progress_pulse" sptr
+#func global gtk_editable_set_editable "gtk_editable_set_editable" sptr, int
+#define	GTK_STOCK_FIND	"gtk-find"
+#enum GTK_ENTRY_ICON_PRIMARY = 0
+#enum GTK_ENTRY_ICON_SECONDARY
+#func global gtk_check_button_new_with_label "gtk_check_button_new_with_label" sptr
+#func global gtk_toggle_button_set_active "gtk_toggle_button_set_active" sptr, int
+#func global gtk_toggle_button_get_active "gtk_toggle_button_get_active" sptr
+
+#uselib "libgobject-2.0-0.dll"
+#define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+#func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+
+#uselib "libglib-2.0-0.dll"
+#func global g_timeout_add "g_timeout_add" int, sptr, sptr
+#func global g_source_remove "g_source_remove" int
+
+	gtk_init	0, 0
+
+	gtk_window_new	GTK_WINDOW_TOPLEVEL
+	win	= stat
+	gtk_window_set_title	win, "Entry Demo"
+	gtk_widget_set_size_request	win, 200, 100
+	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
+	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), 0
+
+	gtk_vbox_new	FALSE, 6
+	vbox	= stat
+
+	gtk_entry_new
+	ety	= stat
+	gtk_entry_set_text	ety, "Hello, World"
+
+	gtk_hbox_new	FALSE, 6
+	hbox	= stat
+
+	gtk_check_button_new_with_label	"Editable"
+	cbtn1	= stat
+	gtk_toggle_button_set_active	cbtn1, TRUE
+	setcallbk	cbcbtn1toggled, cb_cbtn1_toggled, *on_cbtn1_toggled
+	g_signal_connect	cbtn1, "toggled", varptr( cbcbtn1toggled ), 0
+
+	gtk_check_button_new_with_label	"Visible"
+	cbtn2	= stat
+	gtk_toggle_button_set_active	cbtn2, TRUE
+	setcallbk	cbcbtn2toggled, cb_cbtn2_toggled, *on_cbtn2_toggled
+	g_signal_connect	cbtn2, "toggled", varptr( cbcbtn2toggled ), 0
+
+	gtk_check_button_new_with_label	"Pulse"
+	cbtn3	= stat
+	gtk_toggle_button_set_active	cbtn3, FALSE
+	setcallbk	cbcbtn3toggled, cb_cbtn3_toggled, *on_cbtn3_toggled
+	g_signal_connect	cbtn3, "toggled", varptr( cbcbtn3toggled ), 0
+	setcallbk	cbdopulse, cb_do_pulse, *do_pulse
+
+	gtk_check_button_new_with_label	"Icon"
+	cbtn4	= stat
+	gtk_toggle_button_set_active	cbtn4, FALSE
+	setcallbk	cbcbtn4toggled, cb_cbtn4_toggled, *on_cbtn4_toggled
+	g_signal_connect	cbtn4, "toggled", varptr( cbcbtn4toggled ), 0
+
+	gtk_box_pack_start	hbox, cbtn1, TRUE, TRUE, 0
+	gtk_box_pack_start	hbox, cbtn2, TRUE, TRUE, 0
+	gtk_box_pack_start	hbox, cbtn3, TRUE, TRUE, 0
+	gtk_box_pack_start	hbox, cbtn4, TRUE, TRUE, 0
+	gtk_box_pack_start	vbox, ety, TRUE, TRUE, 0
+	gtk_box_pack_start	vbox, hbox, TRUE, TRUE, 0
+	gtk_container_add	win, vbox
+
+	gtk_widget_show_all	win
+	gtk_main
+	end
+
+*on_window_delete_event
+	gtk_main_quit
+	return
+
+*on_cbtn1_toggled
+	gtk_toggle_button_get_active	cbtn1
+	gtk_editable_set_editable	ety, stat
+	return
+
+*on_cbtn2_toggled
+	gtk_toggle_button_get_active	cbtn2
+	gtk_entry_set_visibility	ety, stat
+	return
+
+*on_cbtn3_toggled
+	gtk_toggle_button_get_active	cbtn3
+	active	= stat
+	if active {
+		gtk_entry_set_progress_pulse_step	ety, 0.2
+		g_timeout_add	100, varptr( cbdopulse ), 0
+		timeout_id	= stat
+	}
+	else {
+		g_source_remove	timeout_id
+		timeout_id	= 0
+		gtk_entry_set_progress_pulse_step	ety, 0
+	}
+	return
+
+*do_pulse
+	gtk_entry_progress_pulse	ety
+	return
+
+*on_cbtn4_toggled
+	gtk_toggle_button_get_active	cbtn4
+	active	= stat
+	if active {
+		stock_id	= GTK_STOCK_FIND
+	}
+	else {
+		stock_id	= ""
+	}
+	gtk_entry_set_icon_from_stock	ety, GTK_ENTRY_ICON_PRIMARY, stock_id
+	return

@@ -36,6 +36,7 @@
 #const	GTK_JUSTIFY_FILL	3
 #func global gtk_label_set_line_wrap "gtk_label_set_line_wrap" sptr, int
 #func global gtk_label_set_mnemonic_widget "gtk_label_set_mnemonic_widget" sptr, sptr
+
 #uselib "libgobject-2.0-0.dll"
 #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
 #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int

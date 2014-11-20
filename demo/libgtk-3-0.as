@@ -417,8 +417,8 @@
 ;#func global gtk_cell_view_set_displayed_row "" 
 ;#func global gtk_cell_view_set_model "" 
 ;#func global gtk_check_button_get_type "" 
-;#func global gtk_check_button_new "" 
-;#func global gtk_check_button_new_with_label "" 
+#func global gtk_check_button_new "gtk_check_button_new" 
+#func global gtk_check_button_new_with_label "gtk_check_button_new_with_label" sptr
 ;#func global gtk_check_button_new_with_mnemonic "" 
 ;#func global gtk_check_menu_item_get_active "" 
 ;#func global gtk_check_menu_item_get_draw_as_radio "" 
@@ -855,7 +855,7 @@
 ;#func global gtk_editable_insert_text "" 
 ;#func global gtk_editable_paste_clipboard "" 
 ;#func global gtk_editable_select_region "" 
-;#func global gtk_editable_set_editable "" 
+#func global gtk_editable_set_editable "gtk_editable_set_editable" sptr, int
 ;#func global gtk_editable_set_position "" 
 ;#func global gtk_entry_append_text "" 
 ;#func global gtk_entry_buffer_delete_text "" 
@@ -931,11 +931,11 @@
 ;#func global gtk_entry_icon_position_get_type "" 
 ;#func global gtk_entry_im_context_filter_keypress "" 
 ;#func global gtk_entry_layout_index_to_text_index "" 
-;#func global gtk_entry_new "" 
+#func global gtk_entry_new "gtk_entry_new" 
 ;#func global gtk_entry_new_with_buffer "" 
 ;#func global gtk_entry_new_with_max_length "" 
 ;#func global gtk_entry_prepend_text "" 
-;#func global gtk_entry_progress_pulse "" 
+#func global gtk_entry_progress_pulse "gtk_entry_progress_pulse" sptr
 ;#func global gtk_entry_reset_im_context "" 
 ;#func global gtk_entry_select_region "" 
 ;#func global gtk_entry_set_activates_default "" 
@@ -950,7 +950,7 @@
 ;#func global gtk_entry_set_icon_from_gicon "" 
 ;#func global gtk_entry_set_icon_from_icon_name "" 
 ;#func global gtk_entry_set_icon_from_pixbuf "" 
-;#func global gtk_entry_set_icon_from_stock "" 
+#func global gtk_entry_set_icon_from_stock "gtk_entry_set_icon_from_stock" sptr, int, sptr
 ;#func global gtk_entry_set_icon_sensitive "" 
 ;#func global gtk_entry_set_icon_tooltip_markup "" 
 ;#func global gtk_entry_set_icon_tooltip_text "" 
@@ -960,9 +960,9 @@
 ;#func global gtk_entry_set_overwrite_mode "" 
 ;#func global gtk_entry_set_position "" 
 ;#func global gtk_entry_set_progress_fraction "" 
-;#func global gtk_entry_set_progress_pulse_step "" 
-;#func global gtk_entry_set_text "" 
-;#func global gtk_entry_set_visibility "" 
+#func global gtk_entry_set_progress_pulse_step "gtk_entry_set_progress_pulse_step" sptr, double
+#func global gtk_entry_set_text "gtk_entry_set_text" sptr, sptr
+#func global gtk_entry_set_visibility "gtk_entry_set_visibility" sptr, int
 ;#func global gtk_entry_set_width_chars "" 
 ;#func global gtk_entry_text_index_to_layout_index "" 
 ;#func global gtk_entry_unset_invisible_char "" 
@@ -3022,7 +3022,7 @@
 ;#func global gtk_toggle_button_new "" 
 ;#func global gtk_toggle_button_new_with_label "" 
 ;#func global gtk_toggle_button_new_with_mnemonic "" 
-;#func global gtk_toggle_button_set_active "" 
+#func global gtk_toggle_button_set_active "gtk_toggle_button_set_active" sptr, int
 ;#func global gtk_toggle_button_set_inconsistent "" 
 ;#func global gtk_toggle_button_set_mode "" 
 ;#func global gtk_toggle_button_toggled "" 
@@ -3872,14 +3872,9 @@
 ;#func global gtk_window_unstick "" 
 ;#func global gtk_wrap_mode_get_type "" 
 
-// GtkWindowType
-#enum	GTK_WINDOW_TOPLEVEL = 0
-#enum	GTK_WINDOW_POPUP
-
-// GtkPolicyType
-#enum	GTK_POLICY_ALWAYS = 0
-#enum	GTK_POLICY_AUTOMATIC
-#enum	GTK_POLICY_NEVER
+// GtkEntryIconPosition
+#enum GTK_ENTRY_ICON_PRIMARY = 0
+#enum GTK_ENTRY_ICON_SECONDARY
 
 // GtkJustification
 #enum GTK_JUSTIFY_LEFT = 0
@@ -3887,7 +3882,17 @@
 #enum GTK_JUSTIFY_CENTER
 #enum GTK_JUSTIFY_FILL
 
+// GtkPolicyType
+#enum	GTK_POLICY_ALWAYS = 0
+#enum	GTK_POLICY_AUTOMATIC
+#enum	GTK_POLICY_NEVER
+
+// GtkWindowType
+#enum	GTK_WINDOW_TOPLEVEL = 0
+#enum	GTK_WINDOW_POPUP
+
 // GtkStockItem
+#define	GTK_STOCK_FIND	"gtk-find"
 #define	GTK_STOCK_OPEN	"gtk-open"
 #define	GTK_STOCK_QUIT	"gtk-quit"
 

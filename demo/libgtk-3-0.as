@@ -770,10 +770,10 @@
 ;#func global gtk_dialog_get_response_for_widget "" 
 ;#func global gtk_dialog_get_type "" 
 ;#func global gtk_dialog_get_widget_for_response "" 
-;#func global gtk_dialog_new "" 
+#func global gtk_dialog_new "gtk_dialog_new"
 ;#func global gtk_dialog_new_with_buttons "" 
 ;#func global gtk_dialog_response "" 
-;#func global gtk_dialog_run "" 
+#func global gtk_dialog_run "gtk_dialog_run" sptr
 ;#func global gtk_dialog_set_alternative_button_order "" 
 ;#func global gtk_dialog_set_alternative_button_order_from_array "" 
 ;#func global gtk_dialog_set_default_response "" 
@@ -1010,7 +1010,7 @@
 ;#func global gtk_file_chooser_button_set_width_chars "" 
 ;#func global gtk_file_chooser_confirmation_get_type "" 
 ;#func global gtk_file_chooser_dialog_get_type "" 
-;#func global gtk_file_chooser_dialog_new "" 
+;#func global gtk_file_chooser_dialog_new "gtk_file_chooser_dialog_new" str, sptr, int, (captions and response ids)
 ;#func global gtk_file_chooser_dialog_new_with_backend "" 
 ;#func global gtk_file_chooser_error_get_type "" 
 ;#func global gtk_file_chooser_error_quark "" 
@@ -1023,7 +1023,7 @@
 ;#func global gtk_file_chooser_get_do_overwrite_confirmation "" 
 ;#func global gtk_file_chooser_get_extra_widget "" 
 ;#func global gtk_file_chooser_get_file "" 
-;#func global gtk_file_chooser_get_filename "" 
+#func global gtk_file_chooser_get_filename "gtk_file_chooser_get_filename" sptr
 ;#func global gtk_file_chooser_get_filename_utf8 "" 
 ;#func global gtk_file_chooser_get_filenames "" 
 ;#func global gtk_file_chooser_get_filenames_utf8 "" 
@@ -1418,7 +1418,7 @@
 ;#func global gtk_image_menu_item_set_always_show_image "" 
 ;#func global gtk_image_menu_item_set_image "" 
 ;#func global gtk_image_menu_item_set_use_stock "" 
-;#func global gtk_image_new "" 
+#func global gtk_image_new "gtk_image_new"
 ;#func global gtk_image_new_from_animation "" 
 #func global gtk_image_new_from_file "gtk_image_new_from_file" str
 ;#func global gtk_image_new_from_file_utf8 "" 
@@ -1431,7 +1431,7 @@
 ;#func global gtk_image_new_from_stock "" 
 ;#func global gtk_image_set "" 
 ;#func global gtk_image_set_from_animation "" 
-;#func global gtk_image_set_from_file "" 
+#func global gtk_image_set_from_file "gtk_image_set_from_file" sptr, sptr
 ;#func global gtk_image_set_from_file_utf8 "" 
 ;#func global gtk_image_set_from_gicon "" 
 ;#func global gtk_image_set_from_icon_name "" 
@@ -3872,9 +3872,122 @@
 ;#func global gtk_window_unstick "" 
 ;#func global gtk_wrap_mode_get_type "" 
 
+// GtkStockItem
+#define GTK_STOCK_ABOUT            "gtk-about"
+#define GTK_STOCK_ADD              "gtk-add"
+#define GTK_STOCK_APPLY            "gtk-apply"
+#define GTK_STOCK_BOLD             "gtk-bold"
+#define GTK_STOCK_CANCEL           "gtk-cancel"
+#define GTK_STOCK_CAPS_LOCK_WARNING "gtk-caps-lock-warning"
+#define GTK_STOCK_CDROM            "gtk-cdrom"
+#define GTK_STOCK_CLEAR            "gtk-clear"
+#define GTK_STOCK_CLOSE            "gtk-close"
+#define GTK_STOCK_COLOR_PICKER     "gtk-color-picker"
+#define GTK_STOCK_CONNECT          "gtk-connect"
+#define GTK_STOCK_CONVERT          "gtk-convert"
+#define GTK_STOCK_COPY             "gtk-copy"
+#define GTK_STOCK_CUT              "gtk-cut"
+#define GTK_STOCK_DELETE           "gtk-delete"
+#define GTK_STOCK_DIALOG_AUTHENTICATION "gtk-dialog-authentication"
+#define GTK_STOCK_DIALOG_INFO      "gtk-dialog-info"
+#define GTK_STOCK_DIALOG_WARNING   "gtk-dialog-warning"
+#define GTK_STOCK_DIALOG_ERROR     "gtk-dialog-error"
+#define GTK_STOCK_DIALOG_QUESTION  "gtk-dialog-question"
+#define GTK_STOCK_DIRECTORY        "gtk-directory"
+#define GTK_STOCK_DISCARD          "gtk-discard"
+#define GTK_STOCK_DISCONNECT       "gtk-disconnect"
+#define GTK_STOCK_DND              "gtk-dnd"
+#define GTK_STOCK_DND_MULTIPLE     "gtk-dnd-multiple"
+#define GTK_STOCK_EDIT             "gtk-edit"
+#define GTK_STOCK_EXECUTE          "gtk-execute"
+#define GTK_STOCK_FILE             "gtk-file"
+#define GTK_STOCK_FIND             "gtk-find"
+#define GTK_STOCK_FIND_AND_REPLACE "gtk-find-and-replace"
+#define GTK_STOCK_FLOPPY           "gtk-floppy"
+#define GTK_STOCK_FULLSCREEN       "gtk-fullscreen"
+#define GTK_STOCK_GOTO_BOTTOM      "gtk-goto-bottom"
+#define GTK_STOCK_GOTO_FIRST       "gtk-goto-first"
+#define GTK_STOCK_GOTO_LAST        "gtk-goto-last"
+#define GTK_STOCK_GOTO_TOP         "gtk-goto-top"
+#define GTK_STOCK_GO_BACK          "gtk-go-back"
+#define GTK_STOCK_GO_DOWN          "gtk-go-down"
+#define GTK_STOCK_GO_FORWARD       "gtk-go-forward"
+#define GTK_STOCK_GO_UP            "gtk-go-up"
+#define GTK_STOCK_HARDDISK         "gtk-harddisk"
+#define GTK_STOCK_HELP             "gtk-help"
+#define GTK_STOCK_HOME             "gtk-home"
+#define GTK_STOCK_INDEX            "gtk-index"
+#define GTK_STOCK_INDENT           "gtk-indent"
+#define GTK_STOCK_INFO             "gtk-info"
+#define GTK_STOCK_ITALIC           "gtk-italic"
+#define GTK_STOCK_JUMP_TO          "gtk-jump-to"
+#define GTK_STOCK_JUSTIFY_CENTER   "gtk-justify-center"
+#define GTK_STOCK_JUSTIFY_FILL     "gtk-justify-fill"
+#define GTK_STOCK_JUSTIFY_LEFT     "gtk-justify-left"
+#define GTK_STOCK_JUSTIFY_RIGHT    "gtk-justify-right"
+#define GTK_STOCK_LEAVE_FULLSCREEN "gtk-leave-fullscreen"
+#define GTK_STOCK_MISSING_IMAGE    "gtk-missing-image"
+#define GTK_STOCK_MEDIA_FORWARD    "gtk-media-forward"
+#define GTK_STOCK_MEDIA_NEXT       "gtk-media-next"
+#define GTK_STOCK_MEDIA_PAUSE      "gtk-media-pause"
+#define GTK_STOCK_MEDIA_PLAY       "gtk-media-play"
+#define GTK_STOCK_MEDIA_PREVIOUS   "gtk-media-previous"
+#define GTK_STOCK_MEDIA_RECORD     "gtk-media-record"
+#define GTK_STOCK_MEDIA_REWIND     "gtk-media-rewind"
+#define GTK_STOCK_MEDIA_STOP       "gtk-media-stop"
+#define GTK_STOCK_NETWORK          "gtk-network"
+#define GTK_STOCK_NEW              "gtk-new"
+#define GTK_STOCK_NO               "gtk-no"
+#define GTK_STOCK_OK               "gtk-ok"
+#define GTK_STOCK_OPEN             "gtk-open"
+#define GTK_STOCK_ORIENTATION_PORTRAIT "gtk-orientation-portrait"
+#define GTK_STOCK_ORIENTATION_LANDSCAPE "gtk-orientation-landscape"
+#define GTK_STOCK_ORIENTATION_REVERSE_LANDSCAPE "gtk-orientation-reverse-landscape"
+#define GTK_STOCK_ORIENTATION_REVERSE_PORTRAIT "gtk-orientation-reverse-portrait"
+#define GTK_STOCK_PAGE_SETUP       "gtk-page-setup"
+#define GTK_STOCK_PASTE            "gtk-paste"
+#define GTK_STOCK_PREFERENCES      "gtk-preferences"
+#define GTK_STOCK_PRINT            "gtk-print"
+#define GTK_STOCK_PRINT_ERROR      "gtk-print-error"
+#define GTK_STOCK_PRINT_PAUSED     "gtk-print-paused"
+#define GTK_STOCK_PRINT_PREVIEW    "gtk-print-preview"
+#define GTK_STOCK_PRINT_REPORT     "gtk-print-report"
+#define GTK_STOCK_PRINT_WARNING    "gtk-print-warning"
+#define GTK_STOCK_PROPERTIES       "gtk-properties"
+#define GTK_STOCK_QUIT             "gtk-quit"
+#define GTK_STOCK_REDO             "gtk-redo"
+#define GTK_STOCK_REFRESH          "gtk-refresh"
+#define GTK_STOCK_REMOVE           "gtk-remove"
+#define GTK_STOCK_REVERT_TO_SAVED  "gtk-revert-to-saved"
+#define GTK_STOCK_SAVE             "gtk-save"
+#define GTK_STOCK_SAVE_AS          "gtk-save-as"
+#define GTK_STOCK_SELECT_ALL       "gtk-select-all"
+#define GTK_STOCK_SELECT_COLOR     "gtk-select-color"
+#define GTK_STOCK_SELECT_FONT      "gtk-select-font"
+#define GTK_STOCK_SORT_ASCENDING   "gtk-sort-ascending"
+#define GTK_STOCK_SORT_DESCENDING  "gtk-sort-descending"
+#define GTK_STOCK_SPELL_CHECK      "gtk-spell-check"
+#define GTK_STOCK_STOP             "gtk-stop"
+#define GTK_STOCK_STRIKETHROUGH    "gtk-strikethrough"
+#define GTK_STOCK_UNDELETE         "gtk-undelete"
+#define GTK_STOCK_UNDERLINE        "gtk-underline"
+#define GTK_STOCK_UNDO             "gtk-undo"
+#define GTK_STOCK_UNINDENT         "gtk-unindent"
+#define GTK_STOCK_YES              "gtk-yes"
+#define GTK_STOCK_ZOOM_100         "gtk-zoom-100"
+#define GTK_STOCK_ZOOM_FIT         "gtk-zoom-fit"
+#define GTK_STOCK_ZOOM_IN          "gtk-zoom-in"
+#define GTK_STOCK_ZOOM_OUT         "gtk-zoom-out"
+
 // GtkEntryIconPosition
 #enum GTK_ENTRY_ICON_PRIMARY = 0
 #enum GTK_ENTRY_ICON_SECONDARY
+
+// GtkFileChooserAction
+#enum GTK_FILE_CHOOSER_ACTION_OPEN = 0
+#enum GTK_FILE_CHOOSER_ACTION_SAVE
+#enum GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER
+#enum GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER
 
 // GtkJustification
 #enum GTK_JUSTIFY_LEFT = 0
@@ -3887,14 +4000,22 @@
 #enum	GTK_POLICY_AUTOMATIC
 #enum	GTK_POLICY_NEVER
 
+// GtkResponseType
+#const GTK_RESPONSE_NONE         -1
+#const GTK_RESPONSE_REJECT       -2
+#const GTK_RESPONSE_ACCEPT       -3
+#const GTK_RESPONSE_DELETE_EVENT -4
+#const GTK_RESPONSE_OK           -5
+#const GTK_RESPONSE_CANCEL       -6
+#const GTK_RESPONSE_CLOSE        -7
+#const GTK_RESPONSE_YES          -8
+#const GTK_RESPONSE_NO           -9
+#const GTK_RESPONSE_APPLY        -10
+#const GTK_RESPONSE_HELP         -11
+
 // GtkWindowType
 #enum	GTK_WINDOW_TOPLEVEL = 0
 #enum	GTK_WINDOW_POPUP
-
-// GtkStockItem
-#define	GTK_STOCK_FIND	"gtk-find"
-#define	GTK_STOCK_OPEN	"gtk-open"
-#define	GTK_STOCK_QUIT	"gtk-quit"
 
 
 #endif

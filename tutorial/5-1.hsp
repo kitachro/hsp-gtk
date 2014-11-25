@@ -1,3 +1,6 @@
+#const	FALSE	0
+#const	TRUE	1
+
 #include "hscallbk.as"
 #uselib ""
 #func cb_window_delete_event ""
@@ -15,8 +18,6 @@
 #func global gtk_container_add "gtk_container_add" sptr, sptr
 #func global gtk_hbox_new "gtk_hbox_new" int, int
 #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
-#const	FALSE	0
-#const	TRUE	1
 #uselib "libgobject-2.0-0.dll"
 #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
 #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int

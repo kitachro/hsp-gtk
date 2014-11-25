@@ -313,7 +313,7 @@
 ;#func global gtk_button_get_use_underline "" 
 ;#func global gtk_button_leave "" 
 ;#func global gtk_button_new "" 
-;#func global gtk_button_new_from_stock "" 
+#func global gtk_button_new_from_stock "gtk_button_new_from_stock" sptr
 #func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
 #func global gtk_button_new_with_mnemonic "gtk_button_new_with_mnemonic" sptr 
 ;#func global gtk_button_pressed "" 
@@ -662,7 +662,7 @@
 ;#func global gtk_container_propagate_expose "" 
 ;#func global gtk_container_remove "" 
 ;#func global gtk_container_resize_children "" 
-;#func global gtk_container_set_border_width "" 
+#func global gtk_container_set_border_width "gtk_container_set_border_width" sptr, int
 ;#func global gtk_container_set_focus_chain "" 
 ;#func global gtk_container_set_focus_child "" 
 ;#func global gtk_container_set_focus_hadjustment "" 

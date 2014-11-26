@@ -3,7 +3,7 @@
 
 #include "hspinet.as"
 #module
-#defcfunc u str chars_	// shift-jis•¶Žš—ñ‚ðutf-8‚É•ÏŠ·
+#defcfunc u str chars_ // shift-jis•¶Žš—ñ‚ðutf-8‚É•ÏŠ·
 	chars	= chars_
 	nkfcnv@	chars, chars, "Sw"
 	return	chars

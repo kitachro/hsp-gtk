@@ -4,7 +4,7 @@
 : chrono (<https://github.com/kitachro>)
 
 バージョン:
-: 0.5.5
+: 0.5.6
 
 最終更新日:
 : 2014年11月27日
@@ -752,6 +752,196 @@
 ====================
 # 7. エントリ（Entry）
 
+　エントリウィジェットは、プログラムのユーザに短めの文字列を入力してもらうためのウィジェットです。
+
+　プログラムからエントリ内の文字列を変更したり、エントリ内の文字列を取得したりするには、それぞれ、gtk_entry_set_text関数、gtk_entry_get_text関数を実行します。
+
+　gtk_entry_set_max_length関数を用いると、エントリに入力できる文字数をコントロールできます。
+
+　用途によっては、エントリ内の文字列を編集できないようにしたい時もあるでしょう。そのような場合には、引数に0を渡してgtk_entry_set_editable関数を実行してください。
+
+　エントリウィジェットは、プログラムのユーザからパスワードのようなものを受け取るためにも使えます。パスワードなどを入力させるインターフェースでは、第三者に盗み見られないように、伏せ字にするのが普通ですが、gtk_entry_set_visibility関数によって、そのようなモードのオン・オフを切り替えることができます。引数に0を渡すと、伏せ字になります。
+
+　また、他にも変わったモードを持っています。gtk_entry_set_progress_fraction、gtk_entry_set_progress_pulse_step、gtk_entry_progress_pulseなどの関数を使うと、エントリ内の文字列の背後に、何らかの作業の進行度や作業が進行中であることを表すアニメーションを表示させて、プログレスバー（ProgressBar）のように振る舞わせることもできます。
+
+　さらに、ウィジェットの役割などをわかりやすくするために、ウィジェット内にアイコンを表示する機能もあります。
+
+　このアイコンは、クリックされたことを検知したり、ドラッグ可能にしたり、ツールチップを設定したりすることができます。
+
+　アイコンをウィジェット内に表示するには、例えば、gtk_entry_set_icon_from_stock関数を実行します。この関数は、アイコンのソースとしてストックアイテム（Stock Item）名を指定しますが、他にも、ファイル、pixbuf形式データ、アイコンテーマをソースとして指定できる関数が用意されています。
+
+　アイコンにツールチップを設定するには、gtk_entry_set_icon_tooltip_text関数を使ってください。マークアップされた文字列を表示するために、gtk_entry_set_icon_tooltip_markup関数を使うこともできます。
+
+　次のページからは、例によって、サンプルプログラムのスクリプトとその解説です。
+
+====================
+## 7.1. サンプルプログラムの全体
+
+********************
+    #const FALSE 0
+    #const TRUE 1
+    
+    #include "hspinet.as"
+    #module
+    #defcfunc u str chars_ // shift-jis文字列をutf-8に変換
+    	chars = chars_
+    	nkfcnv@ chars, chars, "Sw"
+    	return chars
+    #global
+    
+    #include "hscallbk.as"
+    #uselib ""
+    #func cb_window_delete_event ""
+    #func cb_cbtn1_toggled ""
+    #func cb_cbtn2_toggled ""
+    #func cb_cbtn3_toggled ""
+    #func cb_cbtn4_toggled ""
+    #func cb_do_pulse ""
+    
+    #uselib "libgtk-3-0.dll"
+    #func global gtk_init "gtk_init" sptr, sptr
+    #func global gtk_window_new "gtk_window_new" int
+    #const GTK_WINDOW_TOPLEVEL 0
+    #func global gtk_window_set_title "gtk_window_set_title" sptr, sptr
+    #func global gtk_container_add "gtk_container_add" sptr, sptr
+    #func global gtk_widget_set_size_request "gtk_widget_set_size_request" sptr, int, int
+    #func global gtk_widget_show_all "gtk_widget_show_all" sptr
+    #func global gtk_main "gtk_main"
+    #func global gtk_main_quit "gtk_main_quit"
+    #func global gtk_vbox_new "gtk_vbox_new" int, int
+    #func global gtk_hbox_new "gtk_hbox_new" int, int
+    #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
+    #func global gtk_entry_new "gtk_entry_new" 
+    #func global gtk_entry_set_text "gtk_entry_set_text" sptr, sptr
+    #func global gtk_entry_set_visibility "gtk_entry_set_visibility" sptr, int
+    #func global gtk_entry_set_icon_from_stock "gtk_entry_set_icon_from_stock" sptr, int, sptr
+    #func global gtk_entry_set_progress_pulse_step "gtk_entry_set_progress_pulse_step" sptr, double
+    #func global gtk_entry_progress_pulse "gtk_entry_progress_pulse" sptr
+    #func global gtk_editable_set_editable "gtk_editable_set_editable" sptr, int
+    #define GTK_STOCK_FIND "gtk-find"
+    #enum GTK_ENTRY_ICON_PRIMARY = 0
+    #enum GTK_ENTRY_ICON_SECONDARY
+    #func global gtk_check_button_new_with_label "gtk_check_button_new_with_label" sptr
+    #func global gtk_toggle_button_set_active "gtk_toggle_button_set_active" sptr, int
+    #func global gtk_toggle_button_get_active "gtk_toggle_button_get_active" sptr
+    
+    #uselib "libgobject-2.0-0.dll"
+    #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+    #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+    
+    #uselib "libglib-2.0-0.dll"
+    #func global g_timeout_add "g_timeout_add" int, sptr, sptr
+    #func global g_source_remove "g_source_remove" int
+    
+    	gtk_init 0, 0
+    
+    	// set up window
+    	gtk_window_new GTK_WINDOW_TOPLEVEL
+    	win = stat
+    	gtk_window_set_title win, "Entry Demo"
+    	gtk_widget_set_size_request win, 200, 100
+    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
+    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), 0
+    
+    	// set up vbox
+    	gtk_vbox_new FALSE, 6
+    	vbox = stat
+    
+    	// set up entry
+    	gtk_entry_new
+    	ety = stat
+    	gtk_entry_set_text ety, "Hello, World"
+    
+    	// set up hbox
+    	gtk_hbox_new FALSE, 6
+    	hbox = stat
+    
+    	// set up check buttons
+    	gtk_check_button_new_with_label "Editable"
+    	cbtn1 = stat
+    	gtk_toggle_button_set_active cbtn1, TRUE
+    	setcallbk cbcbtn1toggled, cb_cbtn1_toggled, *on_cbtn1_toggled
+    	g_signal_connect cbtn1, "toggled", varptr( cbcbtn1toggled ), 0
+    
+    	gtk_check_button_new_with_label "Visible"
+    	cbtn2 = stat
+    	gtk_toggle_button_set_active cbtn2, TRUE
+    	setcallbk cbcbtn2toggled, cb_cbtn2_toggled, *on_cbtn2_toggled
+    	g_signal_connect cbtn2, "toggled", varptr( cbcbtn2toggled ), 0
+    
+    	gtk_check_button_new_with_label "Pulse"
+    	cbtn3 = stat
+    	gtk_toggle_button_set_active cbtn3, FALSE
+    	setcallbk cbcbtn3toggled, cb_cbtn3_toggled, *on_cbtn3_toggled
+    	g_signal_connect cbtn3, "toggled", varptr( cbcbtn3toggled ), 0
+    	setcallbk cbdopulse, cb_do_pulse, *do_pulse
+    
+    	gtk_check_button_new_with_label "Icon"
+    	cbtn4 = stat
+    	gtk_toggle_button_set_active cbtn4, FALSE
+    	setcallbk cbcbtn4toggled, cb_cbtn4_toggled, *on_cbtn4_toggled
+    	g_signal_connect cbtn4, "toggled", varptr( cbcbtn4toggled ), 0
+    
+    	// build up gui
+    	gtk_box_pack_start hbox, cbtn1, TRUE, TRUE, 0
+    	gtk_box_pack_start hbox, cbtn2, TRUE, TRUE, 0
+    	gtk_box_pack_start hbox, cbtn3, TRUE, TRUE, 0
+    	gtk_box_pack_start hbox, cbtn4, TRUE, TRUE, 0
+    	gtk_box_pack_start vbox, ety, TRUE, TRUE, 0
+    	gtk_box_pack_start vbox, hbox, TRUE, TRUE, 0
+    	gtk_container_add win, vbox
+    
+    	// start app
+    	gtk_widget_show_all win
+    	gtk_main
+    	end
+    
+    *on_window_delete_event
+    	gtk_main_quit
+    	return
+    
+    *on_cbtn1_toggled
+    	gtk_toggle_button_get_active cbtn1
+    	gtk_editable_set_editable ety, stat
+    	return
+    
+    *on_cbtn2_toggled
+    	gtk_toggle_button_get_active cbtn2
+    	gtk_entry_set_visibility ety, stat
+    	return
+    
+    *on_cbtn3_toggled
+    	gtk_toggle_button_get_active cbtn3
+    	active = stat
+    	if active {
+    		gtk_entry_set_progress_pulse_step ety, 0.2
+    		g_timeout_add 100, varptr( cbdopulse ), 0
+    		timeout_id = stat
+    	}
+    	else {
+    		g_source_remove timeout_id
+    		timeout_id = 0
+    		gtk_entry_set_progress_pulse_step ety, 0
+    	}
+    	return
+    
+    *do_pulse
+    	gtk_entry_progress_pulse ety
+    	return
+    
+    *on_cbtn4_toggled
+    	gtk_toggle_button_get_active cbtn4
+    	active = stat
+    	if active {
+    		stock_id = GTK_STOCK_FIND
+    	}
+    	else {
+    		stock_id = ""
+    	}
+    	gtk_entry_set_icon_from_stock ety, GTK_ENTRY_ICON_PRIMARY, stock_id
+    	return
+********************
+
 ====================
 # 8. ボタン系ウィジェット
 
@@ -932,70 +1122,3 @@
 ====================
 # 22. ストックアイテム（StockItem）
 
-
-
-====================
-目次
-
-# 1. 開発環境の準備
-## 1.1. GTK+3の入手とインストール
-## 1.2. コールバック関数実装プラグインの入手
-# 2. GTK+の基礎
-## 2.1. ウィジェットのプロパティ
-### 2.1.1. ウィジェットのプロパティを設定する
-### 2.1.2. ウィジェットのプロパティを取得する
-### 2.1.3. ウィジェットの生成時にプロパティを設定する
-## 2.2. メインループとシグナル
-### 2.2.1. GTK+アプリケーションの基本構造
-### 2.2.2. シグナルとコールバック関数を関連付けする
-### 2.2.3. シグナルとコールバック関数の関連付けを削除する
-### 2.2.4. シグナルとコールバック関数の使用例
-# 3. はじめの一歩
-## 3.1. 最もシンプルなGTK+3プログラム
-### 3.1.1. サンプルプログラムの全体
-### 3.1.2. コールバック関数を使うための準備
-### 3.1.3. GTK+3の関数を使うための準備
-### 3.1.4. GTK+の初期化
-### 3.1.5. ウィンドウの生成
-### 3.1.6. ウィンドウのシグナルとコールバック関数を関連付ける
-### 3.1.7. ウィンドウを画面に表示する
-### 3.1.8. メインループの開始
-### 3.1.9. コールバック関数（シグナルハンドラ）の定義
-## 3.2. ウィンドウにウィジェットを1つ配置する
-### 3.2.1. サンプルプログラムの全体
-### 3.2.2. コメントアウト部分
-### 3.2.3. コールバック関数を介したデータの受け渡し
-### 3.2.4. ウィンドウへのウィジェットの追加
-# 4. HSPからGTK+を利用する際の、文字コードに関する注意点
-## 4.1 GTK+とやりとりする文字列の文字コードについて
-## 4.2 HSPスクリプトの保存文字コードについて
-## 4.3 HSPプログラム内での対処方法
-# 5. レイアウトコンテナ
-## 5.1. ボックス（HBoxおよびVBox）
-## 5.2. テーブル（Table）
-# 6. ラベル（Label）
-## 6.1. サンプルプログラムの全体
-# 7. エントリ（Entry）
-# 8. ボタン系ウィジェット
-## 8.1. ボタン（Button）
-### 8.1.1. サンプルプログラムの全体
-## 8.2. トグルボタン（Toggle Button）
-## 8.3. チェックボタン（Check Button）
-## 8.4. ラジオボタン（Radio Button）
-## 8.5. リンクボタン（Link Button）
-## 8.6. スピンボタン（Spin Button）
-## 8.7. スイッチ（Switch）
-# 9. プログレスバー（ProgressBar）
-# 10. スピナー（Spinner）
-# 11. ツリービューとリストビュー（TreeView）
-# 12. セルレンダラ（CellRenderer）
-# 13. コンボボックス（ComboBox）
-# 14. アイコンビュー（IconView）
-# 15. テキストエディタ（TextView）
-# 16. メニュー（Menu）
-# 17. ダイアログ（Dialog）
-# 18. クリップボード（Clipboard）
-# 19. ドラッグアンドドロップ
-# 20. GladeインターフェースデザイナーとGtkBuilderクラス
-# 21. オブジェクト
-# 22. ストックアイテム（StockItem）

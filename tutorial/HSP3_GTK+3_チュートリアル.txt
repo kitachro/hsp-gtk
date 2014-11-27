@@ -4,7 +4,7 @@
 : chrono (<https://github.com/kitachro>)
 
 バージョン:
-: 0.5.4
+: 0.5.5
 
 最終更新日:
 : 2014年11月27日
@@ -168,7 +168,7 @@
 　まずは、できる限り短いGTK+3プログラムのスクリプトを示します。このスクリプトを実行すると、縦横200ピクセルの大きさの空のウィンドウが表示されます。ウィンドウを閉じると、プログラムは終了します。
 
 ====================
-### 3.1.1. プログラムの全体
+### 3.1.1. サンプルプログラムの全体
 
 ********************
     #include "hscallbk.as"
@@ -308,7 +308,7 @@
 　つづいて、もう1つ、トップレベルウィンドウにウィジェットを1つ置いてそれを動作させるプログラムを挙げます。
 
 ====================
-### 3.2.1. プログラムの全体
+### 3.2.1. サンプルプログラムの全体
 
 ********************
     #include "hscallbk.as"
@@ -483,7 +483,7 @@
 　次のページから、サンプルプログラムを挙げて、各部分について説明します。
 
 ====================
-### 5.1.1. プログラムの全体
+### 5.1.1. サンプルプログラムの全体
 
 ********************
     #const FALSE 0
@@ -578,6 +578,177 @@
 ====================
 # 6. ラベル（Label）
 
+　ラベルは、GTK+のウィンドウ内に編集の必要がない文字列を配置する第一の手段です。例えば、エントリ（Entry）ウィジェットのとなりに名前を表示するのに使います。
+
+　文字列は、生成時に設定することもできますし、後で、gtk_label_set_text関数やgtk_label_set_markup関数を使って設定することもできます。
+
+　ラベルウィジェットのサイズは、表示する文字列の長さやフォントの設定によって、自動で調整されます。改行（\n）を含む複数行からなる文字列を表示することもできます。
+
+　gtk_label_set_selectable関数を使うと、プログラムのユーザが、文字列を選択したり、選択した文字列をクリップボードにコピーしたりできるようになります。gtk_label_set_selectable関数は、そういったことが必要になる場合にのみ使うようにしてください。例えば、エラーメッセージを表示する場合です。その方が、プログラムが使いやすくなります。
+
+　文字列の行表示の、左寄せ・右寄せ・中央寄せ・両側寄せの設定や、折り返しのオン・オフを変更するには、それぞれ、gtk_label_set_justify関数、gtk_label_set_line_wrap関数を実行します。
+
+　ラベルウィジェットは、文字列の簡単な装飾もサポートしています。1つのラベルの中で、一部の文字を太字にしたり、一部の文字の色やサイズを変えたりといったことができます。
+
+　例えば、`<b>bold text</b> and <s>strikethrough text</s>`のように、[Pango Markupフォーマット](http://developer.gnome.org/pango/stable/PangoMarkupFormat.html)に従って記述した文字列を、gtk_label_set_markup関数に渡してください。
+
+　また、ラベル文字列には、ニーモニックが設定できます。ニーモニックとは、ウィジェットにキーボードショートカットを実装する仕組みの1つで、プログラム上では、アンダーライン付きの文字列として表示されます。Windowsでは、[Alt+(アルファベット)]キーで実行するアレです。
+
+　ニーモニックを設定するには、例えば"_File"のように、文字列中の対象キーのアルファベットの前にアンダースコア（_）を付加した上で、gtk_label_new_with_mnemonic関数、もしくはgtk_label_set_text_with_mnemonic関数によってラベル文字列を設定してください。
+
+　ニーモニックによるキー操作の動作対象は、基本的に、ニーモニックを設定したラベルを載せたウィジェットです。例えば、ボタンのラベルに設定した場合は、そのボタンです。
+
+　ただし、gtk_label_set_mnemonic_widget関数を使うことで、動作対象を他のウィジェットに変更することもできます。
+
+　次のページから、サンプルプログラムのスクリプトを挙げて、それについて説明します。
+
+====================
+## 6.1. サンプルプログラムの全体
+
+********************
+    #const FALSE 0
+    #const TRUE 1
+    
+    #include "hspinet.as"
+    #module
+    #defcfunc u str chars_ // shift-jis文字列をutf-8に変換
+    	chars = chars_
+    	nkfcnv@ chars, chars, "Sw"
+    	return chars
+    #global
+    
+    #include "hscallbk.as"
+    #uselib ""
+    #func cb_window_delete_event ""
+    
+    #uselib "libgtk-3-0.dll"
+    #func global gtk_init "gtk_init" sptr, sptr
+    #func global gtk_window_new "gtk_window_new" int
+    #const GTK_WINDOW_TOPLEVEL 0
+    #func global gtk_container_add "gtk_container_add" sptr, sptr
+    #func global gtk_widget_show_all "gtk_widget_show_all" sptr
+    #func global gtk_main "gtk_main"
+    #func global gtk_main_quit "gtk_main_quit"
+    #func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
+    #func global gtk_hbox_new "gtk_hbox_new" int, int
+    #func global gtk_vbox_new "gtk_vbox_new" int, int
+    #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
+    #func global gtk_label_new "gtk_label_new" sptr
+    #func global gtk_label_new_with_mnemonic "gtk_label_new_with_mnemonic" sptr
+    #func global gtk_label_set_justify "gtk_label_set_justify" sptr, int
+    #func global gtk_label_set_selectable "gtk_label_set_selectable" sptr, int
+    #func global gtk_label_set_markup "gtk_label_set_markup" sptr, sptr
+    #const GTK_JUSTIFY_LEFT 0
+    #const GTK_JUSTIFY_RIGHT 1
+    #const GTK_JUSTIFY_CENTER 2
+    #const GTK_JUSTIFY_FILL 3
+    #func global gtk_label_set_line_wrap "gtk_label_set_line_wrap" sptr, int
+    #func global gtk_label_set_mnemonic_widget "gtk_label_set_mnemonic_widget" sptr, sptr
+    
+    #uselib "libgobject-2.0-0.dll"
+    #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+    #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+    
+    	gtk_init 0, 0
+    
+    	gtk_window_new GTK_WINDOW_TOPLEVEL
+    	win = stat
+    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
+    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), 0
+    
+    	gtk_hbox_new FALSE, 10
+    	hbox = stat
+    
+    	gtk_vbox_new FALSE, 10
+    	vbox_left = stat
+    	gtk_vbox_new FALSE, 10
+    	vbox_right = stat
+    
+    	gtk_label_new u( "デフォルト状態のラベルです。\n次の行です。" )
+    	lbl1 = stat
+    
+    	text = "テキストを左寄せしたラベルです。\n"
+    	text += "次の行です。\nデフォルトは左寄せです。"
+    	gtk_label_new u( text )
+    	lbl2 = stat
+    	gtk_label_set_justify lbl2, GTK_JUSTIFY_LEFT
+    
+    	text = "テキストを中央寄せしたラベルです。\n"
+    	text += "次の行です。"
+    	gtk_label_new u( text )
+    	lbl3 = stat
+    	gtk_label_set_justify lbl3, GTK_JUSTIFY_CENTER
+    
+    	gtk_label_new u( "テキストを右寄せしたラベルです。\n次の行です。" )
+    	lbl4 = stat
+    	gtk_label_set_justify lbl4, GTK_JUSTIFY_RIGHT
+    
+    	text = "文字を<small>小さくしたり</small>、<big>大きくしたり</big>、"
+    	text += "<b>太くしたり</b>、<i>イタリックにしたり</i>できます。"
+    	text += "行の折り返しがオンになっています。"
+    	gtk_label_new 0
+    	lbl5 = stat
+    	gtk_label_set_markup lbl5, u( text )
+    	gtk_label_set_line_wrap lbl5, TRUE
+    
+    	text = "[Alt+_P]キーを押すと、右側のボタンが動作します。\n"
+    	text += "このラベルのテキストは選択できます。"
+    	gtk_label_new_with_mnemonic u( text )
+    	lbl6 = stat
+    	gtk_label_set_selectable lbl6, TRUE
+    
+    	text = "This is an example of a line-wrapped label.  It "
+    	text += "should not be taking up the entire "
+    	text += "width allocated to it, but automatically "
+    	text += "wraps the words to fit.\n\n"
+    	text += "このラベルも行の折り返しがオンになっています。\n"
+    	text += "1行に入り切らない単語（文字）は次の行に送られます。\n"
+    	text += "テキストは左寄せなので、折り返しによってできた"
+    	text += "右側の余白はそのままです。\n"
+    	text += "テキスト中の  空白も  そのまま  表示  されます。"
+    	gtk_label_new u( text )
+    	lbl7 = stat
+    	gtk_label_set_line_wrap lbl7, TRUE
+    
+    	text = "This is an example of a line-wrapped, filled label. "
+    	text += "It should be taking "
+    	text += "up the entire width allocated to it.\n\n"
+    	text += "このラベルは、行の折り返しがオンで、なおかつテキストが"
+    	text += "両側寄せになっています。\n"
+    	text += "折り返しによって左右に余白ができないようになっています。\n"
+    	gtk_label_new u( text )
+    	lbl8 = stat
+    	gtk_label_set_justify lbl8, GTK_JUSTIFY_FILL
+    	gtk_label_set_line_wrap lbl8, TRUE
+    
+    	gtk_button_new_with_label u( "押さないでください" )
+    	btn = stat
+    	gtk_label_set_mnemonic_widget lbl6, btn
+    
+    	gtk_box_pack_start vbox_left, lbl1, TRUE, TRUE, 0
+    	gtk_box_pack_start vbox_left, lbl2, TRUE, TRUE, 0
+    	gtk_box_pack_start vbox_left, lbl3, TRUE, TRUE, 0
+    	gtk_box_pack_start vbox_left, lbl4, TRUE, TRUE, 0
+    	gtk_box_pack_start vbox_left, lbl5, TRUE, TRUE, 0
+    	gtk_box_pack_start vbox_left, lbl6, TRUE, TRUE, 0
+    
+    	gtk_box_pack_start vbox_right, lbl7, TRUE, TRUE, 0
+    	gtk_box_pack_start vbox_right, lbl8, TRUE, TRUE, 0
+    	gtk_box_pack_start vbox_right, btn, TRUE, TRUE, 0
+    
+    	gtk_box_pack_start hbox, vbox_left, TRUE, TRUE, 0
+    	gtk_box_pack_start hbox, vbox_right, TRUE, TRUE, 0
+    
+    	gtk_container_add win, hbox
+    	gtk_widget_show_all win
+    	gtk_main
+    	end
+    
+    *on_window_delete_event
+    	gtk_main_quit
+    	return
+********************
+
 ====================
 # 7. エントリ（Entry）
 
@@ -586,9 +757,9 @@
 
 　ボタンウィジェットも、ラベルやエントリと同じく、よく使われるウィジェットです。ボタンは、通常、押されるアクションがあった時に何らかの処理が行われるように設定します。つまり、clickedシグナルにコールバック関数をconnectするということです。
 
-　ボタンは、画像やテキストをその上に表示することができます。つまり、イメージ（Image）ウィジェットやラベル（Label）ウィジェットを子として持つことができます。
+　ボタンは、画像や文字列をその上に表示することができます。つまり、イメージ（Image）ウィジェットやラベル（Label）ウィジェットを子として持つことができます。
 
-　画像の代わりに、それ以外のウィジェットも、載せることができなくもないですが、載せられた方のウィジェットをクリックできないなどの制限があるので、あまり意味がありません。
+　画像の代わりに、それ以外のウィジェットも載せることができなくもないですが、載せられた方のウィジェットをクリックできないなどの制限があるので、あまり意味がありません。
 
 ====================
 ## 8.1. ボタン（Button）
@@ -596,7 +767,7 @@
 　まずは、最もありふれた形のボタンを利用するサンプルスクリプトを挙げて、それについて説明します。
 
 ====================
-## 8.1.1. プログラムの全体
+### 8.1.1. サンプルプログラムの全体
 
 ********************
     #const FALSE 0
@@ -781,7 +952,7 @@
 ### 2.2.4. シグナルとコールバック関数の使用例
 # 3. はじめの一歩
 ## 3.1. 最もシンプルなGTK+3プログラム
-### 3.1.1. プログラムの全体
+### 3.1.1. サンプルプログラムの全体
 ### 3.1.2. コールバック関数を使うための準備
 ### 3.1.3. GTK+3の関数を使うための準備
 ### 3.1.4. GTK+の初期化
@@ -791,7 +962,7 @@
 ### 3.1.8. メインループの開始
 ### 3.1.9. コールバック関数（シグナルハンドラ）の定義
 ## 3.2. ウィンドウにウィジェットを1つ配置する
-### 3.2.1. プログラムの全体
+### 3.2.1. サンプルプログラムの全体
 ### 3.2.2. コメントアウト部分
 ### 3.2.3. コールバック関数を介したデータの受け渡し
 ### 3.2.4. ウィンドウへのウィジェットの追加
@@ -803,9 +974,11 @@
 ## 5.1. ボックス（HBoxおよびVBox）
 ## 5.2. テーブル（Table）
 # 6. ラベル（Label）
+## 6.1. サンプルプログラムの全体
 # 7. エントリ（Entry）
 # 8. ボタン系ウィジェット
 ## 8.1. ボタン（Button）
+### 8.1.1. サンプルプログラムの全体
 ## 8.2. トグルボタン（Toggle Button）
 ## 8.3. チェックボタン（Check Button）
 ## 8.4. ラジオボタン（Radio Button）

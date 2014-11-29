@@ -3,7 +3,7 @@
 	This software is released under the MIT License.
 	http://opensource.org/licenses/mit-license.php
 */
-#packopt	name	"gtk3demo"
+#packopt	name	"gtk3demo1"
 #runtime	"hsp3c"
 
 #const	TRUE	1
@@ -39,7 +39,7 @@
 	setcallbk			cbwindowdestroy, cb_window_destroy, *on_window_destroy
 	g_signal_connect	win, "destroy", varptr( cbwindowdestroy ), 0
 
-	gtk_window_set_title  win, u( "hsp gtk テスト" )
+	gtk_window_set_title  win, u( "hsp gtk デモ1" )
 	gtk_widget_set_size_request		win, 200, 200
 
 	// set up vbox

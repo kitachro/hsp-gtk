@@ -9,7 +9,6 @@
 #func global gtk_init "gtk_init" sptr, sptr
 #func global gtk_window_new "gtk_window_new" int
 #const	GTK_WINDOW_TOPLEVEL	0
-#func global gtk_window_set_title "gtk_window_set_title" sptr, sptr
 #func global gtk_table_new "gtk_table_new" int, int, int
 #func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
 #func global gtk_table_attach_defaults "gtk_table_attach_defaults" sptr, sptr, int, int, int, int
@@ -25,7 +24,6 @@
 
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
-	gtk_window_set_title	win, "table sample"
 	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
 	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), 0
 

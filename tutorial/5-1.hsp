@@ -42,9 +42,10 @@
 	setcallbk	cbbutton2clicked, cb_button2_clicked, *on_button2_clicked
 	g_signal_connect	btn2, "clicked", varptr( cbbutton2clicked ), 0
 
+	gtk_container_add	win, hbox
 	gtk_box_pack_start	hbox, btn1, TRUE, TRUE, 0
 	gtk_box_pack_start	hbox, btn2, TRUE, TRUE, 0
-	gtk_container_add	win, hbox
+
 	gtk_widget_show_all	win
 	gtk_main
 	end

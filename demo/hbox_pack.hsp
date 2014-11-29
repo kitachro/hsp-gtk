@@ -1,0 +1,148 @@
+/*
+	Copyright (c) 2014 chrono
+	This software is released under the MIT License.
+	http://opensource.org/licenses/mit-license.php
+*/
+#packopt	name	"hbox_pack_demo"
+#runtime	"hsp3c"
+
+#const	TRUE	1
+#const	FALSE	0
+
+#include "hspinet.as"
+#module
+#defcfunc u str chars_	// shift-jis•¶Žš—ñ‚ðutf-8‚É•ÏŠ·
+	chars	= chars_
+	nkfcnv@	chars, chars, "Sw"
+	return	chars
+#global
+
+#include "libgtk-3-0.as"
+#include "libgobject-2.0-0.as"
+#include "hscallbk.as"
+#uselib ""
+#func cb_window_delete_event ""
+
+	// init gtk+
+
+	gtk_init	0, 0
+
+	// set up window
+
+	gtk_window_new	GTK_WINDOW_TOPLEVEL@
+	win = stat
+
+	setcallbk			cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
+	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), 0
+
+	gtk_window_set_title  win, u( "HBox packing ƒfƒ‚" )
+	gtk_widget_set_size_request		win, 850, 0
+
+	// set up vbox
+
+	gtk_vbox_new	FALSE, 10
+	vbx	= stat
+
+	// set up labels
+
+	gtk_label_new	"gtk_hbox_new FALSE, 0"
+	lbl1	= stat
+	gtk_label_new	"gtk_hbox_new TRUE, 0"
+	lbl2	= stat
+
+	// set up hboxes
+
+	gtk_hbox_new	FALSE, 0
+	hboxes( 0 )	= stat
+	gtk_hbox_new	FALSE, 0
+	hboxes( 1 )	= stat
+	gtk_hbox_new	FALSE, 0
+	hboxes( 2 )	= stat
+	gtk_hbox_new	TRUE, 0
+	hboxes( 3 )	= stat
+	gtk_hbox_new	TRUE, 0
+	hboxes( 4 )	= stat
+	gtk_hbox_new	TRUE, 0
+	hboxes( 5 )	= stat
+
+	// set up buttons
+
+	repeat	6
+		gtk_button_new_with_label	"gtk_box_pack_start	"
+		btn_gtk_box_packs( cnt )	= stat
+	loop
+	repeat	6
+		gtk_button_new_with_label	"box,"
+		btn_boxes( cnt )	= stat
+	loop
+	repeat	6
+		gtk_button_new_with_label	"FALSE,"
+		btn_falses( cnt )	= stat
+	loop
+	repeat	6
+		gtk_button_new_with_label	"TRUE,"
+		btn_trues( cnt )	= stat
+	loop
+	repeat	6
+		gtk_button_new_with_label	"0"
+		btn_0s( cnt )	= stat
+	loop
+
+	// build up gui
+
+	gtk_container_add	win, vbx
+
+	gtk_box_pack_start	vbx, lbl1, FALSE, FALSE, 0
+	gtk_box_pack_start	vbx, hboxes( 0 ), FALSE, FALSE, 0
+	gtk_box_pack_start	vbx, hboxes( 1 ), FALSE, FALSE, 0
+	gtk_box_pack_start	vbx, hboxes( 2 ), FALSE, FALSE, 0
+	gtk_box_pack_start	vbx, lbl2, FALSE, FALSE, 0
+	gtk_box_pack_start	vbx, hboxes( 3 ), FALSE, FALSE, 0
+	gtk_box_pack_start	vbx, hboxes( 4 ), FALSE, FALSE, 0
+	gtk_box_pack_start	vbx, hboxes( 5 ), FALSE, FALSE, 0
+
+	gtk_box_pack_start	hboxes( 0 ), btn_gtk_box_packs( 0 ), FALSE, FALSE, 0
+	gtk_box_pack_start	hboxes( 0 ), btn_boxes( 0 ), FALSE, FALSE, 0
+	gtk_box_pack_start	hboxes( 0 ), btn_falses( 0 ), FALSE, FALSE, 0
+	gtk_box_pack_start	hboxes( 0 ), btn_falses( 1 ), FALSE, FALSE, 0
+	gtk_box_pack_start	hboxes( 0 ), btn_0s( 0 ), FALSE, FALSE, 0
+
+	gtk_box_pack_start	hboxes( 1 ), btn_gtk_box_packs( 1 ), TRUE, FALSE, 0
+	gtk_box_pack_start	hboxes( 1 ), btn_boxes( 1 ), TRUE, FALSE, 0
+	gtk_box_pack_start	hboxes( 1 ), btn_trues( 0 ), TRUE, FALSE, 0
+	gtk_box_pack_start	hboxes( 1 ), btn_falses( 2 ), TRUE, FALSE, 0
+	gtk_box_pack_start	hboxes( 1 ), btn_0s( 1 ), TRUE, FALSE, 0
+
+	gtk_box_pack_start	hboxes( 2 ), btn_gtk_box_packs( 2 ), TRUE, TRUE, 0
+	gtk_box_pack_start	hboxes( 2 ), btn_boxes( 2 ), TRUE, TRUE, 0
+	gtk_box_pack_start	hboxes( 2 ), btn_trues( 1 ), TRUE, TRUE, 0
+	gtk_box_pack_start	hboxes( 2 ), btn_trues( 2 ), TRUE, TRUE, 0
+	gtk_box_pack_start	hboxes( 2 ), btn_0s( 2 ), TRUE, TRUE, 0
+
+	gtk_box_pack_start	hboxes( 3 ), btn_gtk_box_packs( 3 ), FALSE, FALSE, 0
+	gtk_box_pack_start	hboxes( 3 ), btn_boxes( 3 ), FALSE, FALSE, 0
+	gtk_box_pack_start	hboxes( 3 ), btn_falses( 3 ), FALSE, FALSE, 0
+	gtk_box_pack_start	hboxes( 3 ), btn_falses( 4 ), FALSE, FALSE, 0
+	gtk_box_pack_start	hboxes( 3 ), btn_0s( 3 ), FALSE, FALSE, 0
+
+	gtk_box_pack_start	hboxes( 4 ), btn_gtk_box_packs( 4 ), TRUE, FALSE, 0
+	gtk_box_pack_start	hboxes( 4 ), btn_boxes( 4 ), TRUE, FALSE, 0
+	gtk_box_pack_start	hboxes( 4 ), btn_trues( 3 ), TRUE, FALSE, 0
+	gtk_box_pack_start	hboxes( 4 ), btn_falses( 5 ), TRUE, FALSE, 0
+	gtk_box_pack_start	hboxes( 4 ), btn_0s( 4 ), TRUE, FALSE, 0
+
+	gtk_box_pack_start	hboxes( 5 ), btn_gtk_box_packs( 5 ), TRUE, TRUE, 0
+	gtk_box_pack_start	hboxes( 5 ), btn_boxes( 5 ), TRUE, TRUE, 0
+	gtk_box_pack_start	hboxes( 5 ), btn_trues( 4 ), TRUE, TRUE, 0
+	gtk_box_pack_start	hboxes( 5 ), btn_trues( 5 ), TRUE, TRUE, 0
+	gtk_box_pack_start	hboxes( 5 ), btn_0s( 5 ), TRUE, TRUE, 0
+
+	// start app
+
+	gtk_widget_show_all	win
+	gtk_main
+	end
+
+*on_window_delete_event
+	gtk_main_quit
+	return

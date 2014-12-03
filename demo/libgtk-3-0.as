@@ -2608,7 +2608,7 @@
 ;#func global gtk_style_unref "" 
 ;#func global gtk_submenu_direction_get_type "" 
 ;#func global gtk_submenu_placement_get_type "" 
-;#func global gtk_table_attach "" 
+#func global gtk_table_attach "gtk_table_attach" sptr, sptr, int, int, int, int, int, int, int, int
 #func global gtk_table_attach_defaults "gtk_table_attach_defaults" sptr, sptr, int, int, int, int
 ;#func global gtk_table_get_col_spacing "" 
 ;#func global gtk_table_get_default_col_spacing "" 
@@ -2619,11 +2619,11 @@
 ;#func global gtk_table_get_type "" 
 #func global gtk_table_new "gtk_table_new" int, int, int
 ;#func global gtk_table_resize "" 
-;#func global gtk_table_set_col_spacing "" 
-;#func global gtk_table_set_col_spacings "" 
+#func global gtk_table_set_col_spacing "gtk_table_set_col_spacing" sptr, int, int
+#func global gtk_table_set_col_spacings "gtk_table_set_col_spacings" sptr, int
 ;#func global gtk_table_set_homogeneous "" 
-;#func global gtk_table_set_row_spacing "" 
-;#func global gtk_table_set_row_spacings "" 
+#func global gtk_table_set_row_spacing "gtk_table_set_row_spacing" sptr, int, int
+#func global gtk_table_set_row_spacings "gtk_table_set_row_spacings" sptr, int
 ;#func global gtk_target_flags_get_type "" 
 ;#func global gtk_target_list_add "" 
 ;#func global gtk_target_list_add_image_targets "" 
@@ -4016,6 +4016,11 @@
 // GtkWindowType
 #enum	GTK_WINDOW_TOPLEVEL = 0
 #enum	GTK_WINDOW_POPUP
+
+// GtkAttachOptions
+#const GTK_EXPAND	(1 << 0)
+#const GTK_SHRINK	(1 << 1)
+#const GTK_FILL		(1 << 2)
 
 
 #endif

@@ -4,10 +4,10 @@
 : chrono (<https://github.com/kitachro>)
 
 バージョン:
-: 0.5.7
+: 0.6.0
 
 最終更新日:
-: 2014年11月29日
+: 2014年12月04日
 
 ライセンス（Copyright）:
 : GNU Free Documentation License 1.3 with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts
@@ -167,6 +167,8 @@
 
 　まずは、できる限り短いGTK+3プログラムのスクリプトを示します。このスクリプトを実行すると、縦横200ピクセルの大きさの空のウィンドウが表示されます。ウィンドウを閉じると、プログラムは終了します。
 
+![サンプル3-1](3-1.png)
+
 ====================
 ### 3.1.1. サンプルプログラムの全体
 
@@ -306,6 +308,8 @@
 ## 3.2. ウィンドウにウィジェットを1つ配置する
 
 　つづいて、もう1つ、トップレベルウィンドウにウィジェットを1つ置いてそれを動作させるプログラムを挙げます。
+
+![サンプル3-2](3-2.png)
 
 ====================
 ### 3.2.1. サンプルプログラムの全体
@@ -466,7 +470,7 @@
 
 　この章では、GTK+でウィンドウ（Window）に複数のウィジェットを配置する方法を説明します。
 
-　ご存じの通り、HSP本来の機能では、オブジェクト（GUI部品）は、配置する数にかかわらず、プログラマが1つ1つ固定した座標を指定してウィンドウに配置します。
+　ご存じの通り、HSP本来の機能では、ある程度実用的なプログラムを作ろうとする場合、オブジェクト（GUI部品）は、配置する数にかかわらず、プログラマが1つ1つ固定した座標を指定してウィンドウに配置しなければなりません。
 
 　一方GTK+では、複数のウィジェットをウィンドウに配置する場合、一定のパターンに沿って半自動的に配置する機能を持った、レイアウト専用のウィジェットを使います。この種のウィジェットをレイアウトコンテナ（Layout Container）と呼びます。
 
@@ -478,6 +482,8 @@
 
 ====================
 ## 5.1. ボックス（HBoxおよびVBox）
+
+![サンプル5-1](5-1.png)
 
 　ボックスは、複数のウィジェットを縦または横方向に一直線に配置するための、目に見えないレイアウトコンテナです。HBoxは横方向（horizontal）、VBoxは縦方向（vertical）に配置することができます。
 
@@ -603,17 +609,15 @@
 
 ![HBox packing デモ](hbox_packing_demo.png)
 
-　この画像は、gtk_hbox_new関数の1つ目の引数、およびgtk_box_pack_start関数の3つ目、4つ目の引数に指定する真偽値のバリエーションによって、配置したウィジェットの表示パターンがどのように変化するかを、実際にウィジェットを使って示すデモプログラムのウィンドウキャプチャです。
+　この画像は、gtk_hbox_new関数の1つ目の引数、およびgtk_box_pack_start関数の3つ目、4つ目の引数に指定する真偽値のバリエーションによって、配置したウィジェットの表示パターンがどのように変化するかを、実際にボタンウィジェットを使って示すデモプログラムのウィンドウキャプチャです。
 
-　この章の1.3.で、gtk_hbox_new関数の1つ目の引数は、ボックスの上に並べるウィジェットをすべて同じ大きさで表示するかどうかを表す、と書きましたが、正確には、すべてのウィジェットの配置スペースを同じ大きさで確保するかどうかを表します。
+　この章の1.3.で、gtk_hbox_new関数の1つ目の引数は、ボックスの上に並べるウィジェットをすべて同じ大きさで表示するかどうかを表す、と書きましたが、正確には、すべてのウィジェットの配置スペースを同じ大きさで確保するかどうかを表します。従って、2つ目の引数も、正確には、ウィジェットの配置スペース同士の間隔を表します。
 
-　gtk_box_pack_start関数の3つ目の引数の意味を言葉で説明すると、追加するウィジェットの配置スペースを可能な限り大きく確保するかどうかを表す、ということになります。
+　gtk_box_pack_start関数の3つ目の引数は、追加するウィジェットの配置スペースを、可能な限り大きく確保するかどうかを表します。
 
-　gtk_box_pack_start関数の4つ目の引数の意味を言葉で説明すると、追加するウィジェットを確保した配置スペースいっぱいに表示するかどうかを表す、ということになります。
+　gtk_box_pack_start関数の4つ目の引数は、追加するウィジェットを、確保した配置スペースいっぱいに表示するかどうかを表します。
 
 　gtk_box_pack_start関数の5つ目の引数は、確保した配置スペースの中で、ウィジェットの周りに作る余白の幅を表します。ただし「周り」というのは、HBoxの場合、左右を意味し、VBoxの場合、上下を意味します。
-
-　この引数による影響は、ビジュアル的には、gtk_hbox_new関数の2つ目の引数によるものと区別がつきにくいかもしれませんが、ウィジェットの配置スペースの外か内かの違いがあります。
 
 　上で示した画像のデモプログラムでは、同じHBoxに追加するウィジェットについては、同じ引数でgtk_box_pack_start関数を実行していますので、この部分のバリエーションに変化をつけると、さらに細かい変化のついた表示パターンになります。
 
@@ -624,8 +628,151 @@
 ====================
 ## 5.2. テーブル（Table）
 
+![サンプル5-2](5-2.png)
+
+　テーブルは、複数のウィジェットをタイル形に配置するための、目に見えないレイアウトコンテナです。
+
+　gtk_table_new関数でウィジェットを生成することができます。
+
+　テーブルに配置するウィジェット同士の間隔を設定するために、gtk_table_set_col_spacing、gtk_table_set_col_spacings、gtk_table_set_row_spacing、gtk_table_set_row_spacings、の4つの関数が用意されています。
+
+　逆に値を取得するには、gtk_table_set_col_spacing関数、または、gtk_table_set_row_spacing関数を実行します。
+
+　ウィジェットをテーブルに配置するには、gtk_table_attach_defaults関数を実行してください。
+
+　次のページから、サンプルプログラムのスクリプトを挙げて、テーブル関連の関数について詳しく説明します。
+
+====================
+### 5.2.1 サンプルプログラムの全体
+
+********************
+    ; コールバック関数を使うための準備
+    #include "hscallbk.as"
+    #uselib ""
+    #func cb_window_delete_event ""
+    
+    ; GTK+3の関数を使うための準備
+    #uselib "libgtk-3-0.dll"
+    #func global gtk_init "gtk_init" sptr, sptr
+    #func global gtk_window_new "gtk_window_new" int
+    #const GTK_WINDOW_TOPLEVEL 0
+    #func global gtk_table_new "gtk_table_new" int, int, int
+    #func global gtk_table_set_col_spacings "gtk_table_set_col_spacings" sptr, int
+    #func global gtk_table_set_row_spacings "gtk_table_set_row_spacings" sptr, int
+    #func global gtk_table_attach_defaults "gtk_table_attach_defaults" sptr, sptr, int, int, int, int
+    #func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
+    #func global gtk_container_add "gtk_container_add" sptr, sptr
+    #func global gtk_widget_show_all "gtk_widget_show_all" sptr
+    #func global gtk_main "gtk_main"
+    #func global gtk_main_quit "gtk_main_quit"
+    #uselib "libgobject-2.0-0.dll"
+    #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+    #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+    
+    ; 真偽値定数マクロ
+    #const FALSE 0
+    #const TRUE 1
+    
+    	; GTK+3初期化
+    	gtk_init 0, 0
+    
+    	; Window生成
+    	gtk_window_new GTK_WINDOW_TOPLEVEL
+    	win = stat
+    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
+    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), 0
+    
+    	; Table生成
+    	gtk_table_new 3, 3, TRUE
+    	tbl = stat
+    	gtk_table_set_col_spacings tbl, 10
+    	gtk_table_set_row_spacings tbl, 10
+    
+    	; Button生成
+    	gtk_button_new_with_label "Button 1"
+    	btn1 = stat
+    	gtk_button_new_with_label "Button 2"
+    	btn2 = stat
+    	gtk_button_new_with_label "Button 3"
+    	btn3 = stat
+    	gtk_button_new_with_label "Button 4"
+    	btn4 = stat
+    	gtk_button_new_with_label "Button 5"
+    	btn5 = stat
+    	gtk_button_new_with_label "Button 6"
+    	btn6 = stat
+    
+    	; ウィンドウの組み立て
+    	gtk_table_attach_defaults tbl, btn1, 0, 1, 0, 1
+    	gtk_table_attach_defaults tbl, btn2, 1, 3, 0, 1
+    	gtk_table_attach_defaults tbl, btn3, 0, 1, 1, 3
+    	gtk_table_attach_defaults tbl, btn4, 1, 3, 1, 2
+    	gtk_table_attach_defaults tbl, btn5, 1, 2, 2, 3
+    	gtk_table_attach_defaults tbl, btn6, 2, 3, 2, 3
+    	gtk_container_add win, tbl
+    
+    	; ウィンドウの表示とメインループの開始
+    	gtk_widget_show_all win
+    	gtk_main
+    	end
+    
+    /* シグナルハンドラ */
+    *on_window_delete_event
+    	gtk_main_quit
+    	return
+********************
+
+====================
+### 5.2.2 テーブルの生成とウィジェット間隔の設定
+
+********************
+    ; Table生成
+    gtk_table_new 3, 3, TRUE
+    tbl = stat
+    gtk_table_set_col_spacings tbl, 10
+    gtk_table_set_row_spacings tbl, 10
+********************
+
+　ウィジェットを生成するには、gtk_table_new関数を実行します。引数には、縦方向のマスの数（＝行数、number of rows）と横方向のマスの数（＝列数、number of columns）、および、すべてのマスを同じサイズに統一するかどうかを表す真偽値（1 or 0）を指定します。
+
+　1つ目の引数と2つ目の引数の順番は、逆の方が直感的でわかりやすい気がしますが、こうなってしまっているので、仕方ありません。
+
+　3つ目の引数の同じサイズとは、テーブルに配置するウィジェットのうち、一番大きなウィジェットのサイズを意味します。
+
+　gtk_table_set_col_spacing関数を使うと、指定した列とその右の列との間に、指定したピクセル分の隙間を作ることができます。列の位置は、左から何番目かを表す整数で指定します。最初の列は0です。
+
+　すべての列の左右の隙間を一度で設定したい場合は、gtk_table_set_col_spacings関数を使います。
+
+　gtk_table_set_row_spacing関数を使うと、指定した行とその下の行との間に、指定したピクセル分の隙間を作ることができます。行の位置は、上から何番目かを表す整数で指定します。最初の行は0です。
+
+　すべての行の上下の隙間を一度で設定したい場合は、gtk_table_set_row_spacings関数を使います。
+
+====================
+### 5.2.3 テーブルへのウィジェットの配置
+
+********************
+    ; ウィンドウの組み立て
+    gtk_table_attach_defaults tbl, btn1, 0, 1, 0, 1
+    gtk_table_attach_defaults tbl, btn2, 1, 3, 0, 1
+    gtk_table_attach_defaults tbl, btn3, 0, 1, 1, 3
+    gtk_table_attach_defaults tbl, btn4, 1, 3, 1, 2
+    gtk_table_attach_defaults tbl, btn5, 1, 2, 2, 3
+    gtk_table_attach_defaults tbl, btn6, 2, 3, 2, 3
+    gtk_container_add win, tbl
+********************
+
+　任意のウィジェットをテーブルに配置するには、gtk_table_attach_defaults関数を実行します。引数には、テーブルのインスタンス、配置するウィジェットのインスタンス、配置開始X座標、配置終了X座標、配置開始Y座標、配置終了Y座標、の6つの値を指定します。
+
+　ここでの座標とは、テーブルのマスを構成する辺が交差する点を指します。X座標、Y座標とも、テーブルの左上が0となり、そこから離れるに従って、1ずつ増えていき、右下の座標はgtk_table_new関数に指定した、2つ目と1つ目の引数と一致します。
+
+　この節の冒頭のキャプチャ画像を見るとわかりますが、テーブルには、1つのウィジェットを複数のマスを占有するように配置することができます。
+
+　配置座標の指定方法については、キャプチャ画像とスクリプトを見比べることで理解できるのではないかと思います。
+
 ====================
 # 6. ラベル（Label）
+
+![サンプル6](6.png)
 
 　ラベルは、GTK+のウィンドウ内に編集の必要がない文字列を配置する第一の手段です。例えば、エントリ（Entry）ウィジェットのとなりに名前を表示するのに使います。
 
@@ -800,6 +947,8 @@
 
 ====================
 # 7. エントリ（Entry）
+
+![サンプル7](7.png)
 
 　エントリウィジェットは、プログラムのユーザに短めの文字列を入力してもらうためのウィジェットです。
 
@@ -998,10 +1147,12 @@
 
 　ボタンは、画像や文字列をその上に表示することができます。つまり、イメージ（Image）ウィジェットやラベル（Label）ウィジェットを子として持つことができます。
 
-　画像の代わりに、それ以外のウィジェットも載せることができなくもないですが、載せられた方のウィジェットをクリックできないなどの制限があるので、あまり意味がありません。
+　画像の代わりに、それ以外のウィジェットを載せることもできなくもないですが、載せられた方のウィジェットをクリックできないなどの制限があるので、あまり意味がありません。
 
 ====================
 ## 8.1. ボタン（Button）
+
+![サンプル8-1](8-1.png)
 
 　まずは、最もありふれた形のボタンを利用するサンプルスクリプトを挙げて、それについて説明します。
 

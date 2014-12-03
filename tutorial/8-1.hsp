@@ -20,7 +20,6 @@
 #func global gtk_init "gtk_init" sptr, sptr
 #func global gtk_window_new "gtk_window_new" int
 #const	GTK_WINDOW_TOPLEVEL	0
-#func global gtk_window_set_title "gtk_window_set_title" sptr, sptr
 #func global gtk_container_add "gtk_container_add" sptr, sptr
 #func global gtk_container_set_border_width "gtk_container_set_border_width" sptr, int
 #func global gtk_widget_show_all "gtk_widget_show_all" sptr
@@ -42,7 +41,6 @@
 	// set up window
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
-	gtk_window_set_title	win, u( "ƒ{ƒ^ƒ“ ƒfƒ‚" )
 	gtk_container_set_border_width	win, 10
 	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
 	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), 0

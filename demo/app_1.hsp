@@ -28,14 +28,11 @@
 #func cb_cmd_quit ""
 
 	// init gtk+
-
 	gtk_init	argc, argv
 
 	// set up window
-
 	gtk_window_new	GTK_WINDOW_TOPLEVEL@
 	win = stat
-
 	setcallbk			cbwindowdestroy, cb_window_destroy, *on_window_destroy
 	g_signal_connect	win, "destroy", varptr( cbwindowdestroy ), 0
 
@@ -43,12 +40,10 @@
 	gtk_widget_set_size_request		win, 200, 200
 
 	// set up vbox
-
 	gtk_vbox_new	FALSE, 2
 	vbx	= stat
 
 	// set up menubar
-
 	; menu tree definition
 	menu_info  = "<ui>"
 	menu_info += "  <menubar name='Menubar'>"
@@ -96,26 +91,21 @@
 	menubar	= stat
 
 	// set up scrolled window
-
 	gtk_scrolled_window_new			NULL, NULL
 	scw	= stat
 	gtk_scrolled_window_set_policy	scw, GTK_POLICY_AUTOMATIC@, GTK_POLICY_AUTOMATIC@
 
 	// set up image
-
 	gtk_image_new_from_file		"cat.jpg"
 	img	= stat
 
 	// set up button
-
 	gtk_button_new_with_label	u( "èIóπ" )
 	btn	= stat
-
 	setcallbk			cbbuttonclicked, cb_button_clicked, *on_button_clicked
 	g_signal_connect	btn, "clicked", varptr( cbbuttonclicked ), 0
 
 	// build up gui
-
 	gtk_container_add	win, vbx
 	gtk_box_pack_start	vbx, menubar, FALSE, FALSE, 0
 	gtk_box_pack_start	vbx, scw, TRUE, TRUE, 0
@@ -123,11 +113,11 @@
 	gtk_box_pack_start	vbx, btn, FALSE, FALSE, 0
 
 	// start app
-
 	gtk_widget_show_all		win
 	gtk_main
 	end
 
+// signal handlers
 *on_window_destroy
 	gtk_main_quit
 	return

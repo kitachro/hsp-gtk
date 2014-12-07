@@ -24,14 +24,11 @@
 #func cb_window_delete_event ""
 
 	// init gtk+
-
 	gtk_init	0, 0
 
 	// set up window
-
 	gtk_window_new	GTK_WINDOW_TOPLEVEL@
 	win = stat
-
 	setcallbk			cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
 	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), 0
 
@@ -39,19 +36,16 @@
 	gtk_widget_set_size_request		win, 850, 0
 
 	// set up vbox
-
 	gtk_vbox_new	FALSE, 10
 	vbx	= stat
 
 	// set up labels
-
 	gtk_label_new	"gtk_hbox_new FALSE, 0"
 	lbl1	= stat
 	gtk_label_new	"gtk_hbox_new TRUE, 0"
 	lbl2	= stat
 
 	// set up hboxes
-
 	gtk_hbox_new	FALSE, 0
 	hboxes( 0 )	= stat
 	gtk_hbox_new	FALSE, 0
@@ -66,7 +60,6 @@
 	hboxes( 5 )	= stat
 
 	// set up buttons
-
 	repeat	6
 		gtk_button_new_with_label	"gtk_box_pack_start	"
 		btn_gtk_box_packs( cnt )	= stat
@@ -89,7 +82,6 @@
 	loop
 
 	// build up gui
-
 	gtk_container_add	win, vbx
 
 	gtk_box_pack_start	vbx, lbl1, FALSE, FALSE, 0
@@ -138,7 +130,6 @@
 	gtk_box_pack_start	hboxes( 5 ), btn_0s( 5 ), TRUE, TRUE, 0
 
 	// start app
-
 	gtk_widget_show_all	win
 	gtk_main
 	end

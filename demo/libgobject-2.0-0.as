@@ -292,8 +292,8 @@
 ;#func global g_type_depth "" 
 ;#func global g_type_ensure "" 
 ;#func global g_type_free_instance "" 
-;#func global g_type_from_name "" 
-;#func global g_type_fundamental "" 
+#func global g_type_from_name "g_type_from_name" str
+#func global g_type_fundamental "g_type_fundamental" int
 ;#func global g_type_fundamental_next "" 
 ;#func global g_type_get_plugin "" 
 ;#func global g_type_get_qdata "" 

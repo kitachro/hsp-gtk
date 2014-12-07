@@ -1,0 +1,92 @@
+#const	FALSE	0
+#const	TRUE	1
+
+#include "hscallbk.as"
+#uselib ""
+#func cb_window_delete_event ""
+#func cb_cbutton1_toggled ""
+#func cb_cbutton2_toggled ""
+
+#uselib "libgtk-3-0.dll"
+#func global gtk_init "gtk_init" sptr, sptr
+#func global gtk_window_new "gtk_window_new" int
+#const	GTK_WINDOW_TOPLEVEL	0
+#func global gtk_container_set_border_width "gtk_container_set_border_width" sptr, int
+#func global gtk_container_add "gtk_container_add" sptr, sptr
+#func global gtk_widget_show_all "gtk_widget_show_all" sptr
+#func global gtk_main "gtk_main"
+#func global gtk_main_quit "gtk_main_quit"
+#func global gtk_hbox_new "gtk_hbox_new" int, int
+#func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
+#func global gtk_adjustment_new "gtk_adjustment_new" double, double, double, double, double, double
+#func global gtk_spin_button_new "gtk_spin_button_new" sptr, double, int
+#func global gtk_spin_button_set_numeric "gtk_spin_button_set_numeric" sptr, int
+#func global gtk_spin_button_set_update_policy "gtk_spin_button_set_update_policy" sptr, int
+#enum	GTK_UPDATE_ALWAYS = 0
+#enum	GTK_UPDATE_IF_VALID
+#func global gtk_check_button_new_with_label "gtk_check_button_new_with_label" sptr
+#func global gtk_toggle_button_get_active "gtk_toggle_button_get_active" sptr
+
+#uselib "libgobject-2.0-0.dll"
+#define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+#func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+
+	gtk_init	0, 0
+
+	// set up window
+	gtk_window_new	GTK_WINDOW_TOPLEVEL
+	win	= stat
+	gtk_container_set_border_width	win, 10
+	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
+	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), 0
+
+	// set up hbox
+	gtk_hbox_new	FALSE, 6
+	hbox	= stat
+
+	// set up buttons
+	gtk_adjustment_new	0, 0, 1000, 10, 10, 0
+	adj	= stat
+	gtk_spin_button_new	adj, 1, 0
+	spb	= stat
+
+	gtk_check_button_new_with_label	"Numeric"
+	chb1	= stat
+	setcallbk	cbcbutton1toggled, cb_cbutton1_toggled, *on_cbutton1_toggled
+	g_signal_connect	chb1, "toggled", varptr( cbcbutton1toggled ), 0
+
+	gtk_check_button_new_with_label	"If valid"
+	chb2	= stat
+	setcallbk	cbcbutton2toggled, cb_cbutton2_toggled, *on_cbutton2_toggled
+	g_signal_connect	chb2, "toggled", varptr( cbcbutton2toggled ), 0
+
+	// build up gui
+	gtk_box_pack_start	hbox, spb, TRUE, TRUE, 0
+	gtk_box_pack_start	hbox, chb1, TRUE, TRUE, 0
+	gtk_box_pack_start	hbox, chb2, TRUE, TRUE, 0
+	gtk_container_add	win, hbox
+
+	// start app
+	gtk_widget_show_all	win
+	gtk_main
+	end
+
+*on_window_delete_event
+	gtk_main_quit
+	return
+
+*on_cbutton1_toggled
+	gtk_toggle_button_get_active	chb1
+	gtk_spin_button_set_numeric		spb, stat
+	return
+
+*on_cbutton2_toggled
+	gtk_toggle_button_get_active	chb2
+	if stat {
+		policy	= GTK_UPDATE_IF_VALID
+	}
+	else {
+		policy	= GTK_UPDATE_ALWAYS
+	}
+	gtk_spin_button_set_update_policy	spb, policy
+	return

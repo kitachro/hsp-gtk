@@ -1,0 +1,57 @@
+/*
+	Copyright (c) 2014 chrono
+	This software is released under the MIT License.
+	http://opensource.org/licenses/mit-license.php
+*/
+#packopt	name	"message_dialog_demo"
+#runtime	"hsp3c"
+
+#include "hspinet.as"
+#module
+#defcfunc u str chars_	// shift-jis文字列をutf-8に変換
+	chars	= chars_
+	nkfcnv@	chars, chars, "Sw"
+	return	chars
+#global
+
+#include "libgtk-3-0.as"
+#include "libgobject-2.0-0.as"
+#include "hscallbk.as"
+#uselib ""
+#func cb_window_destroy ""
+#func cb_button_clicked "" int, int
+
+	// init gtk+
+	gtk_init	0, 0
+
+	// set up window
+	gtk_window_new	GTK_WINDOW_TOPLEVEL@
+	win = stat
+	setcallbk			cbwindowdestroy, cb_window_destroy, *on_window_destroy
+	g_signal_connect	win, "destroy", varptr( cbwindowdestroy ), 0
+
+	// set up button
+	gtk_button_new_with_label	u( "表示" )
+	btn	= stat
+	setcallbk			cbbuttonclicked, cb_button_clicked, *on_button_clicked
+	g_signal_connect	btn, "clicked", varptr( cbbuttonclicked ), 0
+
+	// build up gui
+	gtk_container_add	win, btn
+
+	// start app
+	gtk_widget_show_all		win
+	gtk_main
+	end
+
+// signal handlers
+*on_window_destroy
+	gtk_main_quit
+	return
+
+*on_button_clicked
+	gtk_message_dialog_new	win, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, u("メッセージダイアログのテストです。")
+	dlg = stat
+	gtk_dialog_run	dlg
+	gtk_widget_destroy	dlg
+	return

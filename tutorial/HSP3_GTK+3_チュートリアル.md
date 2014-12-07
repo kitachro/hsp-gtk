@@ -4,10 +4,10 @@
 : chrono (<https://github.com/kitachro>)
 
 バージョン:
-: 0.6.0
+: 0.6.1
 
 最終更新日:
-: 2014年12月04日
+: 2014年12月07日
 
 ライセンス（Copyright）:
 : GNU Free Documentation License 1.3 with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts
@@ -19,10 +19,10 @@
 　この文書の透過的複製物は<https://github.com/kitachro/hsp-gtk>にて公開しています。
 
 ====================
-# 1. 開発環境の準備
+# 1　開発環境の準備
 
 ====================
-## 1.1. GTK+3の入手とインストール
+## 1.1　GTK+3の入手とインストール
 
 　このチュートリアルでは、[The GTK+ Project](http://www.gtk.org/)で公開されているall-in-one bundleアーカイブのGTK+3を動作確認に利用しています。ダウンロードは、Downloadのページからリンクされている、32bitもしくは64bit Windows用アーカイブのページで行えます。アーカイブはただのzipファイルなので、ダウンロード後、解凍してください。
 
@@ -37,21 +37,21 @@
 　また、以上で説明した以外のファイルもプログラミングに役立ちますので、捨てずに、アーカイブのフォルダごと任意の場所に移動しておいてください。さらにこれらのファイル内のテキストを一気に全文検索できるソフトウェアを用意しておくと、プログラミングが捗ります。
 
 ====================
-## 1.2. コールバック関数実装プラグインの入手
+## 1.2　コールバック関数実装プラグインの入手
 
 　HSPからGTK+を利用するには、HSPでコールバック関数という機能を使えるようにする必要があるのですが、これを実現してくれるのが、ちょくとさんによって公開されているHSP拡張プラグインのhscallbk.dllです。
 
 　hscallbk.dllは、[ちょくとのページ](http://chokuto.ifdef.jp/index.html)内のダウンロードのページでダウンロードできます。非常に簡単に使えますので、Readmeを読んで把握しておいてください。
 
 ====================
-# 2. GTK+の基礎
+# 2　GTK+の基礎
 
 　この章では、GTK+において特に重要な、「ウィジェットのプロパティ」と「メインループとシグナル」という2つの概念について説明します。
 
 　この章で挙げているスクリプトの断片は、それだけで実行することはできません。プログラムとして動作するサンプルスクリプトは、3章および5章以降で挙げています。
 
 ====================
-## 2.1. ウィジェットのプロパティ
+## 2.1　ウィジェットのプロパティ
 
 　GTK+のウィジェット（widget。GTK+が提供するプログラム部品。例えば、WindowやButton）は、インスタンス（プログラム上で生成済みのウィジェット）ごとにプロパティというものを持っています。
 
@@ -60,7 +60,7 @@
 　プロパティの値を設定・取得するには、プロパティごとに用意されている設定・取得用関数を実行します。例えば、Buttonウィジェットであれば、gtk_button_set_label、gtk_button_get_label関数によって、labelプロパティの値を設定・取得することができます。
 
 ====================
-### 2.1.1. ウィジェットのプロパティを設定する
+### 2.1.1　ウィジェットのプロパティを設定する
 
 ********************
     gtk_button_new
@@ -71,7 +71,7 @@
 　gtk_button_set_label関数の引数には、Buttonウィジェットのインスタンス（ウィジェット生成関数（gtk_button_new）の戻り値がその値です）と、ラベルに設定したい文字列（または文字列へのポインタ）を指定します。
 
 ====================
-### 2.1.2. ウィジェットのプロパティを取得する
+### 2.1.2　ウィジェットのプロパティを取得する
 
 ********************
     gtk_button_get_label button
@@ -81,7 +81,7 @@
 　gtk_button_get_label関数の引数には、Buttonウィジェットのインスタンスを指定します。そして、gtk_button_get_label関数の戻り値がラベル文字列へのポインタになっていますので、それをそのまま他の処理に利用したり、HSPのdupptr命令でHSPで利用できる文字列変数に変換したりすることができます。
 
 ====================
-### 2.1.3. ウィジェットの生成時にプロパティを設定する
+### 2.1.3　ウィジェットの生成時にプロパティを設定する
 
 　ウィジェットのプロパティのうちのいくつかは、ウィジェットの生成時に値を設定することができます。例えば、Buttonウィジェットであれば、gtk_button_newの代わりにgtk_button_new_with_label関数を使うことによって、単にボタンを生成するだけでなく、関数の引数を介して、ボタン上のラベルテキストを設定することができます。
 
@@ -92,10 +92,10 @@
 　gtk_button_new_with_label関数を使う場合には、引数にボタンに表示したい文字列（または文字列へのポインタ）を指定します。生成されたウィジェットが戻り値として返されるのは、gtk_button_new関数と同じです。
 
 ====================
-## 2.2. メインループとシグナル
+## 2.2　メインループとシグナル
 
 ====================
-### 2.2.1. GTK+アプリケーションの基本構造
+### 2.2.1　GTK+アプリケーションの基本構造
 
 　他の多くのGUIツールキットと同じく、GTK+はイベント駆動のプログラミングモデルを採用しています。プログラムのユーザが何もしていない時には、メインループ（ユーザの操作を待つための無限ループ）が繰り返され、GTK+はただ待機しているだけですが、ひとたびユーザによって何らかの操作が行われると、GTK+にイベント（event）が送られます。このイベントを待つという状態は、HSPのstop命令を実行した時と同じようなものです。
 
@@ -106,7 +106,7 @@
 　コールバック関数では、通常シグナルの種類（＝プログラムで何が起こったか）に応じた処理を行います。例えば、ファイルを開くためのボタン（Button）が押された（clicked）のであれば、ファイル選択ダイアログ（FileChooserDialog）を表示したりすることが多いでしょう。必要な処理を行った後、コールバック関数がreturnされると、再びメインループに戻り、GTK+は待機状態になります。
 
 ====================
-### 2.2.2. シグナルとコールバック関数を関連付ける
+### 2.2.2　シグナルとコールバック関数を関連付ける
 
 　次に、コールバック関数のシグナルへの関連付け（connect）について、スクリプトの書式を挙げて説明します。
 
@@ -125,7 +125,7 @@
 　`data`には、コールバック関数を呼び出す時に引数として渡したいテータが入った変数を1つ指定できます。`g_signal_connect`関数には、そのポインタを渡します。このポインタは、コールバック関数の2つ目の引数として受け取ることができます（一部、引数を利用できないコールバック関数もあります）。特に渡したいテータがない場合には、`varptr( data )`の代わりに`0`を指定してください。3章の2節で挙げているサンプルプログラムで、この引数の使用例を見ることができます。
 
 ====================
-### 2.2.3. シグナルとコールバック関数の関連付けを削除する
+### 2.2.3　シグナルとコールバック関数の関連付けを削除する
 
 　つづいて、シグナルとコールバック関数の関連付けを削除する方法について説明します。
 
@@ -141,7 +141,7 @@
 　何らかの理由で関連付けの識別番号を利用できない場合は、g_signal_handlers_disconnect_matchedという関数で、例えば、特定のコールバック関数への関連付けをすべて削除するなどといったことができます。詳しくは[GTK+ 3 Reference Manual](http://developer.gnome.org/gtk3/stable/)などを参考にしてください。
 
 ====================
-### 2.2.4. シグナルとコールバック関数の使用例
+### 2.2.4　シグナルとコールバック関数の使用例
 
 　最後に、GTK+におけるシグナルとコールバック関数（シグナルハンドラ）のよくある使用例について説明して、この節を終わります。
 
@@ -158,19 +158,19 @@
 　gtk_main_quit関数によってメインループを抜けると、プログラムの実行位置はgtk_main関数の呼び出しの直後に戻ります。通常その後ろにはHSPのend命令を書いてプログラムを終了させます。
 
 ====================
-# 3. はじめの一歩
+# 3　はじめの一歩
 
 　この章では、ごくシンプルなサンプルプログラムのスクリプトを挙げて、それについて解説します。
 
 ====================
-## 3.1. 最もシンプルなGTK+3プログラム
-
-　まずは、できる限り短いGTK+3プログラムのスクリプトを示します。このスクリプトを実行すると、縦横200ピクセルの大きさの空のウィンドウが表示されます。ウィンドウを閉じると、プログラムは終了します。
+## 3.1　最もシンプルなGTK+3プログラム
 
 ![サンプル3-1](3-1.png)
 
+　まずは、できる限り短いGTK+3プログラムのスクリプトを示します。このスクリプトを実行すると、縦横200ピクセルの大きさの空のウィンドウが表示されます。ウィンドウを閉じると、プログラムは終了します。
+
 ====================
-### 3.1.1. サンプルプログラムの全体
+### 3.1.1　サンプルプログラムの全体
 
 ********************
     #include "hscallbk.as"
@@ -207,7 +207,7 @@
 　以後、パートごとにスクリプトの内容について説明していきます。
 
 ====================
-### 3.1.2. コールバック関数を使うための準備
+### 3.1.2　コールバック関数を使うための準備
 
 ********************
     #include "hscallbk.as"
@@ -218,7 +218,7 @@
 　冒頭は、hscallbk.dllを利用してコールバック関数を使えるようにするためのスクリプトです。書き方については、hscallbk.dllのreadmeを参照してください。今回のプログラムでは、ウィンドウでdelete-eventシグナルが発生した時に実行する処理をコールバック関数として書く必要があるので、cb_window_delete_eventという名前を使っています。
 
 ====================
-### 3.1.3. GTK+3の関数を使うための準備
+### 3.1.3　GTK+3の関数を使うための準備
 
 ********************
     #uselib "libgtk-3-0.dll"
@@ -244,7 +244,7 @@
 　g_signal_connect関数も、[GTK+ 3 Reference Manual](http://developer.gnome.org/gtk3/stable/)には載っていますが、DLLには実装されておらずマクロで定義されていたので、こちらもHSPで書き直してやる必要がありました。このマクロについても、g_signal_connect_data関数を使うのが面倒でなければ、省略してしまってもかまいませんが、まあ書いておいた方が後々楽かなと思います。
 
 ====================
-### 3.1.4. GTK+の初期化
+### 3.1.4　GTK+の初期化
 
 ********************
     gtk_init 0, 0
@@ -255,7 +255,7 @@
 　gtk_init関数に渡す2つの引数は、C言語の場合であれば、main関数の引数として受け取ることができるargcとargvをそのまま渡してやればいいのですが、HSPの場合には、これらを簡単に取得する方法がないので、代わりに0を渡してください。
 
 ====================
-### 3.1.5. ウィンドウの生成
+### 3.1.5　ウィンドウの生成
 
 ********************
     gtk_window_new GTK_WINDOW_TOPLEVEL
@@ -265,7 +265,7 @@
 　GTK+で空のウィンドウを生成して、それを表す値を変数に保存しています。
 
 ====================
-### 3.1.6. ウィンドウのシグナルとコールバック関数の関連付け
+### 3.1.6　ウィンドウのシグナルとコールバック関数の関連付け
 
 ********************
     setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
@@ -275,7 +275,7 @@
 　hscallbk.dllのsetcallbk命令で、*on_window_delete_eventラベルで始まるサブルーチンをコールバック関数として呼び出せるようにした上で、g_signal_connect関数を実行して、生成済みのWindowウィジェットのdelete-eventシグナルに関連付け（connect）しています。
 
 ====================
-### 3.1.7. ウィンドウの表示
+### 3.1.7　ウィンドウの表示
 
 ********************
     gtk_widget_show_all win
@@ -284,7 +284,7 @@
 　gtk_widget_show_all関数は生成済みのウィジェット（ここではウィンドウ）を画面に表示します。
 
 ====================
-### 3.1.8. メインループの開始
+### 3.1.8　メインループの開始
 
 ********************
     gtk_main
@@ -294,7 +294,7 @@
 　ウィンドウの生成、シグナルとそれに対する処理の関連付け、ウィンドウの表示、が終わったら、gtk_main関数でメインループに入ってユーザの操作を待ちます。GTK+では、gtk_mainを抜けたらプログラムを終了させるのが普通なので、そのすぐ後ろにend命令を書いておきます。
 
 ====================
-### 3.1.9. コールバック関数（シグナルハンドラ）の定義
+### 3.1.9　コールバック関数（シグナルハンドラ）の定義
 
 ********************
     *on_window_delete_event
@@ -305,14 +305,14 @@
 　最後は、g_signal_connect関数でdelete-eventシグナルに関連付けしたサブルーチンです。gtk_main_quit関数を実行すると、メインループから抜けてgtk_main関数からreturnすることができます。
 
 ====================
-## 3.2. ウィンドウにウィジェットを1つ配置する
-
-　つづいて、もう1つ、トップレベルウィンドウにウィジェットを1つ置いてそれを動作させるプログラムを挙げます。
+## 3.2　ウィンドウにウィジェットを1つ配置する
 
 ![サンプル3-2](3-2.png)
 
+　つづいて、もう1つ、トップレベルウィンドウにウィジェットを1つ置いてそれを動作させるプログラムを挙げます。
+
 ====================
-### 3.2.1. サンプルプログラムの全体
+### 3.2.1　サンプルプログラムの全体
 
 ********************
     #include "hscallbk.as"
@@ -370,7 +370,7 @@
 　以後、前節と同じように各パートの説明になりますが、前節と2章で既に説明した内容は省略します。
 
 ====================
-### 3.2.2. コメントアウト部分
+### 3.2.2　コメントアウト部分
 
 ********************
     ;#func global g_signal_handler_disconnect "g_signal_handler_disconnect" sptr, int 
@@ -387,7 +387,7 @@
 　まず、スクリプトの中でコメントアウトされている部分ですが、これは、2章で説明した、シグナルとコールバック関数の関連付けを削除するためのスクリプトです。動作を確認したい場合に適宜有効にして実行してください。
 
 ====================
-### 3.2.3. コールバック関数を介したデータの受け渡し
+### 3.2.3　コールバック関数を介したデータの受け渡し
 
 ********************
     	msg = "Hello World"
@@ -408,7 +408,7 @@
 　実際、HSPでわざわざコールバック関数の引数を介してデータをやりとりする必要がどれだけあるかはわかりませんが、g_signal_connect関数の機能の一部として説明しました。ちなみに、コールバック関数の1つ目の引数には、シグナルが発生したウィジェットインスタンスが代入されています。
 
 ====================
-### 3.2.4. ウィンドウへのウィジェットの追加
+### 3.2.4　ウィンドウへのウィジェットの追加
 
 ********************
     gtk_container_add win, btn
@@ -421,20 +421,20 @@
 　Windowウィジェットに複数のウィジェットを詰め込む方法については5章で説明します。
 
 ====================
-# 4. HSPからGTK+を利用する際の、文字コードに関する注意点
+# 4　HSPからGTK+を利用する際の、文字コードに関する注意点
 
 ====================
-## 4.1. GTK+とやりとりする文字列の文字コードについて
+## 4.1　GTK+とやりとりする文字列の文字コードについて
 
 　まず1つ目の注意点は、GTK+のウィジェットは基本的にUTF-8エンコーディングの文字列しか扱えない、ということです。これはつまり、GTK+のウィジェットに渡す文字列は、必ずUTF-8エンコードされていなければならず、また、GTK+のウィジェットから返される文字列は、UTF-8エンコードされたものとして扱う必要がある、ということです。
 
 ====================
-## 4.2. HSPスクリプトの保存文字コードについて
+## 4.2　HSPスクリプトの保存文字コードについて
 
 　2つ目の注意点は、GTK+のウィジェットがUTF-8しか受け付けないからといって、HSPスクリプトファイルの保存文字コードをUTF-8にしてはいけない、ということです。標準エディタを使っている人は、そのような心配はないとは思いますが、いずれにしても、UTF-8エンコードされたマルチバイト文字（日本語の文字など）を含むHSPスクリプトは、エラーが出て実行できません。HSPスクリプトファイルは、シフトJISで保存されている必要があります。
 
 ====================
-## 4.3. HSPプログラム内での対処方法
+## 4.3　HSPプログラム内での対処方法
 
 　そこでどうすれば良いかというと、必要に応じて、随時プログラム内で変換します。
 
@@ -466,7 +466,7 @@
 ********************
 
 ====================
-# 5. レイアウトコンテナ
+# 5　レイアウトコンテナ
 
 　この章では、GTK+でウィンドウ（Window）に複数のウィジェットを配置する方法を説明します。
 
@@ -481,7 +481,7 @@
 　この章では、それらのうち、ボックス（HBoxおよびVBox）とテーブル（Table）を取り上げます。
 
 ====================
-## 5.1. ボックス（HBoxおよびVBox）
+## 5.1　ボックス（HBoxおよびVBox）
 
 ![サンプル5-1](5-1.png)
 
@@ -492,7 +492,7 @@
 　次のページから、サンプルプログラムを挙げて、各部分について説明します。
 
 ====================
-### 5.1.1. サンプルプログラムの全体
+### 5.1.1　サンプルプログラムの全体
 
 ********************
     #const FALSE 0
@@ -563,7 +563,7 @@
 　次のページから、各部分について説明します。今までの章で既出の事は省略します。
 
 ====================
-### 5.1.2. 真偽値の定数
+### 5.1.2　真偽値の定数
 
 ********************
     #const FALSE 0
@@ -573,7 +573,7 @@
 　GTK+の関数に引数として渡す真偽値のマクロです。真偽値を渡す場合、0（偽）か1（真）を渡します。
 
 ====================
-### 5.1.3. HBoxウィジェットの生成
+### 5.1.3　HBoxウィジェットの生成
 
 ********************
     gtk_hbox_new FALSE, 5
@@ -589,7 +589,7 @@
 　関数の戻り値が、ウィジェットのインスタンスを表す値になっているので、後で利用できるように、変数に保存しておきます。
 
 ====================
-### 5.1.4. ウィンドウの組み立て
+### 5.1.4　ウィンドウの組み立て
 
 ********************
     gtk_container_add win, hbox
@@ -611,7 +611,7 @@
 
 　この画像は、gtk_hbox_new関数の1つ目の引数、およびgtk_box_pack_start関数の3つ目、4つ目の引数に指定する真偽値のバリエーションによって、配置したウィジェットの表示パターンがどのように変化するかを、実際にボタンウィジェットを使って示すデモプログラムのウィンドウキャプチャです。
 
-　この章の1.3.で、gtk_hbox_new関数の1つ目の引数は、ボックスの上に並べるウィジェットをすべて同じ大きさで表示するかどうかを表す、と書きましたが、正確には、すべてのウィジェットの配置スペースを同じ大きさで確保するかどうかを表します。従って、2つ目の引数も、正確には、ウィジェットの配置スペース同士の間隔を表します。
+　この章の1.3で、gtk_hbox_new関数の1つ目の引数は、ボックスの上に並べるウィジェットをすべて同じ大きさで表示するかどうかを表す、と書きましたが、正確には、すべてのウィジェットの配置スペースを同じ大きさで確保するかどうかを表します。従って、2つ目の引数も、正確には、ウィジェットの配置スペース同士の間隔を表します。
 
 　gtk_box_pack_start関数の3つ目の引数は、追加するウィジェットの配置スペースを、可能な限り大きく確保するかどうかを表します。
 
@@ -626,7 +626,7 @@
 　なお、今回画像を使用したデモプログラムのソースは、<https://github.com/kitachro/hsp-gtk/tree/master/demo>で、hbox_pack.hspという名前で公開しています。
 
 ====================
-## 5.2. テーブル（Table）
+## 5.2　テーブル（Table）
 
 ![サンプル5-2](5-2.png)
 
@@ -636,7 +636,7 @@
 
 　テーブルに配置するウィジェット同士の間隔を設定するために、gtk_table_set_col_spacing、gtk_table_set_col_spacings、gtk_table_set_row_spacing、gtk_table_set_row_spacings、の4つの関数が用意されています。
 
-　逆に値を取得するには、gtk_table_set_col_spacing関数、または、gtk_table_set_row_spacing関数を実行します。
+　逆に値を取得するには、gtk_table_get_col_spacing関数、または、gtk_table_get_row_spacing関数を実行します。
 
 　ウィジェットをテーブルに配置するには、gtk_table_attach_defaults関数を実行してください。
 
@@ -770,7 +770,7 @@
 　配置座標の指定方法については、キャプチャ画像とスクリプトを見比べることで理解できるのではないかと思います。
 
 ====================
-# 6. ラベル（Label）
+# 6　ラベル（Label）
 
 ![サンプル6](6.png)
 
@@ -799,7 +799,7 @@
 　次のページから、サンプルプログラムのスクリプトを挙げて、それについて説明します。
 
 ====================
-## 6.1. サンプルプログラムの全体
+## 6.1　サンプルプログラムの全体
 
 ********************
     #const FALSE 0
@@ -946,7 +946,7 @@
 ********************
 
 ====================
-# 7. エントリ（Entry）
+# 7　エントリ（Entry）
 
 ![サンプル7](7.png)
 
@@ -973,7 +973,7 @@
 　次のページからは、例によって、サンプルプログラムのスクリプトとその解説です。
 
 ====================
-## 7.1. サンプルプログラムの全体
+## 7.1　サンプルプログラムの全体
 
 ********************
     #const FALSE 0
@@ -1141,23 +1141,23 @@
 ********************
 
 ====================
-# 8. ボタン系ウィジェット
+# 8　ボタン系ウィジェット
 
-　ボタンウィジェットも、ラベルやエントリと同じく、よく使われるウィジェットです。ボタンは、通常、押されるアクションがあった時に何らかの処理が行われるように設定します。つまり、clickedシグナルにコールバック関数をconnectするということです。
+　ボタンウィジェットも、ラベルやエントリと同じく、使いでがあるウィジェットです。ボタンは、通常、押されるアクションがあった時に何らかの処理が行われるように設定します。
 
 　ボタンは、画像や文字列をその上に表示することができます。つまり、イメージ（Image）ウィジェットやラベル（Label）ウィジェットを子として持つことができます。
 
 　画像の代わりに、それ以外のウィジェットを載せることもできなくもないですが、載せられた方のウィジェットをクリックできないなどの制限があるので、あまり意味がありません。
 
 ====================
-## 8.1. ボタン（Button）
+## 8.1　ボタン（Button）
 
 ![サンプル8-1](8-1.png)
 
 　まずは、最もありふれた形のボタンを利用するサンプルスクリプトを挙げて、それについて説明します。
 
 ====================
-### 8.1.1. サンプルプログラムの全体
+### 8.1.1　サンプルプログラムの全体
 
 ********************
     #const FALSE 0
@@ -1263,62 +1263,494 @@
 　次のページから、各部分について説明します。今までの章で既出の事は省略します。
 
 ====================
-## 8.2. トグルボタン（Toggle Button）
+## 8.2　トグルボタン（ToggleButton）
+
+![サンプル8-2](8-2.png)
+
+　トグルボタンは、ボタン（Button）と非常によく似た形をしていますが、1つ違うのは、一度クリックされて押された（凹んだ）状態になると、もう一度クリックされるまでその状態が続くことです。
+
+　トグルボタンは、クリックされて状態が変わるごとに、toggledシグナルを発生させます。
+
+　ボタンの状態を知りたい時には、gtk_toggle_button_get_active関数を実行します。
+
+　ボタンの状態を変更したい時には、gtk_toggle_button_set_active関数を実行してください。この関数を実行すると、クリックされた時と同じようにtoggledシグナルが発生します。
+
+　次のページから、サンプルプログラムのスクリプトと、その説明です。
 
 ====================
-## 8.3. チェックボタン（Check Button）
+### 8.2.1　サンプルプログラムの全体
+
+********************
+    #const FALSE 0
+    #const TRUE 1
+    
+    #include "hscallbk.as"
+    #uselib ""
+    #func cb_window_delete_event ""
+    #func cb_button1_toggled ""
+    #func cb_button2_toggled ""
+    
+    #uselib "libgtk-3-0.dll"
+    #func global gtk_init "gtk_init" sptr, sptr
+    #func global gtk_window_new "gtk_window_new" int
+    #const GTK_WINDOW_TOPLEVEL 0
+    #func global gtk_container_add "gtk_container_add" sptr, sptr
+    #func global gtk_widget_show_all "gtk_widget_show_all" sptr
+    #func global gtk_main "gtk_main"
+    #func global gtk_main_quit "gtk_main_quit"
+    #func global gtk_hbox_new "gtk_hbox_new" int, int
+    #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
+    #func global gtk_toggle_button_new_with_label "gtk_toggle_button_new_with_label" sptr
+    #func global gtk_toggle_button_new_with_mnemonic "gtk_toggle_button_new_with_mnemonic" sptr
+    #func global gtk_toggle_button_get_active "gtk_toggle_button_get_active" sptr
+    
+    #uselib "libgobject-2.0-0.dll"
+    #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+    #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+    
+    	gtk_init 0, 0
+    
+    	// set up window
+    	gtk_window_new GTK_WINDOW_TOPLEVEL
+    	win = stat
+    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
+    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), 0
+    
+    	// set up hbox
+    	gtk_hbox_new FALSE, 6
+    	hbox = stat
+    
+    	// set up buttons
+    	gtk_toggle_button_new_with_label "Button 1"
+    	btn1 = stat
+    	setcallbk cbbutton1toggled, cb_button1_toggled, *on_button1_toggled
+    	g_signal_connect btn1, "toggled", varptr( cbbutton1toggled ), 0
+    
+    	gtk_toggle_button_new_with_mnemonic "_Button 2"
+    	btn2 = stat
+    	setcallbk cbbutton2toggled, cb_button2_toggled, *on_button2_toggled
+    	g_signal_connect btn2, "toggled", varptr( cbbutton2toggled ), 0
+    
+    	// build up gui
+    	gtk_box_pack_start hbox, btn1, TRUE, TRUE, 0
+    	gtk_box_pack_start hbox, btn2, TRUE, TRUE, 0
+    	gtk_container_add win, hbox
+    
+    	// start app
+    	gtk_widget_show_all win
+    	gtk_main
+    	end
+    
+    *on_window_delete_event
+    	gtk_main_quit
+    	return
+    
+    *on_button1_toggled
+    	btn = btn1
+    	num_btn = 1
+    	gosub *show_message
+    	return
+    
+    *on_button2_toggled
+    	btn = btn2
+    	num_btn = 2
+    	gosub *show_message
+    	return
+    
+    *show_message
+    	gtk_toggle_button_get_active btn
+    	if stat {
+    		text_state = "ON"
+    	}
+    	else {
+    		text_state = "OFF"
+    	}
+    	mes "Button " + num_btn + "が" + text_state + "になりました。"
+    	return
+********************
 
 ====================
-## 8.4. ラジオボタン（Radio Button）
+## 8.3　チェックボタン（CheckButton）
+
+![サンプル8-3](8-3.png)
+
+　チェックボタンは、基本的にトグルボタンと同じものです。違うのは、ウィジェットの見栄えと、ウィジェットを生成するための関数名だけです。new系の関数名の"toggle"を"check"に変えてください。
+
+　サンプルスクリプトは省略します。
 
 ====================
-## 8.5. リンクボタン（Link Button）
+## 8.4　ラジオボタン（RadioButton）
+
+![サンプル8-4](8-4.png)
+
+　ラジオボタンは、チェックボタンとほぼ同じものですが、グループという概念が追加されています。
+
+　同じグループに登録されているラジオボタンは、それらのうち、一度に1つしかアクティブ（オン）にすることができません。プログラムのユーザに、固定の選択肢の中から1つだけを選んでもらう機能を作るのに便利です。
+
+　ラジオボタンを生成するには、gtk_radio_button_new_from_widget、gtk_radio_button_new_with_label_from_widget、gtk_radio_button_new_with_mnemonic_from_widget、の3つの関数のうちのいずれかを実行します。
+
+　この時、1つ目の引数に、登録するグループの情報を指定します。
+
+　同じグループとして扱うボタンのうち、1つ目のものを生成する場合には、0を指定してください。
+
+　2つ目以降のものを生成する時には、1つ目の引数に、同じグループの生成済みのウィジェットを指定してください。
+
+　ボタンの生成直後は、同じグループ内で最初に作ったボタンがアクティブになっています。プログラムからアクティブなボタンを変更するには、gtk_toggle_button_set_active関数を実行します。
+
+　また、ボタンのグループを後から変更したい時には、gtk_radio_button_join_group関数を実行してください。
+
+　次のページから、サンプルプログラムのスクリプトを挙げますが、こちらもチェックボタンのものとほぼ同じです。
 
 ====================
-## 8.6. スピンボタン（Spin Button）
+### 8.4.1　サンプルプログラムの全体
+
+********************
+    #const FALSE 0
+    #const TRUE 1
+    
+    #include "hscallbk.as"
+    #uselib ""
+    #func cb_window_delete_event ""
+    #func cb_button1_toggled ""
+    #func cb_button2_toggled ""
+    #func cb_button3_toggled ""
+    
+    #uselib "libgtk-3-0.dll"
+    #func global gtk_init "gtk_init" sptr, sptr
+    #func global gtk_window_new "gtk_window_new" int
+    #const GTK_WINDOW_TOPLEVEL 0
+    #func global gtk_container_set_border_width "gtk_container_set_border_width" sptr, int
+    #func global gtk_container_add "gtk_container_add" sptr, sptr
+    #func global gtk_widget_show_all "gtk_widget_show_all" sptr
+    #func global gtk_main "gtk_main"
+    #func global gtk_main_quit "gtk_main_quit"
+    #func global gtk_hbox_new "gtk_hbox_new" int, int
+    #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
+    #func global gtk_radio_button_new_with_label_from_widget "gtk_radio_button_new_with_label_from_widget" sptr, sptr
+    #func global gtk_radio_button_new_with_mnemonic_from_widget "gtk_radio_button_new_with_mnemonic_from_widget" sptr, sptr
+    #func global gtk_toggle_button_get_active "gtk_toggle_button_get_active" sptr
+    
+    #uselib "libgobject-2.0-0.dll"
+    #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+    #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+    
+    	gtk_init 0, 0
+    
+    	// set up window
+    	gtk_window_new GTK_WINDOW_TOPLEVEL
+    	win = stat
+    	gtk_container_set_border_width win, 10
+    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
+    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), 0
+    
+    	// set up hbox
+    	gtk_hbox_new FALSE, 6
+    	hbox = stat
+    
+    	// set up buttons
+    	gtk_radio_button_new_with_label_from_widget 0, "Button 1"
+    	btn1 = stat
+    	setcallbk cbbutton1toggled, cb_button1_toggled, *on_button1_toggled
+    	g_signal_connect btn1, "toggled", varptr( cbbutton1toggled ), 0
+    
+    	gtk_radio_button_new_with_label_from_widget btn1, "_Button 2"
+    	btn2 = stat
+    	setcallbk cbbutton2toggled, cb_button2_toggled, *on_button2_toggled
+    	g_signal_connect btn2, "toggled", varptr( cbbutton2toggled ), 0
+    
+    	gtk_radio_button_new_with_mnemonic_from_widget btn1, "_Button 3"
+    	btn3 = stat
+    	setcallbk cbbutton3toggled, cb_button3_toggled, *on_button3_toggled
+    	g_signal_connect btn3, "toggled", varptr( cbbutton3toggled ), 0
+    
+    	// build up gui
+    	gtk_box_pack_start hbox, btn1, TRUE, TRUE, 0
+    	gtk_box_pack_start hbox, btn2, TRUE, TRUE, 0
+    	gtk_box_pack_start hbox, btn3, TRUE, TRUE, 0
+    	gtk_container_add win, hbox
+    
+    	// start app
+    	gtk_widget_show_all win
+    	gtk_main
+    	end
+    
+    *on_window_delete_event
+    	gtk_main_quit
+    	return
+    
+    *on_button1_toggled
+    	btn = btn1
+    	num_btn = 1
+    	gosub *show_message
+    	return
+    
+    *on_button2_toggled
+    	btn = btn2
+    	num_btn = 2
+    	gosub *show_message
+    	return
+    
+    *on_button3_toggled
+    	btn = btn3
+    	num_btn = 3
+    	gosub *show_message
+    	return
+    
+    *show_message
+    	gtk_toggle_button_get_active btn
+    	if stat {
+    		text_state = "ON"
+    	}
+    	else {
+    		text_state = "OFF"
+    	}
+    	mes "Button " + num_btn + "が" + text_state + "になりました。"
+    	return
+********************
 
 ====================
-## 8.7. スイッチ（Switch）
+## 8.5　スピンボタン（SpinButton）
+
+![サンプル8-5](8-5.png)
 
 ====================
-# 9. プログレスバー（ProgressBar）
+### 8.5.1　サンプルプログラムの全体
+
+********************
+    #const FALSE 0
+    #const TRUE 1
+    
+    #include "hscallbk.as"
+    #uselib ""
+    #func cb_window_delete_event ""
+    #func cb_cbutton1_toggled ""
+    #func cb_cbutton2_toggled ""
+    
+    #uselib "libgtk-3-0.dll"
+    #func global gtk_init "gtk_init" sptr, sptr
+    #func global gtk_window_new "gtk_window_new" int
+    #const GTK_WINDOW_TOPLEVEL 0
+    #func global gtk_container_set_border_width "gtk_container_set_border_width" sptr, int
+    #func global gtk_container_add "gtk_container_add" sptr, sptr
+    #func global gtk_widget_show_all "gtk_widget_show_all" sptr
+    #func global gtk_main "gtk_main"
+    #func global gtk_main_quit "gtk_main_quit"
+    #func global gtk_hbox_new "gtk_hbox_new" int, int
+    #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
+    #func global gtk_adjustment_new "gtk_adjustment_new" double, double, double, double, double, double
+    #func global gtk_spin_button_new "gtk_spin_button_new" sptr, double, int
+    #func global gtk_spin_button_set_numeric "gtk_spin_button_set_numeric" sptr, int
+    #func global gtk_spin_button_set_update_policy "gtk_spin_button_set_update_policy" sptr, int
+    #enum GTK_UPDATE_ALWAYS = 0
+    #enum GTK_UPDATE_IF_VALID
+    #func global gtk_check_button_new_with_label "gtk_check_button_new_with_label" sptr
+    #func global gtk_toggle_button_get_active "gtk_toggle_button_get_active" sptr
+    
+    #uselib "libgobject-2.0-0.dll"
+    #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+    #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+    
+    	gtk_init 0, 0
+    
+    	// set up window
+    	gtk_window_new GTK_WINDOW_TOPLEVEL
+    	win = stat
+    	gtk_container_set_border_width win, 10
+    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
+    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), 0
+    
+    	// set up hbox
+    	gtk_hbox_new FALSE, 6
+    	hbox = stat
+    
+    	// set up buttons
+    	gtk_adjustment_new 0, 0, 1000, 10, 10, 0
+    	adj = stat
+    	gtk_spin_button_new adj, 1, 0
+    	spb = stat
+    
+    	gtk_check_button_new_with_label "Numeric"
+    	chb1 = stat
+    	setcallbk cbcbutton1toggled, cb_cbutton1_toggled, *on_cbutton1_toggled
+    	g_signal_connect chb1, "toggled", varptr( cbcbutton1toggled ), 0
+    
+    	gtk_check_button_new_with_label "If valid"
+    	chb2 = stat
+    	setcallbk cbcbutton2toggled, cb_cbutton2_toggled, *on_cbutton2_toggled
+    	g_signal_connect chb2, "toggled", varptr( cbcbutton2toggled ), 0
+    
+    	// build up gui
+    	gtk_box_pack_start hbox, spb, TRUE, TRUE, 0
+    	gtk_box_pack_start hbox, chb1, TRUE, TRUE, 0
+    	gtk_box_pack_start hbox, chb2, TRUE, TRUE, 0
+    	gtk_container_add win, hbox
+    
+    	// start app
+    	gtk_widget_show_all win
+    	gtk_main
+    	end
+    
+    *on_window_delete_event
+    	gtk_main_quit
+    	return
+    
+    *on_cbutton1_toggled
+    	gtk_toggle_button_get_active chb1
+    	gtk_spin_button_set_numeric spb, stat
+    	return
+    
+    *on_cbutton2_toggled
+    	gtk_toggle_button_get_active chb2
+    	if stat {
+    		policy = GTK_UPDATE_IF_VALID
+    	}
+    	else {
+    		policy = GTK_UPDATE_ALWAYS
+    	}
+    	gtk_spin_button_set_update_policy spb, policy
+    	return
+********************
 
 ====================
-# 10. スピナー（Spinner）
+## 8.6　スイッチ（Switch）
+
+![サンプル8-6](8-6.png)
 
 ====================
-# 11. ツリービューとリストビュー（TreeView）
+### 8.6.1　サンプルプログラムの全体
+
+********************
+    #const FALSE 0
+    #const TRUE 1
+    
+    #include "hscallbk.as"
+    #uselib ""
+    #func cb_window_delete_event ""
+    #func cb_button1_notifyactive ""
+    #func cb_button2_notifyactive ""
+    
+    #uselib "libgtk-3-0.dll"
+    #func global gtk_init "gtk_init" sptr, sptr
+    #func global gtk_window_new "gtk_window_new" int
+    #const GTK_WINDOW_TOPLEVEL 0
+    #func global gtk_container_set_border_width "gtk_container_set_border_width" sptr, int
+    #func global gtk_container_add "gtk_container_add" sptr, sptr
+    #func global gtk_widget_show_all "gtk_widget_show_all" sptr
+    #func global gtk_main "gtk_main"
+    #func global gtk_main_quit "gtk_main_quit"
+    #func global gtk_hbox_new "gtk_hbox_new" int, int
+    #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
+    #func global gtk_switch_new "gtk_switch_new"
+    #func global gtk_switch_set_active "gtk_switch_set_active" sptr, int
+    #func global gtk_switch_get_active "gtk_switch_get_active" sptr
+    
+    #uselib "libgobject-2.0-0.dll"
+    #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+    #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+    
+    	gtk_init 0, 0
+    
+    	// set up window
+    	gtk_window_new GTK_WINDOW_TOPLEVEL
+    	win = stat
+    	gtk_container_set_border_width win, 10
+    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
+    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), 0
+    
+    	// set up hbox
+    	gtk_hbox_new FALSE, 6
+    	hbox = stat
+    
+    	// set up buttons
+    	gtk_switch_new
+    	btn1 = stat
+    	gtk_switch_set_active btn1, FALSE
+    	setcallbk cbbutton1notifyactive, cb_button1_notifyactive, *on_button1_notifyactive
+    	g_signal_connect btn1, "notify::active", varptr( cbbutton1notifyactive ), "1";0
+    
+    	gtk_switch_new
+    	btn2 = stat
+    	gtk_switch_set_active btn2, TRUE
+    	setcallbk cbbutton2notifyactive, cb_button2_notifyactive, *on_button2_notifyactive
+    	g_signal_connect btn2, "notify::active", varptr( cbbutton2notifyactive ), "2";0
+    
+    	// build up gui
+    	gtk_box_pack_start hbox, btn1, TRUE, TRUE, 0
+    	gtk_box_pack_start hbox, btn2, TRUE, TRUE, 0
+    	gtk_container_add win, hbox
+    
+    	// start app
+    	gtk_widget_show_all win
+    	gtk_main
+    	end
+    
+    *on_window_delete_event
+    	gtk_main_quit
+    	return
+    
+    *on_button1_notifyactive
+    	btn = btn1
+    	num_btn = 1
+    	gosub *show_message
+    	return
+    
+    *on_button2_notifyactive
+    	btn = btn2
+    	num_btn = 2
+    	gosub *show_message
+    	return
+    
+    *show_message
+    	gtk_switch_get_active btn
+    	if stat {
+    		text_state = "ON"
+    	}
+    	else {
+    		text_state = "OFF"
+    	}
+    	mes "Button " + num_btn + "が" + text_state + "になりました。"
+    	return
+********************
 
 ====================
-# 12. セルレンダラ（CellRenderer）
+# 9　プログレスバー（ProgressBar）
 
 ====================
-# 13. コンボボックス（ComboBox）
+# 10　スピナー（Spinner）
 
 ====================
-# 14. アイコンビュー（IconView）
+# 11　ツリービューとリストビュー（TreeView）
 
 ====================
-# 15. テキストエディタ（TextView）
+# 12　セルレンダラ（CellRenderer）
 
 ====================
-# 16. メニュー（Menu）
+# 13　コンボボックス（ComboBox）
 
 ====================
-# 17. ダイアログ（Dialog）
+# 14　アイコンビュー（IconView）
 
 ====================
-# 18. クリップボード（Clipboard）
+# 15　テキストエディタ（TextView）
 
 ====================
-# 19. ドラッグアンドドロップ
+# 16　メニュー（Menu）
 
 ====================
-# 20. GladeインターフェースデザイナーとGtkBuilderクラス
+# 17　ダイアログ（Dialog）
 
 ====================
-# 21. オブジェクト
+# 18　クリップボード（Clipboard）
 
 ====================
-# 22. ストックアイテム（StockItem）
+# 19　ドラッグアンドドロップ
+
+====================
+# 20　GladeインターフェースデザイナーとGtkBuilderクラス
+
+====================
+# 21　オブジェクト
+
+====================
+# 22　ストックアイテム（StockItem）
 

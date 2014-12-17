@@ -314,15 +314,15 @@
 ;#func global gtk_button_leave "" 
 ;#func global gtk_button_new "" 
 #func global gtk_button_new_from_stock "gtk_button_new_from_stock" sptr
-#func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
-#func global gtk_button_new_with_mnemonic "gtk_button_new_with_mnemonic" sptr 
+#func global gtk_button_new_with_label "gtk_button_new_with_label" str
+#func global gtk_button_new_with_mnemonic "gtk_button_new_with_mnemonic" sptr
 ;#func global gtk_button_pressed "" 
 ;#func global gtk_button_released "" 
 ;#func global gtk_button_set_alignment "" 
 ;#func global gtk_button_set_focus_on_click "" 
 ;#func global gtk_button_set_image "" 
 ;#func global gtk_button_set_image_position "" 
-#func global gtk_button_set_label "gtk_button_set_label" sptr, sptr 
+#func global gtk_button_set_label "gtk_button_set_label" sptr, str
 ;#func global gtk_button_set_relief "" 
 ;#func global gtk_button_set_use_stock "" 
 ;#func global gtk_button_set_use_underline "" 
@@ -1563,13 +1563,13 @@
 ;#func global gtk_layout_set_vadjustment "" 
 ;#func global gtk_layout_thaw "" 
 ;;#func global gtk_link_button_get_type "" 
-;#func global gtk_link_button_get_uri "gtk_link_button_get_uri" sptr
-;#func global gtk_link_button_get_visited "gtk_link_button_get_visited" sptr
-;#func global gtk_link_button_new "gtk_link_button_new" str
-;#func global gtk_link_button_new_with_label "gtk_link_button_new_with_label" str, str
-;#func global gtk_link_button_set_uri "gtk_link_button_set_uri" sptr, str
+#func global gtk_link_button_get_uri "gtk_link_button_get_uri" sptr
+#func global gtk_link_button_get_visited "gtk_link_button_get_visited" sptr
+#func global gtk_link_button_new "gtk_link_button_new" str
+#func global gtk_link_button_new_with_label "gtk_link_button_new_with_label" str, str
+#func global gtk_link_button_set_uri "gtk_link_button_set_uri" sptr, str
 ;;#func global gtk_link_button_set_uri_hook "" 
-;#func global gtk_link_button_set_visited "gtk_link_button_set_visited" sptr, int
+#func global gtk_link_button_set_visited "gtk_link_button_set_visited" sptr, int
 ;#func global gtk_list_append_items "" 
 ;#func global gtk_list_child_position "" 
 ;#func global gtk_list_clear_items "" 

@@ -30,52 +30,73 @@
 #func global gtk_button_new_from_stock "gtk_button_new_from_stock" sptr
 #func global gtk_button_new_with_mnemonic "gtk_button_new_with_mnemonic" sptr 
 #define GTK_STOCK_OPEN	"gtk-open"
+#func global gtk_container_get_children "gtk_container_get_children" sptr
+#func gtk_widget_override_font "gtk_widget_override_font" sptr, sptr
 #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
 
 #uselib "libgobject-2.0-0.dll"
 #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
 #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
 
+#uselib "libpango-1.0-0.dll"
+#func pango_font_description_from_string "pango_font_description_from_string" str
+
+#uselib "libglib-2.0-0.dll"
+#func global g_list_nth_data "g_list_nth_data" sptr, int
+
 	gtk_init	0, 0
 
-	// set up window
+	// ウィンドウ生成
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	gtk_container_set_border_width	win, 10
 	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
 	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), 0
 
-	// set up hbox
+	// HBox生成
 	gtk_hbox_new	FALSE, 6
 	hbox	= stat
 
-	// set up buttons
+	// ボタン群生成
+	; ボタン1
 	gtk_button_new_with_label	u( "クリック！" )
 	btn1	= stat
 	setcallbk	cbbutton1clicked, cb_button1_clicked, *on_button1_clicked
 	g_signal_connect	btn1, "clicked", varptr( cbbutton1clicked ), 0
 
+	; ボタン1のラベルのフォントを設定
+	gtk_container_get_children	btn1
+	glist	= stat
+	g_list_nth_data	glist, 0
+	w	= stat
+	pango_font_description_from_string	u( "ms ui gothic 10" )
+	fd	= stat
+	gtk_widget_override_font	w, fd
+
+	; ボタン2
 	gtk_button_new_from_stock	GTK_STOCK_OPEN
 	btn2	= stat
 	setcallbk	cbbutton2clicked, cb_button2_clicked, *on_button2_clicked
 	g_signal_connect	btn2, "clicked", varptr( cbbutton2clicked ), 0
 
+	; ボタン3
 	gtk_button_new_with_mnemonic	"_Close"
 	btn3	= stat
 	setcallbk	cbbutton3clicked, cb_button3_clicked, *on_button3_clicked
 	g_signal_connect	btn3, "clicked", varptr( cbbutton3clicked ), 0
 
-	// build up gui
+	// GUIの組み立て
 	gtk_box_pack_start	hbox, btn1, TRUE, TRUE, 0
 	gtk_box_pack_start	hbox, btn2, TRUE, TRUE, 0
 	gtk_box_pack_start	hbox, btn3, TRUE, TRUE, 0
 	gtk_container_add	win, hbox
 
-	// start app
+	// ウィンドウの表示とメインループの開始
 	gtk_widget_show_all	win
 	gtk_main
 	end
 
+/* シグナルハンドラ */
 *on_window_delete_event
 	gtk_main_quit
 	return

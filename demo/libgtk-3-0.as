@@ -228,7 +228,7 @@
 ;#func global gtk_assistant_set_page_type "" 
 ;#func global gtk_assistant_update_buttons_state "" 
 ;#func global gtk_attach_options_get_type "" 
-;#func global gtk_bin_get_child "" 
+#func global gtk_bin_get_child "gtk_bin_get_child" sptr
 ;#func global gtk_bin_get_type "" 
 ;#func global gtk_binary_age "" 
 ;#func global gtk_binding_entry_add_signal "" 
@@ -652,7 +652,7 @@
 ;#func global gtk_container_foreach "" 
 ;#func global gtk_container_foreach_full "" 
 ;#func global gtk_container_get_border_width "" 
-;#func global gtk_container_get_children "" 
+#func global gtk_container_get_children "gtk_container_get_children" sptr
 ;#func global gtk_container_get_focus_chain "" 
 ;#func global gtk_container_get_focus_child "" 
 ;#func global gtk_container_get_focus_hadjustment "" 
@@ -3694,6 +3694,11 @@
 ;#func global gtk_widget_modify_font "" 
 ;#func global gtk_widget_modify_style "" 
 ;#func global gtk_widget_modify_text "" 
+;#func gtk_widget_override_background_color "" 
+;#func gtk_widget_override_color "" 
+;#func gtk_widget_override_cursor "" 
+#func gtk_widget_override_font "gtk_widget_override_font" sptr, sptr
+;#funcgtk_widget_override_symbolic_color "" 
 ;#func global gtk_widget_new "" 
 ;#func global gtk_widget_path "" 
 ;#func global gtk_widget_pop_colormap "" 

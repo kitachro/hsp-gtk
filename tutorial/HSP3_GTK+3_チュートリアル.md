@@ -4,10 +4,10 @@
 : chrono (<https://github.com/kitachro>)
 
 バージョン:
-: 0.6.2
+: 0.6.3
 
 最終更新日:
-: 2014年12月17日
+: 2014年12月18日
 
 ライセンス（Copyright）:
 : GNU Free Documentation License 1.3 with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts
@@ -504,7 +504,7 @@
 ====================
 ## 5.1　ボタン（Button）
 
-![サンプル8-1](8-1.png)
+![サンプル5-1](5-1.png)
 
 　まずは、最もありふれた形のボタンを利用するサンプルスクリプトを挙げて、それについて説明します。
 
@@ -517,8 +517,7 @@
     
     #include "hspinet.as"
     #module
-    	// shift-jis文字列をutf-8に変換
-    #defcfunc u str chars_
+    #defcfunc u str chars_ // shift-jis文字列をutf-8に変換
     	chars = chars_
     	nkfcnv@ chars, chars, "Sw"
     	return chars
@@ -535,9 +534,8 @@
     #func global gtk_init "gtk_init" sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
     #const GTK_WINDOW_TOPLEVEL 0
-    #func global gtk_window_set_title "gtk_window_set_title" sptr, sptr
-    #func global gtk_container_add "gtk_container_add" sptr, sptr
     #func global gtk_container_set_border_width "gtk_container_set_border_width" sptr, int
+    #func global gtk_container_add "gtk_container_add" sptr, sptr
     #func global gtk_widget_show_all "gtk_widget_show_all" sptr
     #func global gtk_main "gtk_main"
     #func global gtk_main_quit "gtk_main_quit"
@@ -546,54 +544,73 @@
     #func global gtk_button_new_from_stock "gtk_button_new_from_stock" sptr
     #func global gtk_button_new_with_mnemonic "gtk_button_new_with_mnemonic" sptr 
     #define GTK_STOCK_OPEN "gtk-open"
+    #func global gtk_container_get_children "gtk_container_get_children" sptr
+    #func gtk_widget_override_font "gtk_widget_override_font" sptr, sptr
     #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
-    #func global gtk_entry_new "gtk_entry_new" 
     
     #uselib "libgobject-2.0-0.dll"
     #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
     #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
     
+    #uselib "libpango-1.0-0.dll"
+    #func pango_font_description_from_string "pango_font_description_from_string" str
+    
+    #uselib "libglib-2.0-0.dll"
+    #func global g_list_nth_data "g_list_nth_data" sptr, int
+    
     	gtk_init 0, 0
     
-    	// set up window
+    	// ウィンドウ生成
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
-    	gtk_window_set_title win, u( "ボタン デモ" )
     	gtk_container_set_border_width win, 10
     	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
     	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), 0
     
-    	// set up hbox
+    	// HBox生成
     	gtk_hbox_new FALSE, 6
     	hbox = stat
     
-    	// set up buttons
+    	// ボタン群生成
+    	; ボタン1
     	gtk_button_new_with_label u( "クリック！" )
     	btn1 = stat
     	setcallbk cbbutton1clicked, cb_button1_clicked, *on_button1_clicked
     	g_signal_connect btn1, "clicked", varptr( cbbutton1clicked ), 0
     
+    	; ボタン1のラベルのフォントを設定
+    	gtk_container_get_children btn1
+    	glist = stat
+    	g_list_nth_data glist, 0
+    	w = stat
+    	pango_font_description_from_string u( "ms ui gothic 10" )
+    	fd = stat
+    	gtk_widget_override_font w, fd
+    
+    	; ボタン2
     	gtk_button_new_from_stock GTK_STOCK_OPEN
     	btn2 = stat
     	setcallbk cbbutton2clicked, cb_button2_clicked, *on_button2_clicked
     	g_signal_connect btn2, "clicked", varptr( cbbutton2clicked ), 0
     
+    	; ボタン3
     	gtk_button_new_with_mnemonic "_Close"
     	btn3 = stat
     	setcallbk cbbutton3clicked, cb_button3_clicked, *on_button3_clicked
     	g_signal_connect btn3, "clicked", varptr( cbbutton3clicked ), 0
     
-    	// build up gui
+    	// GUIの組み立て
     	gtk_box_pack_start hbox, btn1, TRUE, TRUE, 0
     	gtk_box_pack_start hbox, btn2, TRUE, TRUE, 0
     	gtk_box_pack_start hbox, btn3, TRUE, TRUE, 0
     	gtk_container_add win, hbox
     
-    	// start app
+    	// ウィンドウの表示とメインループの開始
     	gtk_widget_show_all win
     	gtk_main
     	end
     
+    /* シグナルハンドラ */
     *on_window_delete_event
     	gtk_main_quit
     	return
@@ -617,7 +634,7 @@
 ====================
 ## 5.2　トグルボタン（ToggleButton）
 
-![サンプル8-2](8-2.png)
+![サンプル5-2](5-2.png)
 
 　トグルボタンは、ボタン（Button）と非常によく似た形をしていますが、1つ違うのは、一度クリックされて押された（凹んだ）状態になると、もう一度クリックされるまでその状態が続くことです。
 
@@ -724,7 +741,7 @@
 ====================
 ## 5.3　チェックボタン（CheckButton）
 
-![サンプル8-3](8-3.png)
+![サンプル5-3](5-3.png)
 
 　チェックボタンは、基本的にトグルボタンと同じものです。違うのは、ウィジェットの見栄えと、ウィジェットを生成するための関数名だけです。new系の関数名の"toggle"を"check"に変えてください。
 
@@ -733,7 +750,7 @@
 ====================
 ## 5.4　ラジオボタン（RadioButton）
 
-![サンプル8-4](8-4.png)
+![サンプル5-4](5-4.png)
 
 　ラジオボタンは、チェックボタンとほぼ同じものですが、グループという概念が追加されています。
 
@@ -863,7 +880,7 @@
 ====================
 ## 5.5　リンクボタン（LinkButton）
 
-![サンプル8-5](8-5.png)
+![サンプル5-5](5-5.png)
 
 　リンクボタンは、ウェブページにあるようなハイパーリンクを表示するためのボタンです。リンクをクリックすると、リンクされているアドレスを扱うデフォルトのアプリケーションが起動します――と言いたいところなのですが、Windowsでは、アドレスのプロトコルに対する関連付けが設定されていても、GTK+がデフォルトのアプリケーションの設定を見つけられずに、何も反応がないことがあります（C言語からGTK+を利用している場合には、ウォーニングがコンソールに出力されます）。
 
@@ -929,7 +946,7 @@
 ====================
 ## 5.6　スピンボタン（SpinButton）
 
-![サンプル8-6](8-6.png)
+![サンプル5-6](5-6.png)
 
 　スピンボタンは、プログラムのユーザに、一定の範囲内の数値を入力してもらうのに都合がいいウィジェットです。
 
@@ -1038,7 +1055,7 @@
 ====================
 ## 5.7　スイッチ（Switch）
 
-![サンプル8-7](8-7.png)
+![サンプル5-7](5-7.png)
 
 ====================
 ### 5.7.1　サンプルプログラムの全体
@@ -1154,7 +1171,7 @@
 ====================
 ## 6.1　ボックス（HBoxおよびVBox）
 
-![サンプル5-1](5-1.png)
+![サンプル6-1](6-1.png)
 
 　ボックスは、複数のウィジェットを縦または横方向に一直線に配置するための、目に見えないレイアウトコンテナです。HBoxは横方向（horizontal）、VBoxは縦方向（vertical）に配置することができます。
 
@@ -1299,7 +1316,7 @@
 ====================
 ## 6.2　テーブル（Table）
 
-![サンプル5-2](5-2.png)
+![サンプル6-2](6-2.png)
 
 　テーブルは、複数のウィジェットをタイル形に配置するための、目に見えないレイアウトコンテナです。
 
@@ -1443,7 +1460,7 @@
 ====================
 # 7　ラベル（Label）
 
-![サンプル6](6.png)
+![サンプル7](7.png)
 
 　ラベルは、GTK+のウィンドウ内に編集の必要がない文字列を配置する第一の手段です。例えば、エントリ（Entry）ウィジェットのとなりに名前を表示するのに使います。
 
@@ -1619,7 +1636,7 @@
 ====================
 # 8　エントリ（Entry）
 
-![サンプル7](7.png)
+![サンプル8](8.png)
 
 　エントリウィジェットは、プログラムのユーザに短めの文字列を入力してもらうためのウィジェットです。
 

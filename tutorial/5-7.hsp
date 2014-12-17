@@ -4,8 +4,8 @@
 #include "hscallbk.as"
 #uselib ""
 #func cb_window_delete_event ""
-#func cb_button1_toggled ""
-#func cb_button2_toggled ""
+#func cb_button1_notifyactive ""
+#func cb_button2_notifyactive ""
 
 #uselib "libgtk-3-0.dll"
 #func global gtk_init "gtk_init" sptr, sptr
@@ -18,9 +18,9 @@
 #func global gtk_main_quit "gtk_main_quit"
 #func global gtk_hbox_new "gtk_hbox_new" int, int
 #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
-#func global gtk_toggle_button_new_with_label "gtk_toggle_button_new_with_label" sptr
-#func global gtk_toggle_button_new_with_mnemonic "gtk_toggle_button_new_with_mnemonic" sptr
-#func global gtk_toggle_button_get_active "gtk_toggle_button_get_active" sptr
+#func global gtk_switch_new "gtk_switch_new"
+#func global gtk_switch_set_active "gtk_switch_set_active" sptr, int
+#func global gtk_switch_get_active "gtk_switch_get_active" sptr
 
 #uselib "libgobject-2.0-0.dll"
 #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
@@ -40,15 +40,17 @@
 	hbox	= stat
 
 	// set up buttons
-	gtk_toggle_button_new_with_label	"Button 1"
+	gtk_switch_new
 	btn1	= stat
-	setcallbk	cbbutton1toggled, cb_button1_toggled, *on_button1_toggled
-	g_signal_connect	btn1, "toggled", varptr( cbbutton1toggled ), 0
+	gtk_switch_set_active	btn1, FALSE
+	setcallbk	cbbutton1notifyactive, cb_button1_notifyactive, *on_button1_notifyactive
+	g_signal_connect	btn1, "notify::active", varptr( cbbutton1notifyactive ), 0
 
-	gtk_toggle_button_new_with_mnemonic	"_Button 2"
+	gtk_switch_new
 	btn2	= stat
-	setcallbk	cbbutton2toggled, cb_button2_toggled, *on_button2_toggled
-	g_signal_connect	btn2, "toggled", varptr( cbbutton2toggled ), 0
+	gtk_switch_set_active	btn2, TRUE
+	setcallbk	cbbutton2notifyactive, cb_button2_notifyactive, *on_button2_notifyactive
+	g_signal_connect	btn2, "notify::active", varptr( cbbutton2notifyactive ), 0
 
 	// build up gui
 	gtk_box_pack_start	hbox, btn1, TRUE, TRUE, 0
@@ -64,20 +66,20 @@
 	gtk_main_quit
 	return
 
-*on_button1_toggled
+*on_button1_notifyactive
 	btn	= btn1
 	num_btn	= 1
 	gosub	*show_message
 	return
 
-*on_button2_toggled
+*on_button2_notifyactive
 	btn	= btn2
 	num_btn	= 2
 	gosub	*show_message
 	return
 
 *show_message
-	gtk_toggle_button_get_active	btn
+	gtk_switch_get_active	btn
 	if stat {
 		text_state	= "ON"
 	}

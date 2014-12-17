@@ -12,149 +12,130 @@
 #include "hscallbk.as"
 #uselib ""
 #func cb_window_delete_event ""
-#func cb_cbtn1_toggled ""
-#func cb_cbtn2_toggled ""
-#func cb_cbtn3_toggled ""
-#func cb_cbtn4_toggled ""
-#func cb_do_pulse ""
 
 #uselib "libgtk-3-0.dll"
 #func global gtk_init "gtk_init" sptr, sptr
 #func global gtk_window_new "gtk_window_new" int
 #const	GTK_WINDOW_TOPLEVEL	0
 #func global gtk_container_add "gtk_container_add" sptr, sptr
-#func global gtk_widget_set_size_request "gtk_widget_set_size_request" sptr, int, int
 #func global gtk_widget_show_all "gtk_widget_show_all" sptr
 #func global gtk_main "gtk_main"
 #func global gtk_main_quit "gtk_main_quit"
-#func global gtk_vbox_new "gtk_vbox_new" int, int
+#func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
 #func global gtk_hbox_new "gtk_hbox_new" int, int
+#func global gtk_vbox_new "gtk_vbox_new" int, int
 #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
-#func global gtk_entry_new "gtk_entry_new" 
-#func global gtk_entry_set_text "gtk_entry_set_text" sptr, sptr
-#func global gtk_entry_set_visibility "gtk_entry_set_visibility" sptr, int
-#func global gtk_entry_set_icon_from_stock "gtk_entry_set_icon_from_stock" sptr, int, sptr
-#func global gtk_entry_set_progress_pulse_step "gtk_entry_set_progress_pulse_step" sptr, double
-#func global gtk_entry_progress_pulse "gtk_entry_progress_pulse" sptr
-#func global gtk_editable_set_editable "gtk_editable_set_editable" sptr, int
-#define	GTK_STOCK_FIND	"gtk-find"
-#enum GTK_ENTRY_ICON_PRIMARY = 0
-#enum GTK_ENTRY_ICON_SECONDARY
-#func global gtk_check_button_new_with_label "gtk_check_button_new_with_label" sptr
-#func global gtk_toggle_button_set_active "gtk_toggle_button_set_active" sptr, int
-#func global gtk_toggle_button_get_active "gtk_toggle_button_get_active" sptr
+#func global gtk_label_new "gtk_label_new" sptr
+#func global gtk_label_new_with_mnemonic "gtk_label_new_with_mnemonic" sptr
+#func global gtk_label_set_justify "gtk_label_set_justify" sptr, int
+#func global gtk_label_set_selectable "gtk_label_set_selectable" sptr, int
+#func global gtk_label_set_markup "gtk_label_set_markup" sptr, sptr
+#const	GTK_JUSTIFY_LEFT	0
+#const	GTK_JUSTIFY_RIGHT	1
+#const	GTK_JUSTIFY_CENTER	2
+#const	GTK_JUSTIFY_FILL	3
+#func global gtk_label_set_line_wrap "gtk_label_set_line_wrap" sptr, int
+#func global gtk_label_set_mnemonic_widget "gtk_label_set_mnemonic_widget" sptr, sptr
 
 #uselib "libgobject-2.0-0.dll"
 #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
 #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
 
-#uselib "libglib-2.0-0.dll"
-#func global g_timeout_add "g_timeout_add" int, sptr, sptr
-#func global g_source_remove "g_source_remove" int
-
 	gtk_init	0, 0
 
-	// set up window
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
-	gtk_widget_set_size_request	win, 200, 100
 	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
 	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), 0
 
-	// set up vbox
-	gtk_vbox_new	FALSE, 6
-	vbox	= stat
-
-	// set up entry
-	gtk_entry_new
-	ety	= stat
-	gtk_entry_set_text	ety, "Hello, World"
-
-	// set up hbox
-	gtk_hbox_new	FALSE, 6
+	gtk_hbox_new	FALSE, 10
 	hbox	= stat
 
-	// set up check buttons
-	gtk_check_button_new_with_label	"Editable"
-	cbtn1	= stat
-	gtk_toggle_button_set_active	cbtn1, TRUE
-	setcallbk	cbcbtn1toggled, cb_cbtn1_toggled, *on_cbtn1_toggled
-	g_signal_connect	cbtn1, "toggled", varptr( cbcbtn1toggled ), 0
+	gtk_vbox_new	FALSE, 10
+	vbox_left	= stat
+	gtk_vbox_new	FALSE, 10
+	vbox_right	= stat
 
-	gtk_check_button_new_with_label	"Visible"
-	cbtn2	= stat
-	gtk_toggle_button_set_active	cbtn2, TRUE
-	setcallbk	cbcbtn2toggled, cb_cbtn2_toggled, *on_cbtn2_toggled
-	g_signal_connect	cbtn2, "toggled", varptr( cbcbtn2toggled ), 0
+	gtk_label_new	u( "デフォルト状態のラベルです。\n次の行です。" )
+	lbl1	= stat
 
-	gtk_check_button_new_with_label	"Pulse"
-	cbtn3	= stat
-	gtk_toggle_button_set_active	cbtn3, FALSE
-	setcallbk	cbcbtn3toggled, cb_cbtn3_toggled, *on_cbtn3_toggled
-	g_signal_connect	cbtn3, "toggled", varptr( cbcbtn3toggled ), 0
-	setcallbk	cbdopulse, cb_do_pulse, *do_pulse
+	text	= "テキストを左寄せしたラベルです。\n"
+	text	+= "次の行です。\nデフォルトは左寄せです。"
+	gtk_label_new	u( text )
+	lbl2	= stat
+	gtk_label_set_justify	lbl2, GTK_JUSTIFY_LEFT
 
-	gtk_check_button_new_with_label	"Icon"
-	cbtn4	= stat
-	gtk_toggle_button_set_active	cbtn4, FALSE
-	setcallbk	cbcbtn4toggled, cb_cbtn4_toggled, *on_cbtn4_toggled
-	g_signal_connect	cbtn4, "toggled", varptr( cbcbtn4toggled ), 0
+	text	= "テキストを中央寄せしたラベルです。\n"
+	text	+= "次の行です。"
+	gtk_label_new	u( text )
+	lbl3	= stat
+	gtk_label_set_justify	lbl3, GTK_JUSTIFY_CENTER
 
-	// build up gui
-	gtk_box_pack_start	hbox, cbtn1, TRUE, TRUE, 0
-	gtk_box_pack_start	hbox, cbtn2, TRUE, TRUE, 0
-	gtk_box_pack_start	hbox, cbtn3, TRUE, TRUE, 0
-	gtk_box_pack_start	hbox, cbtn4, TRUE, TRUE, 0
-	gtk_box_pack_start	vbox, ety, TRUE, TRUE, 0
-	gtk_box_pack_start	vbox, hbox, TRUE, TRUE, 0
-	gtk_container_add	win, vbox
+	gtk_label_new	u( "テキストを右寄せしたラベルです。\n次の行です。" )
+	lbl4	= stat
+	gtk_label_set_justify	lbl4, GTK_JUSTIFY_RIGHT
 
-	// start app
+	text	= "文字を<small>小さくしたり</small>、<big>大きくしたり</big>、"
+	text	+= "<b>太くしたり</b>、<i>イタリックにしたり</i>できます。"
+	text	+= "行の折り返しがオンになっています。"
+	gtk_label_new	0
+	lbl5	= stat
+	gtk_label_set_markup	lbl5, u( text )
+	gtk_label_set_line_wrap	lbl5, TRUE
+
+	text	= "[Alt+_P]キーを押すと、右側のボタンが動作します。\n"
+	text	+= "このラベルのテキストは選択できます。"
+	gtk_label_new_with_mnemonic	u( text )
+	lbl6	= stat
+	gtk_label_set_selectable	lbl6, TRUE
+
+	text	= "This is an example of a line-wrapped label.  It "
+	text	+= "should not be taking up the entire "
+	text	+= "width allocated to it, but automatically "
+	text	+= "wraps the words to fit.\n\n"
+	text	+= "このラベルも行の折り返しがオンになっています。\n"
+	text	+= "1行に入り切らない単語（文字）は次の行に送られます。\n"
+	text	+= "テキストは左寄せなので、折り返しによってできた"
+	text	+= "右側の余白はそのままです。\n"
+	text	+= "テキスト中の  空白も  そのまま  表示  されます。"
+	gtk_label_new	u( text )
+	lbl7	= stat
+	gtk_label_set_line_wrap	lbl7, TRUE
+
+	text	= "This is an example of a line-wrapped, filled label. "
+	text	+= "It should be taking "
+	text	+= "up the entire width allocated to it.\n\n"
+	text	+= "このラベルは、行の折り返しがオンで、なおかつテキストが"
+	text	+= "両側寄せになっています。\n"
+	text	+= "折り返しによって左右に余白ができないようになっています。\n"
+	gtk_label_new	u( text )
+	lbl8	= stat
+	gtk_label_set_justify	lbl8, GTK_JUSTIFY_FILL
+	gtk_label_set_line_wrap	lbl8, TRUE
+
+	gtk_button_new_with_label	u( "押さないでください" )
+	btn	= stat
+	gtk_label_set_mnemonic_widget	lbl6, btn
+
+	gtk_box_pack_start	vbox_left, lbl1, TRUE, TRUE, 0
+	gtk_box_pack_start	vbox_left, lbl2, TRUE, TRUE, 0
+	gtk_box_pack_start	vbox_left, lbl3, TRUE, TRUE, 0
+	gtk_box_pack_start	vbox_left, lbl4, TRUE, TRUE, 0
+	gtk_box_pack_start	vbox_left, lbl5, TRUE, TRUE, 0
+	gtk_box_pack_start	vbox_left, lbl6, TRUE, TRUE, 0
+
+	gtk_box_pack_start	vbox_right, lbl7, TRUE, TRUE, 0
+	gtk_box_pack_start	vbox_right, lbl8, TRUE, TRUE, 0
+	gtk_box_pack_start	vbox_right, btn, TRUE, TRUE, 0
+
+	gtk_box_pack_start	hbox, vbox_left, TRUE, TRUE, 0
+	gtk_box_pack_start	hbox, vbox_right, TRUE, TRUE, 0
+
+	gtk_container_add	win, hbox
 	gtk_widget_show_all	win
 	gtk_main
 	end
 
 *on_window_delete_event
 	gtk_main_quit
-	return
-
-*on_cbtn1_toggled
-	gtk_toggle_button_get_active	cbtn1
-	gtk_editable_set_editable	ety, stat
-	return
-
-*on_cbtn2_toggled
-	gtk_toggle_button_get_active	cbtn2
-	gtk_entry_set_visibility	ety, stat
-	return
-
-*on_cbtn3_toggled
-	gtk_toggle_button_get_active	cbtn3
-	active	= stat
-	if active {
-		gtk_entry_set_progress_pulse_step	ety, 0.2
-		g_timeout_add	100, varptr( cbdopulse ), 0
-		timeout_id	= stat
-	}
-	else {
-		g_source_remove	timeout_id
-		timeout_id	= 0
-		gtk_entry_set_progress_pulse_step	ety, 0
-	}
-	return
-
-*do_pulse
-	gtk_entry_progress_pulse	ety
-	return
-
-*on_cbtn4_toggled
-	gtk_toggle_button_get_active	cbtn4
-	active	= stat
-	if active {
-		stock_id	= GTK_STOCK_FIND
-	}
-	else {
-		stock_id	= ""
-	}
-	gtk_entry_set_icon_from_stock	ety, GTK_ENTRY_ICON_PRIMARY, stock_id
 	return

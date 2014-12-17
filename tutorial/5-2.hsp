@@ -1,74 +1,88 @@
-; コールバック関数を使うための準備
+#const	FALSE	0
+#const	TRUE	1
+
 #include "hscallbk.as"
 #uselib ""
 #func cb_window_delete_event ""
+#func cb_button1_toggled ""
+#func cb_button2_toggled ""
 
-; GTK+3の関数を使うための準備
 #uselib "libgtk-3-0.dll"
 #func global gtk_init "gtk_init" sptr, sptr
 #func global gtk_window_new "gtk_window_new" int
 #const	GTK_WINDOW_TOPLEVEL	0
-#func global gtk_table_new "gtk_table_new" int, int, int
-#func global gtk_table_set_col_spacings "gtk_table_set_col_spacings" sptr, int
-#func global gtk_table_set_row_spacings "gtk_table_set_row_spacings" sptr, int
-#func global gtk_table_attach_defaults "gtk_table_attach_defaults" sptr, sptr, int, int, int, int
-#func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
+#func global gtk_container_set_border_width "gtk_container_set_border_width" sptr, int
 #func global gtk_container_add "gtk_container_add" sptr, sptr
 #func global gtk_widget_show_all "gtk_widget_show_all" sptr
 #func global gtk_main "gtk_main"
 #func global gtk_main_quit "gtk_main_quit"
+#func global gtk_hbox_new "gtk_hbox_new" int, int
+#func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
+#func global gtk_toggle_button_new_with_label "gtk_toggle_button_new_with_label" sptr
+#func global gtk_toggle_button_new_with_mnemonic "gtk_toggle_button_new_with_mnemonic" sptr
+#func global gtk_toggle_button_get_active "gtk_toggle_button_get_active" sptr
+
 #uselib "libgobject-2.0-0.dll"
 #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
 #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
 
-; 真偽値定数マクロ
-#const	FALSE	0
-#const	TRUE	1
-
-	; GTK+3初期化
 	gtk_init	0, 0
 
-	; Window生成
+	// set up window
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
+	gtk_container_set_border_width	win, 10
 	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
 	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), 0
 
-	; Table生成
-	gtk_table_new	3, 3, TRUE
-	tbl	= stat
-	gtk_table_set_col_spacings	tbl, 10
-	gtk_table_set_row_spacings	tbl, 10
+	// set up hbox
+	gtk_hbox_new	FALSE, 6
+	hbox	= stat
 
-	; Button生成
-	gtk_button_new_with_label	"Button 1"
+	// set up buttons
+	gtk_toggle_button_new_with_label	"Button 1"
 	btn1	= stat
-	gtk_button_new_with_label	"Button 2"
+	setcallbk	cbbutton1toggled, cb_button1_toggled, *on_button1_toggled
+	g_signal_connect	btn1, "toggled", varptr( cbbutton1toggled ), 0
+
+	gtk_toggle_button_new_with_mnemonic	"_Button 2"
 	btn2	= stat
-	gtk_button_new_with_label	"Button 3"
-	btn3	= stat
-	gtk_button_new_with_label	"Button 4"
-	btn4	= stat
-	gtk_button_new_with_label	"Button 5"
-	btn5	= stat
-	gtk_button_new_with_label	"Button 6"
-	btn6	= stat
+	setcallbk	cbbutton2toggled, cb_button2_toggled, *on_button2_toggled
+	g_signal_connect	btn2, "toggled", varptr( cbbutton2toggled ), 0
 
-	; ウィンドウの組み立て
-	gtk_table_attach_defaults	tbl, btn1, 0, 1, 0, 1
-	gtk_table_attach_defaults	tbl, btn2, 1, 3, 0, 1
-	gtk_table_attach_defaults	tbl, btn3, 0, 1, 1, 3
-	gtk_table_attach_defaults	tbl, btn4, 1, 3, 1, 2
-	gtk_table_attach_defaults	tbl, btn5, 1, 2, 2, 3
-	gtk_table_attach_defaults	tbl, btn6, 2, 3, 2, 3
-	gtk_container_add	win, tbl
+	// build up gui
+	gtk_box_pack_start	hbox, btn1, TRUE, TRUE, 0
+	gtk_box_pack_start	hbox, btn2, TRUE, TRUE, 0
+	gtk_container_add	win, hbox
 
-	; ウィンドウの表示とメインループの開始
+	// start app
 	gtk_widget_show_all	win
 	gtk_main
 	end
 
-/* シグナルハンドラ */
 *on_window_delete_event
 	gtk_main_quit
+	return
+
+*on_button1_toggled
+	btn	= btn1
+	num_btn	= 1
+	gosub	*show_message
+	return
+
+*on_button2_toggled
+	btn	= btn2
+	num_btn	= 2
+	gosub	*show_message
+	return
+
+*show_message
+	gtk_toggle_button_get_active	btn
+	if stat {
+		text_state	= "ON"
+	}
+	else {
+		text_state	= "OFF"
+	}
+	mes	"Button " + num_btn + "が" + text_state + "になりました。"
 	return

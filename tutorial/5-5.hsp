@@ -1,7 +1,10 @@
+#const	TRUE	1
+#const	NULL	0
+
 #include "hscallbk.as"
 #uselib ""
 #func cb_window_delete_event ""
-#func cb_button_clicked ""
+#func cb_link_button_activate_link ""
 
 #uselib "libgtk-3-0.dll"
 #func global gtk_init "gtk_init" sptr, sptr
@@ -10,29 +13,24 @@
 #func global gtk_widget_show_all "gtk_widget_show_all" sptr
 #func global gtk_main "gtk_main"
 #func global gtk_main_quit "gtk_main_quit"
-#func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
+#func global gtk_link_button_new_with_label "gtk_link_button_new_with_label" str, str
+#func global gtk_link_button_get_uri "gtk_link_button_get_uri" sptr
 #func global gtk_container_add "gtk_container_add" sptr, sptr
 #uselib "libgobject-2.0-0.dll"
 #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
 #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
-;#func global g_signal_handler_disconnect "g_signal_handler_disconnect" sptr, int 
-;#func global g_signal_handlers_disconnect_matched "g_signal_handlers_disconnect_matched" sptr, int, int, int, sptr, sptr, sptr
-;#const	G_SIGNAL_MATCH_FUNC	(1 << 3)
 
-	gtk_init	0, 0
+	gtk_init	NULL, NULL
 
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), 0
+	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), NULL
 
-	gtk_button_new_with_label	"Click Here"
+	gtk_link_button_new_with_label	"http://www.gtk.org", "GTK+ Homepage"
 	btn	= stat
-	setcallbk	cbbuttonclicked, cb_button_clicked, *on_button_clicked
-	g_signal_connect	btn, "clicked", varptr( cbbuttonclicked ), 0
-;	id = stat
-;	g_signal_handler_disconnect btn, id
-;	g_signal_handlers_disconnect_matched btn, G_SIGNAL_MATCH_FUNC, 0, 0, 0, varptr(cbbuttonclicked), 0
+	setcallbk	cblinkbuttonactivatelink, cb_link_button_activate_link, *on_link_button_activate_link
+	g_signal_connect	btn, "activate-link", varptr( cblinkbuttonactivatelink ), NULL
 
 	gtk_container_add	win, btn
 	gtk_widget_show_all	win
@@ -43,6 +41,9 @@
 	gtk_main_quit
 	return
 
-*on_button_clicked
-	mes	"Hello World"
-	return
+*on_link_button_activate_link
+	gtk_link_button_get_uri	btn
+	p	= stat
+	dupptr	uri, p, 1024, 2
+	exec	uri, 16
+	return	TRUE

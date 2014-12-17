@@ -615,8 +615,8 @@
 ;#func global g_list_insert_sorted_with_data ""
 ;#func global g_list_last ""
 ;#func global g_list_length ""
-;#func global g_list_nth ""
-;#func global g_list_nth_data ""
+#func global g_list_nth "g_list_nth" sptr, int
+#func global g_list_nth_data "g_list_nth_data"  sptr, int
 ;#func global g_list_nth_prev ""
 ;#func global g_list_pop_allocator ""
 ;#func global g_list_position ""

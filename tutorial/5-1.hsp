@@ -1,14 +1,13 @@
-#const	FALSE	0
-#const	TRUE	1
-
+// よく使う関数
 #include "hspinet.as"
 #module
-#defcfunc u str chars_	// shift-jis文字列をutf-8に変換
+#defcfunc u str chars_ ; shift-jis文字列をutf-8に変換
 	chars	= chars_
 	nkfcnv@	chars, chars, "Sw"
 	return	chars
 #global
 
+// コールバック関数を使うための準備
 #include "hscallbk.as"
 #uselib ""
 #func cb_window_delete_event ""
@@ -16,6 +15,7 @@
 #func cb_button2_clicked ""
 #func cb_button3_clicked ""
 
+// GTK+の関数を使うための準備
 #uselib "libgtk-3-0.dll"
 #func global gtk_init "gtk_init" sptr, sptr
 #func global gtk_window_new "gtk_window_new" int
@@ -44,14 +44,22 @@
 #uselib "libglib-2.0-0.dll"
 #func global g_list_nth_data "g_list_nth_data" sptr, int
 
-	gtk_init	0, 0
+// よく使う定数
+; ヌルポインタ
+#const	NULL	0
+; 真偽値
+#const	FALSE	0
+#const	TRUE	1
+
+	// GTK+初期化
+	gtk_init	NULL, NULL
 
 	// ウィンドウ生成
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	gtk_container_set_border_width	win, 10
 	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), 0
+	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), NULL
 
 	// HBox生成
 	gtk_hbox_new	FALSE, 6
@@ -66,12 +74,10 @@
 
 	; ボタン1のラベルのフォントを設定
 	gtk_container_get_children	btn1
-	glist	= stat
-	g_list_nth_data	glist, 0
-	w	= stat
-	pango_font_description_from_string	u( "ms ui gothic 10" )
-	fd	= stat
-	gtk_widget_override_font	w, fd
+	g_list_nth_data	stat, 0
+	lbl	= stat
+	pango_font_description_from_string	"ms ui gothic 10"
+	gtk_widget_override_font	lbl, stat
 
 	; ボタン2
 	gtk_button_new_from_stock	GTK_STOCK_OPEN
@@ -85,7 +91,7 @@
 	setcallbk	cbbutton3clicked, cb_button3_clicked, *on_button3_clicked
 	g_signal_connect	btn3, "clicked", varptr( cbbutton3clicked ), 0
 
-	// GUIの組み立て
+	// ウィンドウの組み立て
 	gtk_box_pack_start	hbox, btn1, TRUE, TRUE, 0
 	gtk_box_pack_start	hbox, btn2, TRUE, TRUE, 0
 	gtk_box_pack_start	hbox, btn3, TRUE, TRUE, 0

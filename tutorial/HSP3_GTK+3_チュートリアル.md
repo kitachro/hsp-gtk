@@ -136,11 +136,6 @@
 　3番目の*callback*には、コールバック関数実装プラグインhscallbk.dllの、setcallbk命令の引数に指定したコールバック型の変数を指定します。hscallbk.dllを使用した場合、コールバック関数はラベルで始まりreturn命令で終わることになりますが、既に説明した通り、このラベルとreturnの間に、イベントが起こった時に実行したい処理を記述します。
 
 　そして、最後の4つ目の引数ですが、本来ここには、コールバック関数を呼び出す時に引数として渡したいテータが入った変数のポインタを指定できるのですが、HSPからGTK+を利用する場合、g_signal_connect関数で関連付けしたコールバック関数の引数を利用しようとすると、エラーが発生して、スクリプトが強制終了してしまうことがあるため、この引数には、常に0を指定して、機能を利用しないようにすることをおすすめします。
-<!--　`data`には、コールバック関数を呼び出す時に引数として渡したいテータが入った変数を1つ指定できます。`g_signal_connect`関数には、そのポインタを渡します。
-
-　このポインタは、コールバック関数の引数として受け取ることができます（何番目の引数として受け取ることができるかは、シグナルによって異なります。シグナルごとのコールバック関数の引数の仕様は、リファレンスマニュアルに載っています）。
-
-　特に渡したいテータがない場合には、`varptr( data )`の代わりに`0`を指定してください。3章の2節で挙げているサンプルプログラムで、この引数の使用例を見ることができます。-->
 
 ====================
 ### 2.2.3　シグナルとコールバック関数の関連付けを削除する
@@ -191,10 +186,12 @@
 ### 3.1.1　サンプルプログラムの全体
 
 ********************
+    // コールバック関数を使うための準備
     #include "hscallbk.as"
     #uselib ""
     #func cb_window_delete_event ""
     
+    // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
@@ -206,17 +203,24 @@
     #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
     #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
     
-    	gtk_init 0, 0
+    // ヌルポインタ定数
+    #const NULL 0
     
+    	// GTK+初期化
+    	gtk_init NULL, NULL
+    
+    	// ウィンドウ生成
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
     	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), 0
+    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
     
+    	// ウィンドウの表示とメインループの開始
     	gtk_widget_show_all win
     	gtk_main
     	end
     
+    /* シグナルハンドラ */
     *on_window_delete_event
     	gtk_main_quit
     	return
@@ -261,18 +265,18 @@
 
 　GTK_WINDOW_TOPLEVEL定数は、添付マニュアルにC言語での定義が載っていますが、値は0です。値さえわかれば、マクロは絶対に必要なものではありませんが、毎度、調べたり思い出したりする手間を考えれば、（再利用することを前提に）書いておくのが得策です。
 
-　g_signal_connect関数は、添付マニュアルには載っていますが、DLLには実装されておらず、C言語用ヘッダファイル内のマクロで定義されていたので、HSPで書き直してやる必要がありました。このマクロについても、g_signal_connect_data関数を使うのが面倒でなければ、省略してしまってもかまいませんが、まあ書いておいた方が後々楽かなと思います。
+　g_signal_connect関数は、添付マニュアルには載っていますが、DLLには実装されておらず、C言語用ヘッダファイル内のマクロで定義されているので、HSPで書き直してやる必要があります。このマクロについても、g_signal_connect_data関数を使うのが面倒でなければ、省略してしまってもかまいませんが、まあ書いておいた方が後々楽かなと思います。
 
 ====================
 ### 3.1.4　GTK+の初期化
 
 ********************
-    gtk_init 0, 0
+    gtk_init NULL, NULL
 ********************
 
 　ここまでの下準備的なスクリプトの後でまず行わなければいけないことは、gtk_init関数でGTK+を初期化することです。この関数を実行しておかないと、他のGTK+の関数はまともに動きません。
 
-　gtk_init関数に渡す2つの引数は、C言語の場合であれば、main関数の引数として受け取ることができる、argcとargvのアドレスを渡してやればいいのですが、HSPの場合には、これらを簡単に取得する方法がないので、代わりに0を渡してください。
+　gtk_init関数に渡す2つの引数は、C言語の場合であれば、main関数の引数として受け取ることができる、argcとargvのアドレスを渡してやればいいのですが、HSPの場合には、これらを簡単に取得する方法がないので、代わりに0（無効なポインタ）を渡してください。
 
 ====================
 ### 3.1.5　ウィンドウの生成
@@ -289,13 +293,12 @@
 
 ********************
     setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), 0
+    g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
 ********************
 
-　hscallbk.dllのsetcallbk命令で、*on_window_delete_eventラベルで始まるサブルーチンをコールバック関数として呼び出せるようにした上で、g_signal_connect関数を実行して、生成済みのWindowウィジェットのdelete-eventシグナルに関連付け（connect）しています。
+　hscallbk.dllのsetcallbk命令で、*on_window_delete_eventラベルで始まるサブルーチンをコールバック関数として呼び出せるようにした上で、g_signal_connect関数を実行して、生成済みのWindowウィジェットのdelete-eventシグナルにconnectしています。
 
 　g_signal_connect関数の4つ目の引数に0を指定する理由は、2.2.2で説明した通りです。
-<!--　なお、g_signal_connect関数には、4つ目の引数に、変数のポインタを指定しておくと、コールバック関数の引数としてそのポインタを受け取れる、という機能がありますが、HSPでこの機能を利用すると、エラーが発生してスクリプトが強制終了してしまう場合が多いので、引数には常に、機能を利用しないことを意味する0を指定しておくことをおすすめします。-->
 
 ====================
 ### 3.1.7　ウィンドウの表示
@@ -314,7 +317,7 @@
     end
 ********************
 
-　ウィンドウの生成、シグナルとそれに対する処理の関連付け、ウィンドウの表示、が終わったら、gtk_main関数でメインループに入ってユーザの操作を待ちます。GTK+では、gtk_mainを抜けたらプログラムを終了させるのが普通なので、そのすぐ後ろにend命令を書いておきます。
+　ウィンドウの生成、シグナルとそれに対する処理のconnect、ウィンドウの表示、が終わったら、gtk_main関数でメインループに入ってユーザの操作を待ちます。GTK+では、gtk_mainを抜けたらプログラムを終了させるのが普通なので、そのすぐ後ろにend命令を書いておきます。
 
 ====================
 ### 3.1.9　コールバック関数（シグナルハンドラ）の定義
@@ -325,7 +328,7 @@
     	return
 ********************
 
-　最後は、g_signal_connect関数でdelete-eventシグナルに関連付けしたサブルーチンです。gtk_main_quit関数を実行すると、メインループから抜けてgtk_main関数からreturnすることができます。
+　最後は、g_signal_connect関数でdelete-eventシグナルにconnectしたサブルーチンです。gtk_main_quit関数を実行すると、メインループから抜けてgtk_main関数からreturnすることができます。
 
 ====================
 ## 3.2　ウィンドウにウィジェットを1つ配置する
@@ -334,15 +337,21 @@
 
 　つづいて、もう1つ、トップレベルウィンドウにウィジェットを1つ置いてそれを動作させるプログラムを挙げます。
 
+　ウィンドウには、Buttonウィジェットを配置します。今回挙げるサンプルでは、clickedシグナルに短いサブルーチンをconnectして利用します。
+
+　Buttonウィジェットを初めとする、ボタン系ウィジェットについては、5章で詳しく説明します。
+
 ====================
 ### 3.2.1　サンプルプログラムの全体
 
 ********************
+    // コールバック関数を使うための準備
     #include "hscallbk.as"
     #uselib ""
     #func cb_window_delete_event ""
     #func cb_button_clicked ""
     
+    // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
@@ -359,26 +368,36 @@
     ;#func global g_signal_handlers_disconnect_matched "g_signal_handlers_disconnect_matched" sptr, int, int, int, sptr, sptr, sptr
     ;#const G_SIGNAL_MATCH_FUNC (1 << 3)
     
-    	gtk_init 0, 0
+    // ヌルポインタ定数
+    #const NULL 0
     
+    	// GTK+初期化
+    	gtk_init NULL, NULL
+    
+    	// ウィンドウ生成
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
     	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), 0
+    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
     
+    	// ボタン生成
     	gtk_button_new_with_label "Click Here"
     	btn = stat
     	setcallbk cbbuttonclicked, cb_button_clicked, *on_button_clicked
-    	g_signal_connect btn, "clicked", varptr( cbbuttonclicked ), 0
+    	g_signal_connect btn, "clicked", varptr( cbbuttonclicked ), NULL
     ;	id = stat
     ;	g_signal_handler_disconnect btn, id
-    ;	g_signal_handlers_disconnect_matched btn, G_SIGNAL_MATCH_FUNC, 0, 0, 0, varptr( cbbuttonclicked ), 0
+    ;	g_signal_handlers_disconnect_matched btn, G_SIGNAL_MATCH_FUNC, 0, 0, 0, varptr(cbbuttonclicked), 0
     
+    	// ウィンドウの組み立て
     	gtk_container_add win, btn
+    
+    	// ウィンドウの表示とメインループの開始
     	gtk_widget_show_all win
     	gtk_main
     	end
     
+    /* シグナルハンドラ */
     *on_window_delete_event
     	gtk_main_quit
     	return
@@ -407,29 +426,6 @@
 
 　まず、スクリプトの中でコメントアウトされている部分ですが、これは、2章で説明した、シグナルとコールバック関数の関連付けを削除するためのスクリプトです。動作を確認したい場合に適宜有効にして実行してください。
 
-<!--====================
-### 3.2.3　コールバック関数を介したデータの受け渡し
-
-********************
-    	msg = "Hello World"
-    	g_signal_connect btn, "clicked", varptr( cbbuttonclicked ), varptr( msg )
-    
-    （中略）
-    
-    *on_button_clicked
-    	dupptr cbdata, callbkarg( 1 ), 20, 2
-    	mes cbdata
-    	return
-********************
-
-　上記は、生成したボタンに対して、clickedシグナルとコールバック関数を関連付けている処理と、コールバック関数本体の部分です。2章で説明した、コールバック関数の引数を介してデータを受け渡しする例になっています。
-
-　ここでは、コールバック関数の引数として文字列変数のポインタを受け取っています。ポインタなので、HSPで中身のデータを扱うには、dupptr命令でそのポインタが指す変数を作ってやる必要があります。dupptr命令では、3つ目の引数として「クローン元のメモリサイズ」を指定しますが、今回の例では、g_signal_connect関数の引数に指定した変数のサイズになります。ただし、文字列変数の場合は、ある程度大きな数値を指定してしまっても大丈夫なようです。
-
-　実際、HSPでわざわざコールバック関数の引数を介してデータをやりとりする必要がどれだけあるかわかりませんが、g_signal_connect関数の機能の一部として説明しました。
-
-　ちなみに、g_signal_connect関数で関連付けしたコールバック関数の1つ目の引数には、常に、シグナルが発生したウィジェットのインスタンスが代入されています。-->
-
 ====================
 ### 3.2.3　ウィンドウへのウィジェットの追加
 
@@ -441,7 +437,7 @@
 
 　GTK+のWindowウィジェットに他のウィジェットを子として追加するには、gtk_container_add関数を使います。2つのウィジェットのインスタンスを引数として指定します。
 
-　Windowウィジェット上に複数のウィジェットを配置する方法については、5章で説明します。
+　Windowウィジェット上に複数のウィジェットを配置する方法については、6章で説明します。
 
 ====================
 # 4　HSPからGTK+を利用する際の、文字コードに関する注意点
@@ -495,34 +491,43 @@
 ====================
 # 5　ボタン系ウィジェット
 
-　まずはじめに紹介するボタンウィジェットは、非常に使いでがあるウィジェットです。ボタンは、通常、押されるアクションがあった時に何らかの処理が行われるように設定します。
+　まずはじめに紹介するボタン系ウィジェットは、非常に使いでがあるウィジェット群です。ボタンは、通常、押されるアクションがあった時に何らかの処理が行われるように設定します。プログラム上では、clickedシグナルにサブルーチンをconnectします。
 
-　ボタンは、画像や文字列をその上に表示することができます。つまり、イメージ（Image）ウィジェットやラベル（Label）ウィジェットを子として持つことができます。
+　ボタンは、画像や文字列をその上に表示することができます。これらのものもウィジェットで、最もよく利用されるのは、文字列を表示するためのLabelウィジェットです。
 
-　画像の代わりに、それ以外のウィジェットを載せることもできなくもないですが、載せられた方のウィジェットをクリックできないなどの制限があるので、あまり意味がありません。
+　単純に画像や文字列を表示するだけではない、複雑なウィジェットを載せることもできなくはないですが、載せられた方のウィジェットをクリックできないなどの制限があるので、あまり意味がありません。
+
+　この章では、用途や機能の異なる7つのボタン系ウィジェットを紹介します。
 
 ====================
 ## 5.1　ボタン（Button）
 
 ![サンプル5-1](5-1.png)
 
-　まずは、最もありふれた形のボタンを利用するサンプルスクリプトを挙げて、それについて説明します。
+[　まずは、最もありふれた形のボタンを利用するサンプルスクリプトを挙げて、それについて説明します。]
+
+　まずは、最もシンプルなボタンであるButtonウィジェットです。
+
+ラベルのフォントを変更できること。
+
+ストックアイテムを利用して、画像を表示できること。
+
+ニーモニックを設定できること。
 
 ====================
 ### 5.1.1　サンプルプログラムの全体
 
 ********************
-    #const FALSE 0
-    #const TRUE 1
-    
+    // よく使う関数
     #include "hspinet.as"
     #module
-    #defcfunc u str chars_ // shift-jis文字列をutf-8に変換
+    #defcfunc u str chars_ ; shift-jis文字列をutf-8に変換
     	chars = chars_
     	nkfcnv@ chars, chars, "Sw"
     	return chars
     #global
     
+    // コールバック関数を使うための準備
     #include "hscallbk.as"
     #uselib ""
     #func cb_window_delete_event ""
@@ -530,6 +535,7 @@
     #func cb_button2_clicked ""
     #func cb_button3_clicked ""
     
+    // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
@@ -558,14 +564,22 @@
     #uselib "libglib-2.0-0.dll"
     #func global g_list_nth_data "g_list_nth_data" sptr, int
     
-    	gtk_init 0, 0
+    // よく使う定数
+    ; ヌルポインタ
+    #const NULL 0
+    ; 真偽値
+    #const FALSE 0
+    #const TRUE 1
+    
+    	// GTK+初期化
+    	gtk_init NULL, NULL
     
     	// ウィンドウ生成
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
     	gtk_container_set_border_width win, 10
     	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), 0
+    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
     
     	// HBox生成
     	gtk_hbox_new FALSE, 6
@@ -580,12 +594,10 @@
     
     	; ボタン1のラベルのフォントを設定
     	gtk_container_get_children btn1
-    	glist = stat
-    	g_list_nth_data glist, 0
-    	w = stat
-    	pango_font_description_from_string u( "ms ui gothic 10" )
-    	fd = stat
-    	gtk_widget_override_font w, fd
+    	g_list_nth_data stat, 0
+    	lbl = stat
+    	pango_font_description_from_string "ms ui gothic 10"
+    	gtk_widget_override_font lbl, stat
     
     	; ボタン2
     	gtk_button_new_from_stock GTK_STOCK_OPEN
@@ -599,7 +611,7 @@
     	setcallbk cbbutton3clicked, cb_button3_clicked, *on_button3_clicked
     	g_signal_connect btn3, "clicked", varptr( cbbutton3clicked ), 0
     
-    	// GUIの組み立て
+    	// ウィンドウの組み立て
     	gtk_box_pack_start hbox, btn1, TRUE, TRUE, 0
     	gtk_box_pack_start hbox, btn2, TRUE, TRUE, 0
     	gtk_box_pack_start hbox, btn3, TRUE, TRUE, 0
@@ -650,19 +662,19 @@
 ### 5.2.1　サンプルプログラムの全体
 
 ********************
-    #const FALSE 0
-    #const TRUE 1
-    
+    // コールバック関数を使うための準備
     #include "hscallbk.as"
     #uselib ""
     #func cb_window_delete_event ""
     #func cb_button1_toggled ""
     #func cb_button2_toggled ""
     
+    // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
     #const GTK_WINDOW_TOPLEVEL 0
+    #func global gtk_container_set_border_width "gtk_container_set_border_width" sptr, int
     #func global gtk_container_add "gtk_container_add" sptr, sptr
     #func global gtk_widget_show_all "gtk_widget_show_all" sptr
     #func global gtk_main "gtk_main"
@@ -677,19 +689,28 @@
     #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
     #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
     
-    	gtk_init 0, 0
+    // よく使う定数
+    ; ヌルポインタ
+    #const NULL 0
+    ; 真偽値
+    #const FALSE 0
+    #const TRUE 1
     
-    	// set up window
+    	// GTK+初期化
+    	gtk_init NULL, NULL
+    
+    	// ウィンドウ生成
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
+    	gtk_container_set_border_width win, 10
     	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
     	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), 0
     
-    	// set up hbox
+    	// HBox生成
     	gtk_hbox_new FALSE, 6
     	hbox = stat
     
-    	// set up buttons
+    	// ボタン群生成
     	gtk_toggle_button_new_with_label "Button 1"
     	btn1 = stat
     	setcallbk cbbutton1toggled, cb_button1_toggled, *on_button1_toggled
@@ -700,16 +721,17 @@
     	setcallbk cbbutton2toggled, cb_button2_toggled, *on_button2_toggled
     	g_signal_connect btn2, "toggled", varptr( cbbutton2toggled ), 0
     
-    	// build up gui
+    	// ウィンドウの組み立て
     	gtk_box_pack_start hbox, btn1, TRUE, TRUE, 0
     	gtk_box_pack_start hbox, btn2, TRUE, TRUE, 0
     	gtk_container_add win, hbox
     
-    	// start app
+    	// ウィンドウの表示とメインループの開始
     	gtk_widget_show_all win
     	gtk_main
     	end
     
+    /* シグナルハンドラ */
     *on_window_delete_event
     	gtk_main_quit
     	return
@@ -762,11 +784,11 @@
 
 　同じグループとして扱うボタンのうち、1つ目のものを生成する場合には、0を指定してください。
 
-　2つ目以降のものを生成する時には、1つ目の引数に、同じグループの生成済みのウィジェットを指定してください。
+　2つ目以降のものを生成する時には、同じグループの生成済みのウィジェットを指定してください。
 
 　ボタンの生成直後は、同じグループ内で最初に作ったボタンがアクティブになっています。プログラムからアクティブなボタンを変更するには、gtk_toggle_button_set_active関数を実行します。
 
-　また、ボタンのグループを後から変更したい時には、gtk_radio_button_join_group関数を実行してください。
+　ボタンのグループを後から変更したい時には、gtk_radio_button_join_group関数を実行してください。
 
 　次のページから、サンプルプログラムのスクリプトとその説明になります。
 
@@ -774,9 +796,7 @@
 ### 5.4.1　サンプルプログラムの全体
 
 ********************
-    #const FALSE 0
-    #const TRUE 1
-    
+    // コールバック関数を使うための準備
     #include "hscallbk.as"
     #uselib ""
     #func cb_window_delete_event ""
@@ -784,6 +804,7 @@
     #func cb_button2_toggled ""
     #func cb_button3_toggled ""
     
+    // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
@@ -803,46 +824,55 @@
     #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
     #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
     
-    	gtk_init 0, 0
+    // よく使う定数
+    ; ヌルポインタ
+    #const NULL 0
+    ; 真偽値
+    #const FALSE 0
+    #const TRUE 1
     
-    	// set up window
+    	// GTK+初期化
+    	gtk_init NULL, NULL
+    
+    	// ウィンドウ生成
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
     	gtk_container_set_border_width win, 10
     	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), 0
+    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
     
-    	// set up hbox
+    	// HBox生成
     	gtk_hbox_new FALSE, 6
     	hbox = stat
     
-    	// set up buttons
+    	// ボタン群生成
     	gtk_radio_button_new_with_label_from_widget 0, "Button 1"
     	btn1 = stat
     	setcallbk cbbutton1toggled, cb_button1_toggled, *on_button1_toggled
-    	g_signal_connect btn1, "toggled", varptr( cbbutton1toggled ), 0
+    	g_signal_connect btn1, "toggled", varptr( cbbutton1toggled ), NULL
     
     	gtk_radio_button_new_with_label_from_widget btn1, "_Button 2"
     	btn2 = stat
     	setcallbk cbbutton2toggled, cb_button2_toggled, *on_button2_toggled
-    	g_signal_connect btn2, "toggled", varptr( cbbutton2toggled ), 0
+    	g_signal_connect btn2, "toggled", varptr( cbbutton2toggled ), NULL
     
     	gtk_radio_button_new_with_mnemonic_from_widget btn1, "_Button 3"
     	btn3 = stat
     	setcallbk cbbutton3toggled, cb_button3_toggled, *on_button3_toggled
-    	g_signal_connect btn3, "toggled", varptr( cbbutton3toggled ), 0
+    	g_signal_connect btn3, "toggled", varptr( cbbutton3toggled ), NULL
     
-    	// build up gui
+    	// ウィンドウの組み立て
     	gtk_box_pack_start hbox, btn1, TRUE, TRUE, 0
     	gtk_box_pack_start hbox, btn2, TRUE, TRUE, 0
     	gtk_box_pack_start hbox, btn3, TRUE, TRUE, 0
     	gtk_container_add win, hbox
     
-    	// start app
+    	// ウィンドウの表示とメインループの開始
     	gtk_widget_show_all win
     	gtk_main
     	end
     
+    /* シグナルハンドラ */
     *on_window_delete_event
     	gtk_main_quit
     	return
@@ -882,7 +912,9 @@
 
 ![サンプル5-5](5-5.png)
 
-　リンクボタンは、ウェブページにあるようなハイパーリンクを表示するためのボタンです。リンクをクリックすると、リンクされているアドレスを扱うデフォルトのアプリケーションが起動します――と言いたいところなのですが、Windowsでは、アドレスのプロトコルに対する関連付けが設定されていても、GTK+がデフォルトのアプリケーションの設定を見つけられずに、何も反応がないことがあります（C言語からGTK+を利用している場合には、ウォーニングがコンソールに出力されます）。
+　リンクボタンは、ウェブページにあるようなハイパーリンクを表示するためのボタンです。
+
+　リンクをクリックすると、リンクされているアドレスを扱うデフォルトのアプリケーションが起動します――と言いたいところなのですが、Windowsでは、アドレスのプロトコルに対する関連付けが設定されていても、GTK+がデフォルトのアプリケーションの設定を見つけられずに、何も反応がないことがあります（C言語からGTK+を利用している場合には、ウォーニングがコンソールに出力されます）。
 
 　というわけで、HSPからリンクボタンを使う場合には、組み込みの機能には頼らずに、リンクがクリックされた時点で、HSPのexec命令でアドレスをオープンしてしまうやり方をおすすめします。
 
@@ -892,14 +924,13 @@
 ### 5.5.1　サンプルプログラムの全体
 
 ********************
-    #const TRUE 1
-    #const NULL 0
-    
+    // コールバック関数を使うための準備
     #include "hscallbk.as"
     #uselib ""
     #func cb_window_delete_event ""
     #func cb_link_button_activate_link ""
     
+    // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
@@ -914,23 +945,36 @@
     #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
     #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
     
+    // よく使う定数
+    ; ヌルポインタ
+    #const NULL 0
+    ; 真偽値
+    #const TRUE 1
+    
+    	// GTK+初期化
     	gtk_init NULL, NULL
     
+    	// ウィンドウ生成
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
     	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
     	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
     
+    	// ボタン生成
     	gtk_link_button_new_with_label "http://www.gtk.org", "GTK+ Homepage"
     	btn = stat
     	setcallbk cblinkbuttonactivatelink, cb_link_button_activate_link, *on_link_button_activate_link
     	g_signal_connect btn, "activate-link", varptr( cblinkbuttonactivatelink ), NULL
     
+    	// ウィンドウの組み立て
     	gtk_container_add win, btn
+    
+    	// ウィンドウの表示とメインループの開始
     	gtk_widget_show_all win
     	gtk_main
     	end
     
+    /* シグナルハンドラ */
     *on_window_delete_event
     	gtk_main_quit
     	return
@@ -950,23 +994,22 @@
 
 　スピンボタンは、プログラムのユーザに、一定の範囲内の数値を入力してもらうのに都合がいいウィジェットです。
 
-　エントリのように、値を直接タイプして入力するだけでなく、矢印ボタンで値を増減させることができるのが特徴です。
+　エントリのように、値を直接タイプして入力するだけでなく、－/＋ボタンで値を増減させることができるのが特徴です。
 
-　矢印ボタンで値を変更する場合には、あらかじめ設定した範囲を超えないようになっており、なおかつ、タイプで入力した場合でも、設定の範囲内かどうかチェックする機能がついています。
+　－/＋ボタンで値を変更する場合には、あらかじめ設定した範囲を超えないようになっており、なおかつ、タイプで入力した場合でも、設定の範囲内かどうかチェックする機能がついています。
 
 ====================
 ### 5.6.1　サンプルプログラムの全体
 
 ********************
-    #const FALSE 0
-    #const TRUE 1
-    
+    // コールバック関数を使うための準備
     #include "hscallbk.as"
     #uselib ""
     #func cb_window_delete_event ""
     #func cb_cbutton1_toggled ""
     #func cb_cbutton2_toggled ""
     
+    // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
@@ -991,21 +1034,29 @@
     #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
     #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
     
-    	gtk_init 0, 0
+    // よく使う定数
+    ; ヌルポインタ
+    #const NULL 0
+    ; 真偽値
+    #const FALSE 0
+    #const TRUE 1
     
-    	// set up window
+    	// GTK+初期化
+    	gtk_init NULL, NULL
+    
+    	// ウィンドウ生成
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
     	gtk_container_set_border_width win, 10
     	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), 0
+    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
     
-    	// set up hbox
+    	// HBox生成
     	gtk_hbox_new FALSE, 6
     	hbox = stat
     
-    	// set up buttons
-    	gtk_adjustment_new 0, 0, 1000, 10, 10, 0
+    	// ボタン群生成
+    	gtk_adjustment_new 0, 0, 1000, 1, 10, 0
     	adj = stat
     	gtk_spin_button_new adj, 1, 0
     	spb = stat
@@ -1013,24 +1064,25 @@
     	gtk_check_button_new_with_label "Numeric"
     	chb1 = stat
     	setcallbk cbcbutton1toggled, cb_cbutton1_toggled, *on_cbutton1_toggled
-    	g_signal_connect chb1, "toggled", varptr( cbcbutton1toggled ), 0
+    	g_signal_connect chb1, "toggled", varptr( cbcbutton1toggled ), NULL
     
     	gtk_check_button_new_with_label "If valid"
     	chb2 = stat
     	setcallbk cbcbutton2toggled, cb_cbutton2_toggled, *on_cbutton2_toggled
-    	g_signal_connect chb2, "toggled", varptr( cbcbutton2toggled ), 0
+    	g_signal_connect chb2, "toggled", varptr( cbcbutton2toggled ), NULL
     
-    	// build up gui
+    	// ウィンドウの組み立て
     	gtk_box_pack_start hbox, spb, TRUE, TRUE, 0
     	gtk_box_pack_start hbox, chb1, TRUE, TRUE, 0
     	gtk_box_pack_start hbox, chb2, TRUE, TRUE, 0
     	gtk_container_add win, hbox
     
-    	// start app
+    	// ウィンドウの表示とメインループの開始
     	gtk_widget_show_all win
     	gtk_main
     	end
     
+    /* シグナルハンドラ */
     *on_window_delete_event
     	gtk_main_quit
     	return
@@ -1061,15 +1113,14 @@
 ### 5.7.1　サンプルプログラムの全体
 
 ********************
-    #const FALSE 0
-    #const TRUE 1
-    
+    // コールバック関数を使うための準備
     #include "hscallbk.as"
     #uselib ""
     #func cb_window_delete_event ""
     #func cb_button1_notifyactive ""
     #func cb_button2_notifyactive ""
     
+    // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
@@ -1089,42 +1140,51 @@
     #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
     #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
     
-    	gtk_init 0, 0
+    // よく使う定数
+    ; ヌルポインタ
+    #const NULL 0
+    ; 真偽値
+    #const FALSE 0
+    #const TRUE 1
     
-    	// set up window
+    	// GTK+初期化
+    	gtk_init NULL, NULL
+    
+    	// ウィンドウ生成
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
     	gtk_container_set_border_width win, 10
     	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), 0
+    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
     
-    	// set up hbox
+    	// HBox生成
     	gtk_hbox_new FALSE, 6
     	hbox = stat
     
-    	// set up buttons
+    	// ボタン群生成
     	gtk_switch_new
     	btn1 = stat
     	gtk_switch_set_active btn1, FALSE
     	setcallbk cbbutton1notifyactive, cb_button1_notifyactive, *on_button1_notifyactive
-    	g_signal_connect btn1, "notify::active", varptr( cbbutton1notifyactive ), 0
+    	g_signal_connect btn1, "notify::active", varptr( cbbutton1notifyactive ), NULL
     
     	gtk_switch_new
     	btn2 = stat
     	gtk_switch_set_active btn2, TRUE
     	setcallbk cbbutton2notifyactive, cb_button2_notifyactive, *on_button2_notifyactive
-    	g_signal_connect btn2, "notify::active", varptr( cbbutton2notifyactive ), 0
+    	g_signal_connect btn2, "notify::active", varptr( cbbutton2notifyactive ), NULL
     
-    	// build up gui
+    	// ウィンドウの組み立て
     	gtk_box_pack_start hbox, btn1, TRUE, TRUE, 0
     	gtk_box_pack_start hbox, btn2, TRUE, TRUE, 0
     	gtk_container_add win, hbox
     
-    	// start app
+    	// ウィンドウの表示とメインループの開始
     	gtk_widget_show_all win
     	gtk_main
     	end
     
+    /* シグナルハンドラ */
     *on_window_delete_event
     	gtk_main_quit
     	return
@@ -1183,15 +1243,14 @@
 ### 6.1.1　サンプルプログラムの全体
 
 ********************
-    #const FALSE 0
-    #const TRUE 1
-    
+    // コールバック関数を使うための準備
     #include "hscallbk.as"
     #uselib ""
     #func cb_window_delete_event ""
     #func cb_button1_clicked ""
     #func cb_button2_clicked ""
     
+    // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
@@ -1207,34 +1266,48 @@
     #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
     #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
     
-    	gtk_init 0, 0
+    // よく使う定数
+    ; ヌルポインタ
+    #const NULL 0
+    ; 真偽値
+    #const FALSE 0
+    #const TRUE 1
     
+    	// GTK+初期化
+    	gtk_init NULL, NULL
+    
+    	// ウィンドウ生成
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
     	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), 0
+    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
     
+    	// HBox生成
     	gtk_hbox_new FALSE, 5
     	hbox = stat
     
+    	// ボタン群生成
     	gtk_button_new_with_label "Hello"
     	btn1 = stat
     	setcallbk cbbutton1clicked, cb_button1_clicked, *on_button1_clicked
-    	g_signal_connect btn1, "clicked", varptr( cbbutton1clicked ), 0
+    	g_signal_connect btn1, "clicked", varptr( cbbutton1clicked ), NULL
     
     	gtk_button_new_with_label "Goodbye"
     	btn2 = stat
     	setcallbk cbbutton2clicked, cb_button2_clicked, *on_button2_clicked
-    	g_signal_connect btn2, "clicked", varptr( cbbutton2clicked ), 0
+    	g_signal_connect btn2, "clicked", varptr( cbbutton2clicked ), NULL
     
+    	// ウィンドウの組み立て
     	gtk_container_add win, hbox
     	gtk_box_pack_start hbox, btn1, TRUE, TRUE, 0
     	gtk_box_pack_start hbox, btn2, TRUE, TRUE, 0
-
+    
+    	// ウィンドウの表示とメインループの開始
     	gtk_widget_show_all win
     	gtk_main
     	end
     
+    /* シグナルハンドラ */
     *on_window_delete_event
     	gtk_main_quit
     	return
@@ -1334,12 +1407,12 @@
 ### 6.2.1 サンプルプログラムの全体
 
 ********************
-    ; コールバック関数を使うための準備
+    // コールバック関数を使うための準備
     #include "hscallbk.as"
     #uselib ""
     #func cb_window_delete_event ""
     
-    ; GTK+3の関数を使うための準備
+    // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
@@ -1357,26 +1430,28 @@
     #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
     #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
     
-    ; 真偽値定数マクロ
-    #const FALSE 0
+    // よく使う定数
+    ; ヌルポインタ
+    #const NULL 0
+    ; 真偽値
     #const TRUE 1
     
-    	; GTK+3初期化
-    	gtk_init 0, 0
+    	// GTK+初期化
+    	gtk_init NULL, NULL
     
-    	; Window生成
+    	// ウィンドウ生成
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
     	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), 0
+    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
     
-    	; Table生成
+    	// テーブル生成
     	gtk_table_new 3, 3, TRUE
     	tbl = stat
     	gtk_table_set_col_spacings tbl, 10
     	gtk_table_set_row_spacings tbl, 10
     
-    	; Button生成
+    	// ボタン群生成
     	gtk_button_new_with_label "Button 1"
     	btn1 = stat
     	gtk_button_new_with_label "Button 2"
@@ -1390,7 +1465,7 @@
     	gtk_button_new_with_label "Button 6"
     	btn6 = stat
     
-    	; ウィンドウの組み立て
+    	// ウィンドウの組み立て
     	gtk_table_attach_defaults tbl, btn1, 0, 1, 0, 1
     	gtk_table_attach_defaults tbl, btn2, 1, 3, 0, 1
     	gtk_table_attach_defaults tbl, btn3, 0, 1, 1, 3
@@ -1399,7 +1474,7 @@
     	gtk_table_attach_defaults tbl, btn6, 2, 3, 2, 3
     	gtk_container_add win, tbl
     
-    	; ウィンドウの表示とメインループの開始
+    	// ウィンドウの表示とメインループの開始
     	gtk_widget_show_all win
     	gtk_main
     	end
@@ -1490,21 +1565,21 @@
 ## 7.1　サンプルプログラムの全体
 
 ********************
-    #const FALSE 0
-    #const TRUE 1
-    
+    // よく使う関数
     #include "hspinet.as"
     #module
-    #defcfunc u str chars_ // shift-jis文字列をutf-8に変換
+    #defcfunc u str chars_ ; shift-jis文字列をutf-8に変換
     	chars = chars_
     	nkfcnv@ chars, chars, "Sw"
     	return chars
     #global
     
+    // コールバック関数を使うための準備
     #include "hscallbk.as"
     #uselib ""
     #func cb_window_delete_event ""
     
+    // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
@@ -1533,13 +1608,23 @@
     #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
     #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
     
-    	gtk_init 0, 0
+    // よく使う定数
+    ; ヌルポインタ
+    #const NULL 0
+    ; 真偽値
+    #const FALSE 0
+    #const TRUE 1
     
+    	// GTK+初期化
+    	gtk_init NULL, NULL
+    
+    	// ウィンドウ生成
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
     	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), 0
+    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
     
+    	// ボックス群生成
     	gtk_hbox_new FALSE, 10
     	hbox = stat
     
@@ -1548,6 +1633,7 @@
     	gtk_vbox_new FALSE, 10
     	vbox_right = stat
     
+    	// ラベル群生成
     	gtk_label_new u( "デフォルト状態のラベルです。\n次の行です。" )
     	lbl1 = stat
     
@@ -1609,6 +1695,7 @@
     	btn = stat
     	gtk_label_set_mnemonic_widget lbl6, btn
     
+    	// ウィンドウの組み立て
     	gtk_box_pack_start vbox_left, lbl1, TRUE, TRUE, 0
     	gtk_box_pack_start vbox_left, lbl2, TRUE, TRUE, 0
     	gtk_box_pack_start vbox_left, lbl3, TRUE, TRUE, 0
@@ -1624,10 +1711,13 @@
     	gtk_box_pack_start hbox, vbox_right, TRUE, TRUE, 0
     
     	gtk_container_add win, hbox
+    
+    	// ウィンドウの表示とメインループの開始
     	gtk_widget_show_all win
     	gtk_main
     	end
     
+    /* シグナルハンドラ */
     *on_window_delete_event
     	gtk_main_quit
     	return
@@ -1664,17 +1754,16 @@
 ## 8.1　サンプルプログラムの全体
 
 ********************
-    #const FALSE 0
-    #const TRUE 1
-    
+    // よく使う関数
     #include "hspinet.as"
     #module
-    #defcfunc u str chars_ // shift-jis文字列をutf-8に変換
+    #defcfunc u str chars_ ; shift-jis文字列をutf-8に変換
     	chars = chars_
     	nkfcnv@ chars, chars, "Sw"
     	return chars
     #global
     
+    // コールバック関数を使うための準備
     #include "hscallbk.as"
     #uselib ""
     #func cb_window_delete_event ""
@@ -1684,11 +1773,11 @@
     #func cb_cbtn4_toggled ""
     #func cb_do_pulse ""
     
+    // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
     #const GTK_WINDOW_TOPLEVEL 0
-    #func global gtk_window_set_title "gtk_window_set_title" sptr, sptr
     #func global gtk_container_add "gtk_container_add" sptr, sptr
     #func global gtk_widget_set_size_request "gtk_widget_set_size_request" sptr, int, int
     #func global gtk_widget_show_all "gtk_widget_show_all" sptr
@@ -1719,56 +1808,63 @@
     #func global g_timeout_add "g_timeout_add" int, sptr, sptr
     #func global g_source_remove "g_source_remove" int
     
-    	gtk_init 0, 0
+    // よく使う定数
+    ; ヌルポインタ
+    #const NULL 0
+    ; 真偽値
+    #const FALSE 0
+    #const TRUE 1
     
-    	// set up window
+    	// GTK+初期化
+    	gtk_init NULL, NULL
+    
+    	// ウィンドウ生成
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
-    	gtk_window_set_title win, "Entry Demo"
     	gtk_widget_set_size_request win, 200, 100
     	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), 0
+    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
     
-    	// set up vbox
+    	// VBox生成
     	gtk_vbox_new FALSE, 6
     	vbox = stat
     
-    	// set up entry
+    	// エントリ生成
     	gtk_entry_new
     	ety = stat
     	gtk_entry_set_text ety, "Hello, World"
     
-    	// set up hbox
+    	// HBox生成
     	gtk_hbox_new FALSE, 6
     	hbox = stat
     
-    	// set up check buttons
+    	// ボタン群生成
     	gtk_check_button_new_with_label "Editable"
     	cbtn1 = stat
     	gtk_toggle_button_set_active cbtn1, TRUE
     	setcallbk cbcbtn1toggled, cb_cbtn1_toggled, *on_cbtn1_toggled
-    	g_signal_connect cbtn1, "toggled", varptr( cbcbtn1toggled ), 0
+    	g_signal_connect cbtn1, "toggled", varptr( cbcbtn1toggled ), NULL
     
     	gtk_check_button_new_with_label "Visible"
     	cbtn2 = stat
     	gtk_toggle_button_set_active cbtn2, TRUE
     	setcallbk cbcbtn2toggled, cb_cbtn2_toggled, *on_cbtn2_toggled
-    	g_signal_connect cbtn2, "toggled", varptr( cbcbtn2toggled ), 0
+    	g_signal_connect cbtn2, "toggled", varptr( cbcbtn2toggled ), NULL
     
     	gtk_check_button_new_with_label "Pulse"
     	cbtn3 = stat
     	gtk_toggle_button_set_active cbtn3, FALSE
     	setcallbk cbcbtn3toggled, cb_cbtn3_toggled, *on_cbtn3_toggled
-    	g_signal_connect cbtn3, "toggled", varptr( cbcbtn3toggled ), 0
+    	g_signal_connect cbtn3, "toggled", varptr( cbcbtn3toggled ), NULL
     	setcallbk cbdopulse, cb_do_pulse, *do_pulse
     
     	gtk_check_button_new_with_label "Icon"
     	cbtn4 = stat
     	gtk_toggle_button_set_active cbtn4, FALSE
     	setcallbk cbcbtn4toggled, cb_cbtn4_toggled, *on_cbtn4_toggled
-    	g_signal_connect cbtn4, "toggled", varptr( cbcbtn4toggled ), 0
+    	g_signal_connect cbtn4, "toggled", varptr( cbcbtn4toggled ), NULL
     
-    	// build up gui
+    	// ウィンドウの組み立て
     	gtk_box_pack_start hbox, cbtn1, TRUE, TRUE, 0
     	gtk_box_pack_start hbox, cbtn2, TRUE, TRUE, 0
     	gtk_box_pack_start hbox, cbtn3, TRUE, TRUE, 0
@@ -1777,11 +1873,12 @@
     	gtk_box_pack_start vbox, hbox, TRUE, TRUE, 0
     	gtk_container_add win, vbox
     
-    	// start app
+    	// ウィンドウの表示とメインループの開始
     	gtk_widget_show_all win
     	gtk_main
     	end
     
+    /* シグナルハンドラ */
     *on_window_delete_event
     	gtk_main_quit
     	return

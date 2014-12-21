@@ -3036,7 +3036,7 @@
 ;#func global gtk_toggle_button_get_inconsistent "" 
 ;#func global gtk_toggle_button_get_mode "" 
 ;#func global gtk_toggle_button_get_type "" 
-;#func global gtk_toggle_button_new "" 
+#func global gtk_toggle_button_new "gtk_toggle_button_new"
 #func global gtk_toggle_button_new_with_label "gtk_toggle_button_new_with_label" sptr
 #func global gtk_toggle_button_new_with_mnemonic "gtk_toggle_button_new_with_mnemonic" sptr
 #func global gtk_toggle_button_set_active "gtk_toggle_button_set_active" sptr, int

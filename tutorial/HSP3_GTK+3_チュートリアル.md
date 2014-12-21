@@ -687,9 +687,11 @@
 
 　トグルボタンは、ボタン（Button）と非常によく似た形をしていますが、1つ違うのは、一度クリックされて押された（凹んだ）状態になると、もう一度クリックされるまでその状態が続くことです。
 
+　トグルボタンを生成するには、gtk_toggle_button_new、gtk_toggle_button_new、gtk_toggle_button_new、の3つの関数のうちのいずれかを実行します。
+
 　トグルボタンは、クリックされて状態が変わるごとに、toggledシグナルを発生させます。
 
-　ボタンの状態を知りたい時には、gtk_toggle_button_get_active関数を実行します。
+　ボタンの状態を知りたい時には、gtk_toggle_button_get_active関数を実行します。戻り値として、TRUE(1)、またはFALSE(0)がstatに代入されます。
 
 　ボタンの状態を変更したい時には、gtk_toggle_button_set_active関数を実行してください。この関数を実行すると、クリックされた時と同じようにtoggledシグナルが発生します。
 

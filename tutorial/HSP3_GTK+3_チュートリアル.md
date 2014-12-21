@@ -151,8 +151,6 @@
 
 　先に説明したg_signal_connect関数の戻り値が関連付けの識別番号になっていますので、その値を引数としてg_signal_handler_disconnect関数を実行することによって、関連付けを削除することができます。g_signal_handler_disconnectを実行した時点で識別番号は無効になります。
 
-<!--　何らかの理由で関連付けの識別番号を利用できない場合は、g_signal_handlers_disconnect_matchedという関数で、例えば、特定のコールバック関数への関連付けをすべて削除するなどといったことができます。詳しくは[GTK+ 3 Reference Manual](http://developer.gnome.org/gtk3/stable/)などを参考にしてください。-->
-
 ====================
 ### 2.2.4　シグナルとコールバック関数の使用例
 
@@ -268,7 +266,16 @@
 　g_signal_connect関数は、添付マニュアルには載っていますが、DLLには実装されておらず、C言語用ヘッダファイル内のマクロで定義されているので、HSPで書き直してやる必要があります。このマクロについても、g_signal_connect_data関数を使うのが面倒でなければ、省略してしまってもかまいませんが、まあ書いておいた方が後々楽かなと思います。
 
 ====================
-### 3.1.4　GTK+の初期化
+### 3.1.4　ヌルポインタ定数
+
+********************
+    #const NULL 0
+********************
+
+　ここは、無効なポインタを表す定数を定義しています。この定数は、GTK+の関数を呼び出す時に、ポインタ型の引数を省略するめためによく利用します。
+
+====================
+### 3.1.5　GTK+の初期化
 
 ********************
     gtk_init NULL, NULL
@@ -279,17 +286,25 @@
 　gtk_init関数に渡す2つの引数は、C言語の場合であれば、main関数の引数として受け取ることができる、argcとargvのアドレスを渡してやればいいのですが、HSPの場合には、これらを簡単に取得する方法がないので、代わりに0（無効なポインタ）を渡してください。
 
 ====================
-### 3.1.5　ウィンドウの生成
+### 3.1.6　ウィンドウの生成
 
 ********************
     gtk_window_new GTK_WINDOW_TOPLEVEL
     win = stat
 ********************
 
-　GTK+で空のウィンドウを生成して、それを表す値を変数に保存しています。
+　GTK+のgtk_window_new関数で空のウィンドウを生成して、それを表す値を変数に保存しています。
+
+　gtk_window_new関数の引数には、GTK_WINDOW_TOPLEVEL（既に説明したように、値は0です）、または、GTK_WINDOW_POPUP（添付マニュアルのAPIリファレンスに載っていますが、値は1です）を指定します。
+
+　GTK_WINDOW_TOPLEVELを指定すると、いわゆるメインウィンドウ、トップレベルウィンドウを生成することができます。
+
+　GTK_WINDOW_POPUPは、ポップアップメニューやポップアップのツールチップを作りたいときに指定します。この定数はダイアログを生成するためのものではありません。ダイアログを生成するには、別の専用の関数を実行する必要があります。
+
+ダイアログについては、17章で詳しく説明します。
 
 ====================
-### 3.1.6　ウィンドウのシグナルとコールバック関数の関連付け
+### 3.1.7　ウィンドウのシグナルとコールバック関数の関連付け
 
 ********************
     setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
@@ -301,7 +316,7 @@
 　g_signal_connect関数の4つ目の引数に0を指定する理由は、2.2.2で説明した通りです。
 
 ====================
-### 3.1.7　ウィンドウの表示
+### 3.1.8　ウィンドウの表示
 
 ********************
     gtk_widget_show_all win
@@ -310,7 +325,7 @@
 　gtk_widget_show_all関数は、生成済みのウィジェット（ここではウィンドウ）を中身ごと画面に表示します。
 
 ====================
-### 3.1.8　メインループの開始
+### 3.1.9　メインループの開始
 
 ********************
     gtk_main
@@ -320,7 +335,7 @@
 　ウィンドウの生成、シグナルとそれに対する処理のconnect、ウィンドウの表示、が終わったら、gtk_main関数でメインループに入ってユーザの操作を待ちます。GTK+では、gtk_mainを抜けたらプログラムを終了させるのが普通なので、そのすぐ後ろにend命令を書いておきます。
 
 ====================
-### 3.1.9　コールバック関数（シグナルハンドラ）の定義
+### 3.1.10　コールバック関数（シグナルハンドラ）の定義
 
 ********************
     *on_window_delete_event
@@ -365,8 +380,6 @@
     #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
     #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
     ;#func global g_signal_handler_disconnect "g_signal_handler_disconnect" sptr, int 
-    ;#func global g_signal_handlers_disconnect_matched "g_signal_handlers_disconnect_matched" sptr, int, int, int, sptr, sptr, sptr
-    ;#const G_SIGNAL_MATCH_FUNC (1 << 3)
     
     // ヌルポインタ定数
     #const NULL 0
@@ -387,7 +400,6 @@
     	g_signal_connect btn, "clicked", varptr( cbbuttonclicked ), NULL
     ;	id = stat
     ;	g_signal_handler_disconnect btn, id
-    ;	g_signal_handlers_disconnect_matched btn, G_SIGNAL_MATCH_FUNC, 0, 0, 0, varptr(cbbuttonclicked), 0
     
     	// ウィンドウの組み立て
     	gtk_container_add win, btn
@@ -414,20 +426,33 @@
 
 ********************
     ;#func global g_signal_handler_disconnect "g_signal_handler_disconnect" sptr, int 
-    ;#func global g_signal_handlers_disconnect_matched "g_signal_handlers_disconnect_matched" sptr, int, int, int, sptr, sptr, sptr
-    ;#const G_SIGNAL_MATCH_FUNC (1 << 3)
-    
     （中略）
-    
     ;	id = stat
     ;	g_signal_handler_disconnect btn, id
-    ;	g_signal_handlers_disconnect_matched btn, G_SIGNAL_MATCH_FUNC, 0, 0, 0, varptr( cbbuttonclicked ), 0
 ********************
 
 　まず、スクリプトの中でコメントアウトされている部分ですが、これは、2章で説明した、シグナルとコールバック関数の関連付けを削除するためのスクリプトです。動作を確認したい場合に適宜有効にして実行してください。
 
 ====================
-### 3.2.3　ウィンドウへのウィジェットの追加
+### 3.2.3　ボタンの生成
+
+********************
+    gtk_button_new_with_label "Click Here"
+    btn = stat
+    setcallbk cbbuttonclicked, cb_button_clicked, *on_button_clicked
+    g_signal_connect btn, "clicked", varptr( cbbuttonclicked ), NULL
+********************
+
+　ここでは、ウィンドウに載せるためのButtonウィジェットを生成しています。
+
+　Buttonウィジェットを生成する関数は、いくつかあるのですが、ここでは、gtk_button_new_with_label関数を使っています。
+
+　この関数は、ボタン上に表示する文字列を指定してウィジェットを生成することができます。
+
+　Buttonウィジェットについては、5.1で詳しく説明します。
+
+====================
+### 3.2.4　ウィンドウの組み立て
 
 ********************
     gtk_container_add win, btn

@@ -53,8 +53,7 @@
 
 	// ƒ{ƒ^ƒ“ŒQ¶¬
 	gtk_adjustment_new	0, 0, 1000, 1, 10, 0
-	adj	= stat
-	gtk_spin_button_new	adj, 1, 0
+	gtk_spin_button_new	stat, 1, 0
 	spb	= stat
 
 	gtk_check_button_new_with_label	"Numeric"

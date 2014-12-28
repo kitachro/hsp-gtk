@@ -1,12 +1,3 @@
-// よく使う関数
-#include "hspinet.as"
-#module
-#defcfunc u str chars_ ; shift-jis文字列をutf-8に変換
-	chars	= chars_
-	nkfcnv@	chars, chars, "Sw"
-	return	chars
-#global
-
 // コールバック関数を使うための準備
 #include "hscallbk.as"
 #uselib ""
@@ -43,6 +34,15 @@
 
 #uselib "libglib-2.0-0.dll"
 #func global g_list_nth_data "g_list_nth_data" sptr, int
+
+// よく使う関数
+#include "hspinet.as"
+#module
+#defcfunc u str chars_ ; shift-jis文字列をutf-8に変換
+	chars	= chars_
+	nkfcnv@	chars, chars, "Sw"
+	return	chars
+#global
 
 // よく使う定数
 ; ヌルポインタ

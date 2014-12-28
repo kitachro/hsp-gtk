@@ -390,7 +390,7 @@
 ;#func global g_format_size_for_display ""
 ;#func global g_format_size_full ""
 ;#func global g_fprintf ""
-;#func global g_free ""
+#func global g_free "g_free" sptr
 ;#func global g_freopen ""
 ;#func global g_get_application_name ""
 ;#func global g_get_charset ""

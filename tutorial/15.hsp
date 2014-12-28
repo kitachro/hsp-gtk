@@ -41,6 +41,8 @@
 #func global gtk_combo_box_get_active_id "gtk_combo_box_get_active_id" sptr
 #func global gtk_combo_box_get_active_iter "gtk_combo_box_get_active_iter" sptr, sptr
 #func global gtk_combo_box_get_model "gtk_combo_box_get_model" sptr
+#func global gtk_combo_box_set_wrap_width "gtk_combo_box_set_wrap_width" sptr, int
+#func global gtk_combo_box_get_wrap_width "gtk_combo_box_get_wrap_width" sptr
 #func global gtk_cell_layout_pack_start "gtk_cell_layout_pack_start" sptr, sptr, int
 #func global gtk_cell_renderer_text_new "gtk_cell_renderer_text_new"
 #func global gtk_cell_renderer_pixbuf_new "gtk_cell_renderer_pixbuf_new"
@@ -163,6 +165,7 @@
 	gtk_cell_layout_add_attribute	cmb5, ren5_p, "pixbuf", COL_MODEL5_PIXBUF
 	gtk_cell_layout_pack_start	cmb5, ren5_t, 0
 	gtk_cell_layout_add_attribute	cmb5, ren5_t, "text", COL_MODEL5_TEXT
+;	gtk_combo_box_set_wrap_width	cmb5, 2
 	gtk_combo_box_set_active	cmb5, 0
 	setcallbk	cbcombobox5changed, cb_combobox5_changed, *on_combobox5_changed
 	g_signal_connect	cmb5, "changed", varptr( cbcombobox5changed ), NULL

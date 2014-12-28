@@ -168,7 +168,7 @@
 
 　プログラマが上記のようなdelete-eventシグナルのハンドラをconnectするのには理由があり、原因はdelete-eventシグナルのデフォルトのハンドラの仕様にあります。デフォルトハンドラとは、プログラマが明示的にconnectするハンドラとは別に、文字通りデフォルトでconnectされているハンドラのことです。
 
-　このdelete-eventシグナルのデフォルトハンドラ内では、トップレベルウィンドウが破棄される（＝メモリ上から削除され、プログラムのユーザはもちろんプログラマからも利用できなくなる）のですが、ハンドラを抜けた後もプログラムのメインループは回り続けます。
+　このdelete-eventシグナルのデフォルトハンドラ内では、トップレベルウィンドウが破棄される（＝プログラムのユーザはもちろんプログラマからも利用できなくなる）のですが、ハンドラを抜けた後もプログラムのメインループは回り続けます。
 
 　つまり、プログラムが動き続けるにもかかわらず、プログラムのユーザがプログラムを終了する手段がなくなってしまうということです。そこでこれを防ぐために、メインループから抜けるためのgtk_main_quit関数を呼び出すシグナルハンドラをconnectする必要があるというわけです（ちなみにメインループに入るにはgtk_main関数を実行します）。gtk_main_quit関数を呼び出す責任はプログラマにあります。
 
@@ -205,6 +205,7 @@
     #func global gtk_widget_show_all "gtk_widget_show_all" sptr
     #func global gtk_main "gtk_main"
     #func global gtk_main_quit "gtk_main_quit"
+    
     #uselib "libgobject-2.0-0.dll"
     #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
     #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
@@ -309,7 +310,7 @@
 
 　GTK_WINDOW_POPUPは、ポップアップメニューやポップアップのツールチップを1から作りたいときに指定します。この定数はダイアログを生成するためのものではありません。ダイアログを生成するには、別の専用の関数を実行する必要があります。
 
-ダイアログについては、17章で詳しく説明します。
+ダイアログについては、10章で詳しく説明します。
 
 ====================
 ### 3.1.7　ウィンドウのシグナルとコールバック関数の関連付け
@@ -697,7 +698,7 @@
 
 　トグルボタンを生成するには、gtk_toggle_button_new、gtk_toggle_button_new_with_label、gtk_toggle_button_new_with_mnemonic、の3つの関数のうちのいずれかを実行します。
 
-　ボタンの状態を知りたい時には、gtk_toggle_button_get_active関数を実行します。戻り値として、TRUE(1)、またはFALSE(0)がstatに代入されます。
+　ボタンの状態を知りたい時には、gtk_toggle_button_get_active関数を実行します。戻り値として、TRUE(1)、またはFALSE(0)がstatに代入されます。押された（凹んだ）状態がTRUEです。
 
 　ボタンの状態を変更したい時には、gtk_toggle_button_set_active関数を実行してください。この関数を実行すると、クリックされた時と同じようにtoggledシグナルが発生します。
 

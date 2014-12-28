@@ -3,11 +3,8 @@
 公開者:
 : chrono (<https://github.com/kitachro>)
 
-バージョン:
-: 0.6.3
-
 最終更新日:
-: 2014年12月18日
+: 2014年12月25日
 
 ライセンス（Copyright）:
 : GNU Free Documentation License 1.3 with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts
@@ -26,8 +23,6 @@
 
 　このチュートリアルでは、[The GTK+ Project](http://www.gtk.org/)で公開されているall-in-one bundleアーカイブのGTK+3を動作確認に利用しています。ダウンロードは、Downloadのページからリンクされている、32bit Windows用アーカイブのページで行えます。アーカイブはただのzipファイルなので、ダウンロード後、解凍してください。
 
-　このチュートリアルで解説、および、サンプルスクリプトの動作確認に使用しているバージョンは、3.6.4です。将来のバージョン、あるいは、Windows以外のOSで利用できる最新版のGTK+では、仕様が変更されている場合があります。
-
 　アーカイブに含まれるファイルの中で、HSPスクリプトのデバッグ実行、およびスクリプトから作った実行ファイルの動作に必ず必要なのは、binフォルダにあるDLLファイルです。まずはデバッグ実行用に、これらのDLLファイルをすべて、HSP用プラグインを使う時と同じようにHSPのインストールフォルダにコピーしてください。
 
 　実行ファイルの動作に必要なDLLは、スクリプトから利用しているものとそれらが依存しているDLLになります。DLLの依存関係を調べるには、Dependency Walkerというフリーウェアが便利です。Dependency Walkerは、他にもDLLに含まれている関数名を表示したり、その一覧をクリップボードにコピーできたりするのでおすすめです。ただしDependency Walkerを使わなくても、エラーなしで実行ファイルが起動するかどうかでDLLがそろっているかどうかを確認できます。
@@ -37,6 +32,8 @@
 　このチュートリアルを読むにあたっては、"\share\gtk-doc\html\gtk3\api-index-full.html"、"\share\gtk-doc\html\glib\api-index-full.html"、"\share\gtk-doc\html\gobject\api-index-full.html"などのページを開いておくと、関数の仕様などを簡単に調べることができます。英語ですが、引数や戻り値の型を見るだけでも役に立ちます。
 
 　また、以上で説明した以外のファイルもプログラミングに役立ちますので、捨てずに、アーカイブのフォルダごと任意の場所に移動しておいてください。さらにこれらのファイル内のテキストを一気に全文検索できるソフトウェアを用意しておくと、プログラミングが捗ります。
+
+　このチュートリアルで解説、および、サンプルスクリプトの動作確認に使用しているバージョンは、3.6.4です。将来のバージョン、あるいは、Windows以外のOSで利用できる最新版のGTK+では、仕様が変更されている場合があります。
 
 ====================
 ## 1.2　コールバック関数実装プラグインの入手
@@ -1997,34 +1994,290 @@
 ********************
 
 ====================
-# 9　プログレスバー（ProgressBar）
+# 9　メニュー（Menu）
 
 ====================
-# 10　スピナー（Spinner）
+# 10　ダイアログ（Dialog）
 
 ====================
-# 11　ツリービューとリストビュー（TreeView）
+# 11　クリップボード（Clipboard）
 
 ====================
-# 12　セルレンダラ（CellRenderer）
+# 12　プログレスバー（ProgressBar）
 
 ====================
-# 13　コンボボックス（ComboBox）
+# 13　スピナー（Spinner）
 
 ====================
-# 14　アイコンビュー（IconView）
+# 14　テキストエディタ（TextView）
 
 ====================
-# 15　テキストエディタ（TextView）
+# 15　コンボボックス（ComboBox）
+
+![サンプル15](15.png)
 
 ====================
-# 16　メニュー（Menu）
+## 15.1　サンプルプログラムの全体
+
+********************
+    // コールバック関数を使うための準備
+    #include "hscallbk.as"
+    #uselib ""
+    #func cb_window_delete_event ""
+    #func cb_combobox1_changed ""
+    #func cb_combobox2_changed ""
+    #func cb_combobox3_changed ""
+    #func cb_combobox4_changed ""
+    #func cb_combobox5_changed ""
+    
+    // GTK+の関数を使うための準備
+    #uselib "libgtk-3-0.dll"
+    #func global gtk_init "gtk_init" sptr, sptr
+    #func global gtk_window_new "gtk_window_new" int
+    #const GTK_WINDOW_TOPLEVEL 0
+    #func global gtk_widget_show_all "gtk_widget_show_all" sptr
+    #func global gtk_main "gtk_main"
+    #func global gtk_main_quit "gtk_main_quit"
+    #func global gtk_container_add "gtk_container_add" sptr, sptr
+    
+    #func global gtk_vbox_new "gtk_vbox_new" int, int
+    #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
+    
+    #func global gtk_list_store_new1 "gtk_list_store_new" int, int
+    #func global gtk_list_store_new2 "gtk_list_store_new" int, int, int
+    #func global gtk_list_store_append "gtk_list_store_append" sptr, sptr
+    #func global gtk_list_store_set1 "gtk_list_store_set" sptr, sptr, int, sptr, int
+    #func global gtk_list_store_set2 "gtk_list_store_set" sptr, sptr, int, sptr, int, sptr, int
+    #func global gtk_tree_model_get1 "gtk_tree_model_get" sptr, sptr, int, sptr, int
+    
+    #func global gtk_combo_box_text_new "gtk_combo_box_text_new"
+    #func global gtk_combo_box_text_new_with_entry "gtk_combo_box_text_new_with_entry"
+    #func global gtk_combo_box_text_append "gtk_combo_box_text_append" sptr, str, str
+    #func global gtk_combo_box_text_append_text "gtk_combo_box_text_append_text" sptr, str
+    #func global gtk_combo_box_text_get_active_text "gtk_combo_box_text_get_active_text" sptr
+    #func global gtk_combo_box_new_with_model "gtk_combo_box_new_with_model" sptr
+    #func global gtk_combo_box_new_with_model_and_entry "gtk_combo_box_new_with_model_and_entry" sptr
+    #func global gtk_combo_box_set_active "gtk_combo_box_set_active" sptr, int
+    #func global gtk_combo_box_set_entry_text_column "gtk_combo_box_set_entry_text_column" sptr, int
+    #func global gtk_combo_box_get_active "gtk_combo_box_get_active" sptr
+    #func global gtk_combo_box_get_active_id "gtk_combo_box_get_active_id" sptr
+    #func global gtk_combo_box_get_active_iter "gtk_combo_box_get_active_iter" sptr, sptr
+    #func global gtk_combo_box_get_model "gtk_combo_box_get_model" sptr
+    #func global gtk_cell_layout_pack_start "gtk_cell_layout_pack_start" sptr, sptr, int
+    #func global gtk_cell_renderer_text_new "gtk_cell_renderer_text_new"
+    #func global gtk_cell_renderer_pixbuf_new "gtk_cell_renderer_pixbuf_new"
+    #func global gtk_cell_layout_add_attribute "gtk_cell_layout_add_attribute" sptr, sptr, str, int
+    
+    #uselib "libgobject-2.0-0.dll"
+    #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+    #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+    #const G_TYPE_STRING 64
+    
+    #uselib "libgdk_pixbuf-2.0-0.dll"
+    #func global gdk_pixbuf_get_type "gdk_pixbuf_get_type"
+    #func global gdk_pixbuf_new_from_file "gdk_pixbuf_new_from_file" str, sptr
+    
+    #uselib "libglib-2.0-0.dll"
+    #func global g_free "g_free" sptr
+    
+    // よく使う定数
+    ; ヌルポインタ
+    #const NULL 0
+    ; 真偽値
+    #const FALSE 0
+    #const TRUE 1
+    
+    	// GTK+初期化
+    	gtk_init NULL, NULL
+    
+    	// ウィンドウ生成
+    	gtk_window_new GTK_WINDOW_TOPLEVEL
+    	win = stat
+    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
+    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+    
+    	// VBox生成
+    	gtk_vbox_new FALSE, 5
+    	vbx = stat
+    
+    	// コンボボックス1（テキスト専用）生成
+    	gtk_combo_box_text_new
+    	cmb1 = stat
+    	gtk_combo_box_text_append cmb1, "1", "item1(1)"
+    	gtk_combo_box_text_append cmb1, "2", "item2(1)"
+    	gtk_combo_box_set_active cmb1, 0
+    	setcallbk cbcombobox1changed, cb_combobox1_changed, *on_combobox1_changed
+    	g_signal_connect cmb1, "changed", varptr( cbcombobox1changed ), NULL
+    
+    	// コンボボックス2（テキスト専用、エントリ付き）生成
+    	gtk_combo_box_text_new_with_entry
+    	cmb2 = stat
+    	gtk_combo_box_text_append_text cmb2, "item1(2)"
+    	gtk_combo_box_text_append_text cmb2, "item2(2)"
+    	gtk_combo_box_set_active cmb2, 0
+    	setcallbk cbcombobox2changed, cb_combobox2_changed, *on_combobox2_changed
+    	g_signal_connect cmb2, "changed", varptr( cbcombobox2changed ), NULL
+    
+    	// TreeIterator格納用変数作成
+    	sdim struct_itr, ( 4 * 4 ) ; 4*4 = GtkTreeIterator構造体サイズ
+    	itr = varptr( struct_itr )
+    
+    	// コンボボックス用セルレンダラ群生成
+    	gtk_cell_renderer_text_new
+    	ren3 = stat
+    	gtk_cell_renderer_pixbuf_new
+    	ren5_p = stat
+    	gtk_cell_renderer_text_new
+    	ren5_t = stat
+    
+    	// コンボボックス3用モデル（データ）生成
+    #const COL_MODEL3_TEXT 0
+    	gtk_list_store_new1 1, G_TYPE_STRING
+    	mdl3 = stat
+    	gtk_list_store_append mdl3, itr
+    	gtk_list_store_set1 mdl3, itr, COL_MODEL3_TEXT, "item1(3)", -1
+    	gtk_list_store_append mdl3, itr
+    	gtk_list_store_set1 mdl3, itr, COL_MODEL3_TEXT, "item2(3)", -1
+    
+    	// コンボボックス3生成
+    	gtk_combo_box_new_with_model mdl3
+    	cmb3 = stat
+    	gtk_cell_layout_pack_start cmb3, ren3, 0
+    	gtk_cell_layout_add_attribute cmb3, ren3, "text", COL_MODEL3_TEXT
+    	gtk_combo_box_set_active cmb3, 0
+    	setcallbk cbcombobox3changed, cb_combobox3_changed, *on_combobox3_changed
+    	g_signal_connect cmb3, "changed", varptr( cbcombobox3changed ), NULL
+    
+    	// コンボボックス4用モデル（データ）生成
+    #const COL_MODEL4_TEXT 0
+    	gtk_list_store_new1 1, G_TYPE_STRING
+    	mdl4 = stat
+    	gtk_list_store_append mdl4, itr
+    	gtk_list_store_set1 mdl4, itr, COL_MODEL4_TEXT, "item1(4)", -1
+    	gtk_list_store_append mdl4, itr
+    	gtk_list_store_set1 mdl4, itr, COL_MODEL4_TEXT, "item2(4)", -1
+    
+    	// コンボボックス4（エントリ付き）生成
+    	gtk_combo_box_new_with_model_and_entry mdl4
+    	cmb4 = stat
+    	gtk_combo_box_set_entry_text_column cmb4, COL_MODEL4_TEXT
+    	gtk_combo_box_set_active cmb4, 0
+    	setcallbk cbcombobox4changed, cb_combobox4_changed, *on_combobox4_changed
+    	g_signal_connect cmb4, "changed", varptr( cbcombobox4changed ), NULL
+    
+    	// コンボボックス5用モデル（データ）生成
+    #const COL_MODEL5_PIXBUF 0
+    #const COL_MODEL5_TEXT 1
+    	gdk_pixbuf_get_type
+    	gtk_list_store_new2 2, stat, G_TYPE_STRING
+    	mdl5 = stat
+    	gdk_pixbuf_new_from_file "cat_s.jpg", varptr( p_error )
+    	pix = stat
+    	gtk_list_store_append mdl5, itr
+    	gtk_list_store_set2 mdl5, itr, COL_MODEL5_PIXBUF, pix, COL_MODEL5_TEXT, "item1(5)", -1
+    	gtk_list_store_append mdl5, itr
+    	gtk_list_store_set2 mdl5, itr, COL_MODEL5_PIXBUF, pix, COL_MODEL5_TEXT, "item2(5)", -1
+    
+    	// コンボボックス5生成
+    	gtk_combo_box_new_with_model mdl5
+    	cmb5 = stat
+    	gtk_cell_layout_pack_start cmb5, ren5_p, 0
+    	gtk_cell_layout_add_attribute cmb5, ren5_p, "pixbuf", COL_MODEL5_PIXBUF
+    	gtk_cell_layout_pack_start cmb5, ren5_t, 0
+    	gtk_cell_layout_add_attribute cmb5, ren5_t, "text", COL_MODEL5_TEXT
+    	gtk_combo_box_set_active cmb5, 0
+    	setcallbk cbcombobox5changed, cb_combobox5_changed, *on_combobox5_changed
+    	g_signal_connect cmb5, "changed", varptr( cbcombobox5changed ), NULL
+    
+    	// ウィンドウの組み立て
+    	gtk_box_pack_start vbx, cmb1, TRUE, TRUE, 0
+    	gtk_box_pack_start vbx, cmb2, TRUE, TRUE, 0
+    	gtk_box_pack_start vbx, cmb3, TRUE, TRUE, 0
+    	gtk_box_pack_start vbx, cmb4, TRUE, TRUE, 0
+    	gtk_box_pack_start vbx, cmb5, TRUE, TRUE, 0
+    	gtk_container_add win, vbx
+    
+    	// ウィンドウの表示とメインループの開始
+    	gtk_widget_show_all win
+    	gtk_main
+    	end
+    
+    /* シグナルハンドラ */
+    #const VARTYPE_STRING 2
+    
+    *on_window_delete_event
+    	gtk_main_quit
+    	return
+    
+    #const LEN_COMBOBOX_ID 5
+    *on_combobox1_changed
+    	gtk_combo_box_get_active_id cmb1
+    	ptr = stat
+    	dupptr txt, ptr, LEN_COMBOBOX_ID, VARTYPE_STRING
+    	mes "active id: " + txt
+    
+    	gtk_combo_box_text_get_active_text cmb1
+    	ptr = stat
+    	gosub *print_active_text
+    	return
+    
+    *on_combobox2_changed
+    	gtk_combo_box_get_active cmb2
+    	mes "active index: " + stat
+    
+    	gtk_combo_box_text_get_active_text cmb2
+    	ptr = stat
+    	gosub *print_active_text
+    	return
+    
+    *on_combobox3_changed
+    	gtk_combo_box_get_active cmb3
+    	mes "active index: " + stat
+    
+    	ptr = NULL
+    	gtk_combo_box_get_active_iter cmb3, itr
+    	gtk_tree_model_get1 mdl3, itr, COL_MODEL3_TEXT, varptr( ptr ), -1
+    	gosub *print_active_text
+    	return
+    
+    *on_combobox4_changed
+    	gtk_combo_box_get_active cmb4
+    	mes "active index: " + stat
+    
+    	ptr = NULL
+    	gtk_combo_box_get_active_iter cmb4, itr
+    	gtk_tree_model_get1 mdl4, itr, COL_MODEL4_TEXT, varptr( ptr ), -1
+    	gosub *print_active_text
+    	return
+    
+    *on_combobox5_changed
+    	gtk_combo_box_get_active cmb5
+    	mes "active index: " + stat
+    
+    	ptr = NULL
+    	gtk_combo_box_get_active_iter cmb5, itr
+    	gtk_tree_model_get1 mdl5, itr, COL_MODEL5_TEXT, varptr( ptr ), -1
+    	gosub *print_active_text
+    	return
+    
+    #const LEN_COMBOBOX_TEXT 10
+    *print_active_text
+    	if ptr {
+    		dupptr txt, ptr, LEN_COMBOBOX_TEXT, VARTYPE_STRING
+    		mes "active text: " + txt
+    		g_free ptr
+    	}
+    	return
+********************
 
 ====================
-# 17　ダイアログ（Dialog）
+# 16　セルレンダラ（CellRenderer）
 
 ====================
-# 18　クリップボード（Clipboard）
+# 17　ツリービューとリストビュー（TreeView）
+
+====================
+# 18　アイコンビュー（IconView）
 
 ====================
 # 19　ドラッグアンドドロップ
@@ -2034,7 +2287,4 @@
 
 ====================
 # 21　オブジェクト
-
-====================
-# 22　ストックアイテム（StockItem）
 

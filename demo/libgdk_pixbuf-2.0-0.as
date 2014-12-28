@@ -8,128 +8,128 @@
 
 
 #uselib "libgdk_pixbuf-2.0-0.dll"
-;gdk_colorspace_get_type
-;gdk_interp_type_get_type
-;gdk_pixbuf_add_alpha
-;gdk_pixbuf_alpha_mode_get_type
-;gdk_pixbuf_animation_get_height
-;gdk_pixbuf_animation_get_iter
-;gdk_pixbuf_animation_get_static_image
-;gdk_pixbuf_animation_get_type
-;gdk_pixbuf_animation_get_width
-;gdk_pixbuf_animation_is_static_image
-;gdk_pixbuf_animation_iter_advance
-;gdk_pixbuf_animation_iter_get_delay_time
-;gdk_pixbuf_animation_iter_get_pixbuf
-;gdk_pixbuf_animation_iter_get_type
-;gdk_pixbuf_animation_iter_on_currently_loading_frame
-;gdk_pixbuf_animation_new_from_file
-;gdk_pixbuf_animation_new_from_file_utf8
-;gdk_pixbuf_animation_ref
-;gdk_pixbuf_animation_unref
-;gdk_pixbuf_apply_embedded_orientation
-;gdk_pixbuf_composite
-;gdk_pixbuf_composite_color
-;gdk_pixbuf_composite_color_simple
-;gdk_pixbuf_copy
-;gdk_pixbuf_copy_area
-;gdk_pixbuf_error_get_type
-;gdk_pixbuf_error_quark
-;gdk_pixbuf_fill
-;gdk_pixbuf_flip
-;gdk_pixbuf_format_copy
-;gdk_pixbuf_format_free
-;gdk_pixbuf_format_get_description
-;gdk_pixbuf_format_get_extensions
-;gdk_pixbuf_format_get_license
-;gdk_pixbuf_format_get_mime_types
-;gdk_pixbuf_format_get_name
-;gdk_pixbuf_format_get_type
-;gdk_pixbuf_format_is_disabled
-;gdk_pixbuf_format_is_scalable
-;gdk_pixbuf_format_is_writable
-;gdk_pixbuf_format_set_disabled
-;gdk_pixbuf_from_pixdata
-;gdk_pixbuf_get_bits_per_sample
-;gdk_pixbuf_get_byte_length
-;gdk_pixbuf_get_colorspace
-;gdk_pixbuf_get_file_info
-;gdk_pixbuf_get_formats
-;gdk_pixbuf_get_has_alpha
-;gdk_pixbuf_get_height
-;gdk_pixbuf_get_n_channels
-;gdk_pixbuf_get_option
-;gdk_pixbuf_get_pixels
-;gdk_pixbuf_get_pixels_with_length
-;gdk_pixbuf_get_rowstride
+;#func global gdk_colorspace_get_type "" 
+;#func global gdk_interp_type_get_type "" 
+;#func global gdk_pixbuf_add_alpha "" 
+;#func global gdk_pixbuf_alpha_mode_get_type "" 
+;#func global gdk_pixbuf_animation_get_height "" 
+;#func global gdk_pixbuf_animation_get_iter "" 
+;#func global gdk_pixbuf_animation_get_static_image "" 
+;#func global gdk_pixbuf_animation_get_type "" 
+;#func global gdk_pixbuf_animation_get_width "" 
+;#func global gdk_pixbuf_animation_is_static_image "" 
+;#func global gdk_pixbuf_animation_iter_advance "" 
+;#func global gdk_pixbuf_animation_iter_get_delay_time "" 
+;#func global gdk_pixbuf_animation_iter_get_pixbuf "" 
+;#func global gdk_pixbuf_animation_iter_get_type "" 
+;#func global gdk_pixbuf_animation_iter_on_currently_loading_frame "" 
+;#func global gdk_pixbuf_animation_new_from_file "" 
+;#func global gdk_pixbuf_animation_new_from_file_utf8 "" 
+;#func global gdk_pixbuf_animation_ref "" 
+;#func global gdk_pixbuf_animation_unref "" 
+;#func global gdk_pixbuf_apply_embedded_orientation "" 
+;#func global gdk_pixbuf_composite "" 
+;#func global gdk_pixbuf_composite_color "" 
+;#func global gdk_pixbuf_composite_color_simple "" 
+;#func global gdk_pixbuf_copy "" 
+;#func global gdk_pixbuf_copy_area "" 
+;#func global gdk_pixbuf_error_get_type "" 
+;#func global gdk_pixbuf_error_quark "" 
+;#func global gdk_pixbuf_fill "" 
+;#func global gdk_pixbuf_flip "" 
+;#func global gdk_pixbuf_format_copy "" 
+;#func global gdk_pixbuf_format_free "" 
+;#func global gdk_pixbuf_format_get_description "" 
+;#func global gdk_pixbuf_format_get_extensions "" 
+;#func global gdk_pixbuf_format_get_license "" 
+;#func global gdk_pixbuf_format_get_mime_types "" 
+;#func global gdk_pixbuf_format_get_name "" 
+;#func global gdk_pixbuf_format_get_type "" 
+;#func global gdk_pixbuf_format_is_disabled "" 
+;#func global gdk_pixbuf_format_is_scalable "" 
+;#func global gdk_pixbuf_format_is_writable "" 
+;#func global gdk_pixbuf_format_set_disabled "" 
+;#func global gdk_pixbuf_from_pixdata "" 
+;#func global gdk_pixbuf_get_bits_per_sample "" 
+;#func global gdk_pixbuf_get_byte_length "" 
+;#func global gdk_pixbuf_get_colorspace "" 
+;#func global gdk_pixbuf_get_file_info "" 
+;#func global gdk_pixbuf_get_formats "" 
+;#func global gdk_pixbuf_get_has_alpha "" 
+;#func global gdk_pixbuf_get_height "" 
+;#func global gdk_pixbuf_get_n_channels "" 
+;#func global gdk_pixbuf_get_option "" 
+;#func global gdk_pixbuf_get_pixels "" 
+;#func global gdk_pixbuf_get_pixels_with_length "" 
+;#func global gdk_pixbuf_get_rowstride "" 
 #func global gdk_pixbuf_get_type "gdk_pixbuf_get_type"
-;gdk_pixbuf_get_width
-;gdk_pixbuf_gettext
-;gdk_pixbuf_loader_close
-;gdk_pixbuf_loader_get_animation
-;gdk_pixbuf_loader_get_format
-;gdk_pixbuf_loader_get_pixbuf
-;gdk_pixbuf_loader_get_type
-;gdk_pixbuf_loader_new
-;gdk_pixbuf_loader_new_with_mime_type
-;gdk_pixbuf_loader_new_with_type
-;gdk_pixbuf_loader_set_size
-;gdk_pixbuf_loader_write
-;gdk_pixbuf_major_version
-;gdk_pixbuf_micro_version
-;gdk_pixbuf_minor_version
-;gdk_pixbuf_new
-;gdk_pixbuf_new_from_data
-;gdk_pixbuf_new_from_file
-;gdk_pixbuf_new_from_file_at_scale
-;gdk_pixbuf_new_from_file_at_scale_utf8
-;gdk_pixbuf_new_from_file_at_size
-;gdk_pixbuf_new_from_file_at_size_utf8
-;gdk_pixbuf_new_from_file_utf8
-;gdk_pixbuf_new_from_inline
-;gdk_pixbuf_new_from_resource
-;gdk_pixbuf_new_from_resource_at_scale
-;gdk_pixbuf_new_from_stream
-;gdk_pixbuf_new_from_stream_async
-;gdk_pixbuf_new_from_stream_at_scale
-;gdk_pixbuf_new_from_stream_at_scale_async
-;gdk_pixbuf_new_from_stream_finish
-;gdk_pixbuf_new_from_xpm_data
-;gdk_pixbuf_new_subpixbuf
-;gdk_pixbuf_non_anim_get_type
-;gdk_pixbuf_non_anim_new
-;gdk_pixbuf_ref
-;gdk_pixbuf_rotate_simple
-;gdk_pixbuf_rotation_get_type
-;gdk_pixbuf_saturate_and_pixelate
-;gdk_pixbuf_save
-;gdk_pixbuf_save_to_buffer
-;gdk_pixbuf_save_to_bufferv
-;gdk_pixbuf_save_to_callback
-;gdk_pixbuf_save_to_callbackv
-;gdk_pixbuf_save_to_stream
-;gdk_pixbuf_save_to_stream_async
-;gdk_pixbuf_save_to_stream_finish
-;gdk_pixbuf_save_utf8
-;gdk_pixbuf_savev
-;gdk_pixbuf_savev_utf8
-;gdk_pixbuf_scale
-;gdk_pixbuf_scale_simple
-;gdk_pixbuf_scaled_anim_get_type
-;gdk_pixbuf_scaled_anim_iter_get_type
-;gdk_pixbuf_set_option
-;gdk_pixbuf_simple_anim_add_frame
-;gdk_pixbuf_simple_anim_get_loop
-;gdk_pixbuf_simple_anim_get_type
-;gdk_pixbuf_simple_anim_iter_get_type
-;gdk_pixbuf_simple_anim_new
-;gdk_pixbuf_simple_anim_set_loop
-;gdk_pixbuf_unref
-;gdk_pixbuf_version
-;gdk_pixdata_deserialize
-;gdk_pixdata_from_pixbuf
-;gdk_pixdata_serialize
-;gdk_pixdata_to_csource
+;#func global gdk_pixbuf_get_width "" 
+;#func global gdk_pixbuf_gettext "" 
+;#func global gdk_pixbuf_loader_close "" 
+;#func global gdk_pixbuf_loader_get_animation "" 
+;#func global gdk_pixbuf_loader_get_format "" 
+;#func global gdk_pixbuf_loader_get_pixbuf "" 
+;#func global gdk_pixbuf_loader_get_type "" 
+;#func global gdk_pixbuf_loader_new "" 
+;#func global gdk_pixbuf_loader_new_with_mime_type "" 
+;#func global gdk_pixbuf_loader_new_with_type "" 
+;#func global gdk_pixbuf_loader_set_size "" 
+;#func global gdk_pixbuf_loader_write "" 
+;#func global gdk_pixbuf_major_version "" 
+;#func global gdk_pixbuf_micro_version "" 
+;#func global gdk_pixbuf_minor_version "" 
+;#func global gdk_pixbuf_new "" 
+;#func global gdk_pixbuf_new_from_data "" 
+#func global gdk_pixbuf_new_from_file "gdk_pixbuf_new_from_file" str, sptr
+;#func global gdk_pixbuf_new_from_file_at_scale "" 
+;#func global gdk_pixbuf_new_from_file_at_scale_utf8 "" 
+;#func global gdk_pixbuf_new_from_file_at_size "" 
+;#func global gdk_pixbuf_new_from_file_at_size_utf8 "" 
+;#func global gdk_pixbuf_new_from_file_utf8 "" 
+;#func global gdk_pixbuf_new_from_inline "" 
+;#func global gdk_pixbuf_new_from_resource "" 
+;#func global gdk_pixbuf_new_from_resource_at_scale "" 
+;#func global gdk_pixbuf_new_from_stream "" 
+;#func global gdk_pixbuf_new_from_stream_async "" 
+;#func global gdk_pixbuf_new_from_stream_at_scale "" 
+;#func global gdk_pixbuf_new_from_stream_at_scale_async "" 
+;#func global gdk_pixbuf_new_from_stream_finish "" 
+;#func global gdk_pixbuf_new_from_xpm_data "" 
+;#func global gdk_pixbuf_new_subpixbuf "" 
+;#func global gdk_pixbuf_non_anim_get_type "" 
+;#func global gdk_pixbuf_non_anim_new "" 
+;#func global gdk_pixbuf_ref "" 
+;#func global gdk_pixbuf_rotate_simple "" 
+;#func global gdk_pixbuf_rotation_get_type "" 
+;#func global gdk_pixbuf_saturate_and_pixelate "" 
+;#func global gdk_pixbuf_save "" 
+;#func global gdk_pixbuf_save_to_buffer "" 
+;#func global gdk_pixbuf_save_to_bufferv "" 
+;#func global gdk_pixbuf_save_to_callback "" 
+;#func global gdk_pixbuf_save_to_callbackv "" 
+;#func global gdk_pixbuf_save_to_stream "" 
+;#func global gdk_pixbuf_save_to_stream_async "" 
+;#func global gdk_pixbuf_save_to_stream_finish "" 
+;#func global gdk_pixbuf_save_utf8 "" 
+;#func global gdk_pixbuf_savev "" 
+;#func global gdk_pixbuf_savev_utf8 "" 
+;#func global gdk_pixbuf_scale "" 
+;#func global gdk_pixbuf_scale_simple "" 
+;#func global gdk_pixbuf_scaled_anim_get_type "" 
+;#func global gdk_pixbuf_scaled_anim_iter_get_type "" 
+;#func global gdk_pixbuf_set_option "" 
+;#func global gdk_pixbuf_simple_anim_add_frame "" 
+;#func global gdk_pixbuf_simple_anim_get_loop "" 
+;#func global gdk_pixbuf_simple_anim_get_type "" 
+;#func global gdk_pixbuf_simple_anim_iter_get_type "" 
+;#func global gdk_pixbuf_simple_anim_new "" 
+;#func global gdk_pixbuf_simple_anim_set_loop "" 
+;#func global gdk_pixbuf_unref "" 
+;#func global gdk_pixbuf_version "" 
+;#func global gdk_pixdata_deserialize "" 
+;#func global gdk_pixdata_from_pixbuf "" 
+;#func global gdk_pixdata_serialize "" 
+;#func global gdk_pixdata_to_csource "" 
 
 
 #endif

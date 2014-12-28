@@ -580,16 +580,16 @@
 ;#func global gtk_combo_box_entry_new_text "" 
 ;#func global gtk_combo_box_entry_new_with_model "" 
 ;#func global gtk_combo_box_entry_set_text_column "" 
-;#func global gtk_combo_box_get_active "" 
-;#func global gtk_combo_box_get_active_iter "" 
-;#func global gtk_combo_box_get_active_text "" 
+#func global gtk_combo_box_get_active "gtk_combo_box_get_active" sptr
+#func global gtk_combo_box_get_active_id "gtk_combo_box_get_active_id" sptr
+#func global gtk_combo_box_get_active_iter "gtk_combo_box_get_active_iter" sptr, sptr
 ;#func global gtk_combo_box_get_add_tearoffs "" 
 ;#func global gtk_combo_box_get_button_sensitivity "" 
 ;#func global gtk_combo_box_get_column_span_column "" 
 ;#func global gtk_combo_box_get_entry_text_column "" 
 ;#func global gtk_combo_box_get_focus_on_click "" 
 ;#func global gtk_combo_box_get_has_entry "" 
-;#func global gtk_combo_box_get_model "" 
+#func global gtk_combo_box_get_model "gtk_combo_box_get_model" sptr
 ;#func global gtk_combo_box_get_popup_accessible "" 
 ;#func global gtk_combo_box_get_row_separator_func "" 
 ;#func global gtk_combo_box_get_row_span_column "" 
@@ -601,7 +601,7 @@
 ;#func global gtk_combo_box_new_text "" 
 ;#func global gtk_combo_box_new_with_entry "" 
 #func global gtk_combo_box_new_with_model "gtk_combo_box_new_with_model" sptr
-;#func global gtk_combo_box_new_with_model_and_entry "" 
+#func global gtk_combo_box_new_with_model_and_entry "gtk_combo_box_new_with_model_and_entry" sptr
 ;#func global gtk_combo_box_popdown "" 
 ;#func global gtk_combo_box_popup "" 
 ;#func global gtk_combo_box_prepend_text "" 
@@ -611,19 +611,20 @@
 ;#func global gtk_combo_box_set_add_tearoffs "" 
 ;#func global gtk_combo_box_set_button_sensitivity "" 
 ;#func global gtk_combo_box_set_column_span_column "" 
-;#func global gtk_combo_box_set_entry_text_column "" 
+#func global gtk_combo_box_set_entry_text_column "gtk_combo_box_set_entry_text_column" sptr, int
 ;#func global gtk_combo_box_set_focus_on_click "" 
 ;#func global gtk_combo_box_set_model "" 
 ;#func global gtk_combo_box_set_row_separator_func "" 
 ;#func global gtk_combo_box_set_row_span_column "" 
 ;#func global gtk_combo_box_set_title "" 
 ;#func global gtk_combo_box_set_wrap_width "" 
-;#func global gtk_combo_box_text_append_text "" 
-;#func global gtk_combo_box_text_get_active_text "" 
+#func global gtk_combo_box_text_append "gtk_combo_box_text_append" sptr, str, str
+#func global gtk_combo_box_text_append_text "gtk_combo_box_text_append_text" sptr, str
+#func global gtk_combo_box_text_get_active_text "gtk_combo_box_text_get_active_text" sptr
 ;#func global gtk_combo_box_text_get_type "" 
 ;#func global gtk_combo_box_text_insert_text "" 
-;#func global gtk_combo_box_text_new "" 
-;#func global gtk_combo_box_text_new_with_entry "" 
+#func global gtk_combo_box_text_new "gtk_combo_box_text_new"
+#func global gtk_combo_box_text_new_with_entry "gtk_combo_box_text_new_with_entry"
 ;#func global gtk_combo_box_text_prepend_text "" 
 ;#func global gtk_combo_box_text_remove "" 
 ;#func global gtk_combo_disable_activate "" 

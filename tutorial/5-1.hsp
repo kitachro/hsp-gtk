@@ -26,13 +26,13 @@
 #func global gtk_main "gtk_main"
 #func global gtk_main_quit "gtk_main_quit"
 #func global gtk_hbox_new "gtk_hbox_new" int, int
+#func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
 #func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
 #func global gtk_button_new_from_stock "gtk_button_new_from_stock" sptr
 #func global gtk_button_new_with_mnemonic "gtk_button_new_with_mnemonic" sptr 
 #define GTK_STOCK_OPEN	"gtk-open"
 #func global gtk_container_get_children "gtk_container_get_children" sptr
 #func gtk_widget_override_font "gtk_widget_override_font" sptr, sptr
-#func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
 
 #uselib "libgobject-2.0-0.dll"
 #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0

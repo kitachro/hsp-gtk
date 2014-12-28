@@ -595,7 +595,7 @@
 ;#func global gtk_combo_box_get_row_span_column "" 
 ;#func global gtk_combo_box_get_title "" 
 ;#func global gtk_combo_box_get_type "" 
-;#func global gtk_combo_box_get_wrap_width "" 
+#func global gtk_combo_box_get_wrap_width "gtk_combo_box_get_wrap_width" sptr
 ;#func global gtk_combo_box_insert_text "" 
 ;#func global gtk_combo_box_new "" 
 ;#func global gtk_combo_box_new_text "" 
@@ -617,7 +617,7 @@
 ;#func global gtk_combo_box_set_row_separator_func "" 
 ;#func global gtk_combo_box_set_row_span_column "" 
 ;#func global gtk_combo_box_set_title "" 
-;#func global gtk_combo_box_set_wrap_width "" 
+#func global gtk_combo_box_set_wrap_width "gtk_combo_box_set_wrap_width" sptr, int
 #func global gtk_combo_box_text_append "gtk_combo_box_text_append" sptr, str, str
 #func global gtk_combo_box_text_append_text "gtk_combo_box_text_append_text" sptr, str
 #func global gtk_combo_box_text_get_active_text "gtk_combo_box_text_get_active_text" sptr

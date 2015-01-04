@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2014 chrono
+	Copyright (c) 2015 chrono
 	This software is released under the MIT License.
 	http://opensource.org/licenses/mit-license.php
 */
@@ -765,7 +765,7 @@
 ;#func global gtk_dialog_add_button "" 
 ;#func global gtk_dialog_add_buttons "" 
 ;#func global gtk_dialog_flags_get_type "" 
-;#func global gtk_dialog_get_action_area "" 
+#func global gtk_dialog_get_action_area "gtk_dialog_get_action_area" sptr
 ;#func global gtk_dialog_get_content_area "" 
 ;#func global gtk_dialog_get_has_separator "" 
 ;#func global gtk_dialog_get_response_for_widget "" 
@@ -1003,7 +1003,7 @@
 ;#func global gtk_file_chooser_button_get_title "" 
 ;#func global gtk_file_chooser_button_get_type "" 
 ;#func global gtk_file_chooser_button_get_width_chars "" 
-;#func global gtk_file_chooser_button_new "" 
+;#func global gtk_file_chooser_button_new "gtk_file_chooser_button_new" str, int
 ;#func global gtk_file_chooser_button_new_with_backend "" 
 ;#func global gtk_file_chooser_button_new_with_dialog "" 
 ;#func global gtk_file_chooser_button_set_focus_on_click "" 
@@ -1011,7 +1011,9 @@
 ;#func global gtk_file_chooser_button_set_width_chars "" 
 ;#func global gtk_file_chooser_confirmation_get_type "" 
 ;#func global gtk_file_chooser_dialog_get_type "" 
-#func global gtk_file_chooser_dialog_new1 "gtk_file_chooser_dialog_new" str, sptr, int, str, int
+;#func global gtk_file_chooser_dialog_new "" 
+;#func global gtk_file_chooser_dialog_new1 "gtk_file_chooser_dialog_new" sptr, sptr, int, str, int, int
+;#func global gtk_file_chooser_dialog_new2 "gtk_file_chooser_dialog_new" sptr, sptr, int, str, int, str, int, int
 ;#func global gtk_file_chooser_dialog_new_with_backend "" 
 ;#func global gtk_file_chooser_error_get_type "" 
 ;#func global gtk_file_chooser_error_quark "" 
@@ -1024,7 +1026,7 @@
 ;#func global gtk_file_chooser_get_do_overwrite_confirmation "" 
 ;#func global gtk_file_chooser_get_extra_widget "" 
 ;#func global gtk_file_chooser_get_file "" 
-#func global gtk_file_chooser_get_filename "gtk_file_chooser_get_filename" sptr
+;#func global gtk_file_chooser_get_filename "gtk_file_chooser_get_filename" sptr
 ;#func global gtk_file_chooser_get_filename_utf8 "" 
 ;#func global gtk_file_chooser_get_filenames "" 
 ;#func global gtk_file_chooser_get_filenames_utf8 "" 
@@ -1082,7 +1084,7 @@
 ;#func global gtk_file_chooser_unselect_filename_utf8 "" 
 ;#func global gtk_file_chooser_unselect_uri "" 
 ;#func global gtk_file_chooser_widget_get_type "" 
-;#func global gtk_file_chooser_widget_new "" 
+;#func global gtk_file_chooser_widget_new "gtk_file_chooser_widget_new" int
 ;#func global gtk_file_chooser_widget_new_with_backend "" 
 ;#func global gtk_file_filter_add_custom "" 
 ;#func global gtk_file_filter_add_mime_type "" 
@@ -1735,7 +1737,7 @@
 ;#func global gtk_message_dialog_format_secondary_markup "" 
 ;#func global gtk_message_dialog_format_secondary_text "" 
 ;#func global gtk_message_dialog_get_image "" 
-;#func global gtk_message_dialog_get_message_area "" 
+#func global gtk_message_dialog_get_message_area "gtk_message_dialog_get_message_area" sptr
 ;#func global gtk_message_dialog_get_type "" 
 #func global gtk_message_dialog_new "gtk_message_dialog_new" sptr, int, int, int, str
 ;#func global gtk_message_dialog_new_with_markup "" 
@@ -4007,11 +4009,11 @@
 #enum GTK_ENTRY_ICON_PRIMARY = 0
 #enum GTK_ENTRY_ICON_SECONDARY
 
-// GtkFileChooserAction
-#enum GTK_FILE_CHOOSER_ACTION_OPEN = 0
-#enum GTK_FILE_CHOOSER_ACTION_SAVE
-#enum GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER
-#enum GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER
+;// GtkFileChooserAction
+;#enum GTK_FILE_CHOOSER_ACTION_OPEN = 0
+;#enum GTK_FILE_CHOOSER_ACTION_SAVE
+;#enum GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER
+;#enum GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER
 
 // GtkJustification
 #enum GTK_JUSTIFY_LEFT = 0

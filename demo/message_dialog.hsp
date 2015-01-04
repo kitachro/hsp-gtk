@@ -1,11 +1,21 @@
 /*
-	Copyright (c) 2014 chrono
+	Copyright (c) 2015 chrono
 	This software is released under the MIT License.
 	http://opensource.org/licenses/mit-license.php
 */
 #packopt	name	"message_dialog_demo"
 #runtime	"hsp3c"
 
+#include "libgtk-3-0.as"
+#include "libgobject-2.0-0.as"
+#include "libglib-2.0-0.as"
+#include "libpango-1.0-0.as"
+#include "hscallbk.as"
+#uselib ""
+#func cb_window_destroy ""
+#func cb_button_clicked "" int, int
+
+// よく使う関数
 #include "hspinet.as"
 #module
 #defcfunc u str chars_	// shift-jis文字列をutf-8に変換
@@ -14,44 +24,61 @@
 	return	chars
 #global
 
-#include "libgtk-3-0.as"
-#include "libgobject-2.0-0.as"
-#include "hscallbk.as"
-#uselib ""
-#func cb_window_destroy ""
-#func cb_button_clicked "" int, int
+// よく使う定数
+; ヌルポインタ
+#const	NULL	0
 
-	// init gtk+
-	gtk_init	0, 0
+	// GTK+初期化
+	gtk_init	NULL, NULL
 
-	// set up window
+	// ウィンドウ生成
 	gtk_window_new	GTK_WINDOW_TOPLEVEL@
 	win = stat
 	setcallbk			cbwindowdestroy, cb_window_destroy, *on_window_destroy
-	g_signal_connect	win, "destroy", varptr( cbwindowdestroy ), 0
+	g_signal_connect	win, "destroy", varptr( cbwindowdestroy ), NULL
 
-	// set up button
+	// ウィジェット用フォント情報を生成
+	pango_font_description_from_string	"ms ui gothic 10"
+	pfd	= stat
+
+	// ボタン生成
 	gtk_button_new_with_label	u( "表示" )
 	btn	= stat
 	setcallbk			cbbuttonclicked, cb_button_clicked, *on_button_clicked
-	g_signal_connect	btn, "clicked", varptr( cbbuttonclicked ), 0
+	g_signal_connect	btn, "clicked", varptr( cbbuttonclicked ), NULL
 
-	// build up gui
+	; ボタンのラベルのフォントを設定
+	gtk_container_get_children	btn
+	g_list_nth_data	stat, 0
+	lbl	= stat
+	gtk_widget_override_font	lbl, pfd
+
+	// ウィンドウの組み立て
 	gtk_container_add	win, btn
 
-	// start app
+	// ウィンドウの表示とメインループの開始
 	gtk_widget_show_all		win
 	gtk_main
 	end
 
-// signal handlers
+/* シグナルハンドラ */
 *on_window_destroy
 	gtk_main_quit
 	return
 
 *on_button_clicked
+	// メッセージダイアログ生成
 	gtk_message_dialog_new	win, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, u("メッセージダイアログのテストです。")
 	dlg = stat
+
+	; primaryラベルのフォントを設定
+	gtk_message_dialog_get_message_area	dlg
+	ara	= stat
+	gtk_container_get_children	ara
+	g_list_nth_data	stat, 0
+	gtk_widget_override_font	stat, pfd
+
+	// メッセージダイアログ表示
 	gtk_dialog_run	dlg
 	gtk_widget_destroy	dlg
 	return

@@ -1,0 +1,125 @@
+/*
+	Copyright (c) 2015 chrono
+	This software is released under the MIT License.
+	http://opensource.org/licenses/mit-license.php
+*/
+#packopt	name	"menubar_demo"
+#runtime	"hsp3c"
+
+#include "libgtk-3-0.as"
+#include "libgobject-2.0-0.as"
+#include "hscallbk.as"
+#uselib ""
+#func cb_window_delete_event ""
+#func cb_button_clicked ""
+#func cb_cmd_mes ""
+#func cb_cmd_quit ""
+
+// よく使う関数
+#include "hspinet.as"
+#module
+#defcfunc u str chars_	// shift-jis文字列をutf-8に変換
+	chars	= chars_
+	nkfcnv@	chars, chars, "Sw"
+	return	chars
+#global
+
+// よく使う定数
+; 真偽値
+#const	TRUE	1
+#const	FALSE	0
+; ヌルポインタ
+#const	NULL	0
+
+	// GTK+初期化
+	gtk_init	NULL, NULL
+
+	// Window生成
+	gtk_window_new	GTK_WINDOW_TOPLEVEL@
+	win = stat
+	setcallbk			cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
+	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+
+	// VBox生成
+	gtk_vbox_new	FALSE, 2
+	vbx	= stat
+
+	// メニューバー生成
+	; メニュー構造定義
+	menu_info  = "<ui>"
+	menu_info += "  <menubar name='Menubar'>"
+	menu_info += "    <menu action='FileMenu'>"
+	menu_info += "      <menuitem action='Mes' />"
+	menu_info += "      <separator />"
+	menu_info += "      <menuitem action='Quit' />"
+	menu_info += "    </menu>"
+	menu_info += "  </menubar>"
+	menu_info += "</ui>"
+
+	; UIManager生成
+	gtk_ui_manager_new
+	ui	= stat
+
+	; ActionGroup生成
+	gtk_action_group_new	"filemenu"
+	actions	= stat
+
+	; Fileメニュー生成
+	gtk_action_new	"FileMenu", "_File", NULL, NULL
+	gtk_action_group_add_action	actions, stat
+
+	; Openメニュー項目生成
+	gtk_action_new		"Mes", "_Mes", "Print message", GTK_STOCK_OPEN@
+	action_file_mes	= stat
+	setcallbk			cbcmdmes, cb_cmd_mes, *cmd_mes
+	g_signal_connect	action_file_mes, "activate", varptr( cbcmdmes ), NULL
+	gtk_action_group_add_action_with_accel	actions, action_file_mes, "<control>M"
+
+	; Quitメニュー項目生成
+	gtk_action_new		"Quit", "_Quit", "Quit this program", GTK_STOCK_QUIT@
+	action_file_quit	= stat
+	setcallbk			cbcmdquit, cb_cmd_quit, *cmd_quit
+	g_signal_connect	action_file_quit, "activate", varptr( cbcmdquit ), NULL
+	gtk_action_group_add_action_with_accel	actions, action_file_quit, "<control>Q"
+
+	; メニューバー組み立て
+	gtk_ui_manager_insert_action_group	ui, actions, 0
+	gtk_ui_manager_add_ui_from_string	ui, varptr( menu_info ), -1, NULL
+	gtk_ui_manager_get_accel_group		ui
+	gtk_window_add_accel_group			win, stat
+	path	= "/Menubar"
+	gtk_ui_manager_get_widget			ui, varptr( path )
+	menubar	= stat
+
+	// Button生成
+	gtk_button_new_with_label	u( "終了" )
+	btn	= stat
+	setcallbk			cbbuttonclicked, cb_button_clicked, *on_button_clicked
+	g_signal_connect	btn, "clicked", varptr( cbbuttonclicked ), NULL
+
+	// ウィンドウ組み立て
+	gtk_container_add	win, vbx
+	gtk_box_pack_start	vbx, menubar, FALSE, FALSE, 0
+	gtk_box_pack_start	vbx, btn, TRUE, TRUE, 0
+
+	// ウィンドウの表示とメインループの開始
+	gtk_widget_show_all		win
+	gtk_main
+	end
+
+/* シグナルハンドラ */
+*on_window_delete_event
+	gtk_main_quit
+	return
+
+*on_button_clicked
+	gtk_main_quit
+	return
+
+*cmd_mes
+	mes	"Mesメニューが選択されました。"
+	return
+
+*cmd_quit
+	gtk_main_quit
+	return

@@ -44,7 +44,7 @@
 	gtk_vbox_new	FALSE, 2
 	vbx	= stat
 
-	// メニューバー生成
+	// Menubar生成
 	; メニュー構造定義
 	menu_info  = "<ui>"
 	menu_info += "  <menubar name='Menubar'>"
@@ -64,18 +64,18 @@
 	gtk_action_group_new	"filemenu"
 	actions	= stat
 
-	; Fileメニュー生成
+	; FileメニューAction生成
 	gtk_action_new	"FileMenu", "_File", NULL, NULL
 	gtk_action_group_add_action	actions, stat
 
-	; Openメニュー項目生成
+	; MesコマンドAction生成
 	gtk_action_new		"Mes", "_Mes", "Print message", GTK_STOCK_OPEN@
 	action_file_mes	= stat
 	setcallbk			cbcmdmes, cb_cmd_mes, *cmd_mes
 	g_signal_connect	action_file_mes, "activate", varptr( cbcmdmes ), NULL
 	gtk_action_group_add_action_with_accel	actions, action_file_mes, "<control>M"
 
-	; Quitメニュー項目生成
+	; QuitコマンドAction生成
 	gtk_action_new		"Quit", "_Quit", "Quit this program", GTK_STOCK_QUIT@
 	action_file_quit	= stat
 	setcallbk			cbcmdquit, cb_cmd_quit, *cmd_quit
@@ -103,7 +103,7 @@
 	gtk_box_pack_start	vbx, btn, TRUE, TRUE, 0
 
 	// ウィンドウの表示とメインループの開始
-	gtk_widget_show_all		win
+	gtk_widget_show_all	win
 	gtk_main
 	end
 

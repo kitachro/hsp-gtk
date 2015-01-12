@@ -123,7 +123,7 @@
 ;#func global gtk_action_get_visible_vertical "" 
 #func global gtk_action_group_add_action "gtk_action_group_add_action" sptr, sptr
 #func global gtk_action_group_add_action_with_accel "gtk_action_group_add_action_with_accel" sptr, sptr, sptr
-#func global gtk_action_group_add_actions "gtk_action_group_add_actions" sptr, sptr, int, sptr
+;#func global gtk_action_group_add_actions "gtk_action_group_add_actions" sptr, sptr, int, sptr
 ;#func global gtk_action_group_add_actions_full "" 
 ;#func global gtk_action_group_add_radio_actions "" 
 ;#func global gtk_action_group_add_radio_actions_full "" 
@@ -970,7 +970,7 @@
 ;#func global gtk_event_box_get_above_child "" 
 ;#func global gtk_event_box_get_type "" 
 ;#func global gtk_event_box_get_visible_window "" 
-;#func global gtk_event_box_new "" 
+#func global gtk_event_box_new "gtk_event_box_new"
 ;#func global gtk_event_box_set_above_child "" 
 ;#func global gtk_event_box_set_visible_window "" 
 ;#func global gtk_events_pending "" 
@@ -1703,7 +1703,7 @@
 ;#func global gtk_menu_item_toggle_size_request "" 
 ;#func global gtk_menu_new "" 
 ;#func global gtk_menu_popdown "" 
-;#func global gtk_menu_popup "" 
+#func global gtk_menu_popup "gtk_menu_popup" sptr, sptr, sptr, sptr, sptr, int, int
 ;#func global gtk_menu_reorder_child "" 
 ;#func global gtk_menu_reposition "" 
 ;#func global gtk_menu_set_accel_group "" 
@@ -2159,11 +2159,12 @@
 ;#func global gtk_quit_add_full "" 
 ;#func global gtk_quit_remove "" 
 ;#func global gtk_quit_remove_by_data "" 
-;#func global gtk_radio_action_get_current_value "" 
+#func global gtk_radio_action_get_current_value "gtk_radio_action_get_current_value" sptr
 ;#func global gtk_radio_action_get_group "" 
 ;#func global gtk_radio_action_get_type "" 
-;#func global gtk_radio_action_new "" 
-;#func global gtk_radio_action_set_current_value "" 
+#func global gtk_radio_action_join_group "gtk_radio_action_join_group" sptr, sptr
+#func global gtk_radio_action_new "gtk_radio_action_new" str, str, str, str, int
+#func global gtk_radio_action_set_current_value "gtk_radio_action_set_current_value" sptr, int
 ;#func global gtk_radio_action_set_group "" 
 ;#func global gtk_radio_button_get_group "" 
 ;#func global gtk_radio_button_get_type "" 
@@ -2465,7 +2466,7 @@
 ;#func global gtk_separator_tool_item_new "" 
 ;#func global gtk_separator_tool_item_set_draw "" 
 ;#func global gtk_set_locale "" 
-;#func global gtk_settings_get_default "" 
+#func global gtk_settings_get_default "gtk_settings_get_default"
 ;#func global gtk_settings_get_for_screen "" 
 ;#func global gtk_settings_get_type "" 
 ;#func global gtk_settings_install_property "" 
@@ -2473,7 +2474,7 @@
 ;#func global gtk_settings_set_double_property "" 
 ;#func global gtk_settings_set_long_property "" 
 ;#func global gtk_settings_set_property_value "" 
-;#func global gtk_settings_set_string_property "" 
+#func global gtk_settings_set_string_property "gtk_settings_set_string_property" sptr, sptr, sptr, sptr
 ;#func global gtk_shadow_type_get_type "" 
 ;#func global gtk_show_about_dialog "" 
 ;#func global gtk_show_uri "" 
@@ -3028,10 +3029,10 @@
 ;#func global gtk_tips_query_set_labels "" 
 ;#func global gtk_tips_query_start_query "" 
 ;#func global gtk_tips_query_stop_query "" 
-;#func global gtk_toggle_action_get_active "" 
+#func global gtk_toggle_action_get_active "gtk_toggle_action_get_active" sptr
 ;#func global gtk_toggle_action_get_draw_as_radio "" 
 ;#func global gtk_toggle_action_get_type "" 
-;#func global gtk_toggle_action_new "" 
+#func global gtk_toggle_action_new "gtk_toggle_action_new" sptr, sptr, sptr, sptr
 ;#func global gtk_toggle_action_set_active "" 
 ;#func global gtk_toggle_action_set_draw_as_radio "" 
 ;#func global gtk_toggle_action_toggled "" 
@@ -3054,7 +3055,7 @@
 ;#func global gtk_tool_button_get_icon_name "" 
 ;#func global gtk_tool_button_get_icon_widget "" 
 ;#func global gtk_tool_button_get_label "" 
-;#func global gtk_tool_button_get_label_widget "" 
+#func global gtk_tool_button_get_label_widget "gtk_tool_button_get_label_widget" sptr
 ;#func global gtk_tool_button_get_stock_id "" 
 ;#func global gtk_tool_button_get_type "" 
 ;#func global gtk_tool_button_get_use_underline "" 
@@ -3641,7 +3642,7 @@
 ;#func global gtk_widget_get_has_window "" 
 ;#func global gtk_widget_get_mapped "" 
 ;#func global gtk_widget_get_modifier_style "" 
-;#func global gtk_widget_get_name "" 
+#func global gtk_widget_get_name "gtk_widget_get_name" sptr
 ;#func global gtk_widget_get_no_show_all "" 
 ;#func global gtk_widget_get_pango_context "" 
 ;#func global gtk_widget_get_parent "" 

@@ -1,0 +1,332 @@
+// コールバック関数を使うための準備
+#include "hscallbk.as"
+#uselib ""
+#func cb_window_delete_event ""
+#func cb_act_new_hoge ""
+#func cb_act_new_fuga ""
+#func cb_act_quit ""
+#func cb_act_copy ""
+#func cb_act_paste ""
+#func cb_act_one ""
+#func cb_act_two ""
+#func cb_act_three ""
+#func cb_ebox_button_release_event "" int, int
+
+// GTK+の関数を使うための準備
+#uselib "libgtk-3-0.dll"
+#func global gtk_init "gtk_init" sptr, sptr
+#func global gtk_settings_get_default "gtk_settings_get_default"
+#func global gtk_settings_set_string_property "gtk_settings_set_string_property" sptr, sptr, sptr, sptr
+#func global gtk_window_new "gtk_window_new" int
+#const	GTK_WINDOW_TOPLEVEL	0
+#func global gtk_window_add_accel_group "gtk_window_add_accel_group" sptr, sptr
+#func global gtk_container_add "gtk_container_add" sptr, sptr
+#func global gtk_widget_set_size_request "gtk_widget_set_size_request" sptr, int, int
+#func global gtk_widget_show_all "gtk_widget_show_all" sptr
+#func global gtk_main "gtk_main"
+#func global gtk_main_quit "gtk_main_quit"
+#func global gtk_vbox_new "gtk_vbox_new" int, int
+#func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
+#func global gtk_action_group_new "gtk_action_group_new" sptr
+#func global gtk_action_group_add_action "gtk_action_group_add_action" sptr, sptr
+#func global gtk_action_group_add_action_with_accel "gtk_action_group_add_action_with_accel" sptr, sptr, sptr
+#func global gtk_action_new "gtk_action_new" sptr, sptr, sptr, sptr
+#func global gtk_radio_action_new "gtk_radio_action_new" sptr, sptr, sptr, sptr, int
+#func global gtk_radio_action_set_current_value "gtk_radio_action_set_current_value" sptr, int
+#func global gtk_radio_action_join_group "gtk_radio_action_join_group" sptr, sptr
+#func global gtk_radio_action_get_current_value "gtk_radio_action_get_current_value" sptr
+#func global gtk_toggle_action_new "gtk_toggle_action_new" sptr, sptr, sptr, sptr
+#func global gtk_toggle_action_get_active "gtk_toggle_action_get_active" sptr
+#func global gtk_ui_manager_new "gtk_ui_manager_new"
+#func global gtk_ui_manager_get_widget "gtk_ui_manager_get_widget" sptr, str
+#func global gtk_ui_manager_insert_action_group "gtk_ui_manager_insert_action_group" sptr, sptr, int
+#func global gtk_ui_manager_add_ui_from_string "gtk_ui_manager_add_ui_from_string" sptr, sptr, int, sptr
+#func global gtk_ui_manager_get_accel_group "gtk_ui_manager_get_accel_group" sptr
+#func global gtk_event_box_new "gtk_event_box_new"
+#func global gtk_menu_popup "gtk_menu_popup" sptr, sptr, sptr, sptr, sptr, int, int
+
+#uselib "libgobject-2.0-0.dll"
+#define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+#func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+
+#uselib "libgdk-3-0.dll"
+#func global gdk_event_get_button "gdk_event_get_button" sptr, sptr
+#func global gdk_event_get_time "gdk_event_get_time" sptr
+
+// よく使う関数
+#include "hspinet.as"
+#module
+#defcfunc u str chars_ // shift-jis文字列をutf-8に変換
+	chars	= chars_
+	nkfcnv@	chars, chars, "Sw"
+	return	chars
+#global
+
+// よく使う定数
+; 真偽値
+#const	TRUE	1
+#const	FALSE	0
+; ヌルポインタ
+#const	NULL	0
+
+	// GTK+初期化
+	gtk_init	NULL, NULL
+
+	// GTK+のデフォルトGUIフォントを変更
+	gtk_settings_get_default
+	gtk_settings_set_string_property	stat, "gtk-font-name", "meiryo, bold 11", NULL
+
+	// Window生成
+	gtk_window_new	GTK_WINDOW_TOPLEVEL
+	win	= stat
+	gtk_widget_set_size_request	win, 300, 200
+	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
+	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+
+	// VBox生成
+	gtk_vbox_new	FALSE, 2
+	vbox	= stat
+
+	// コマンド系UI生成
+#define	NAME_MENUBAR	"MenuBar"
+#define	NAME_FILEMENU	"FileMenu"
+#define	NAME_NEWMENU	"NewMenu"
+#define	NAME_NEWHOGE	"NewHoge"
+#define	NAME_NEWFUGA	"NewFuga"
+#define	NAME_QUIT	"Quit"
+#define	NAME_EDITMENU	"EditMenu"
+#define	NAME_COPY	"Copy"
+#define	NAME_PASTE	"Paste"
+#define	NAME_CHOICESMENU	"ChoicesMenu"
+#define	NAME_CHOICEONE	"ChoiceOne"
+#define	NAME_CHOICETWO	"ChoiceTwo"
+#define	NAME_CHOICETHREE	"ChoiceThree"
+#define	NAME_TOOLBAR	"ToolBar"
+#define	NAME_POPUPMENU	"PopupMenu"
+
+	; UI構造定義
+	ui_info  = "<ui>"
+	ui_info  += "  <menubar name='" + NAME_MENUBAR + "'>"
+	ui_info  += "    <menu action='" + NAME_FILEMENU + "'>"
+	ui_info  += "      <menu action='" + NAME_NEWMENU + "'>"
+	ui_info  += "        <menuitem action='" + NAME_NEWHOGE + "' />"
+	ui_info  += "        <menuitem action='" + NAME_NEWFUGA + "' />"
+	ui_info  += "      </menu>"
+	ui_info  += "      <separator />"
+	ui_info  += "      <menuitem action='" + NAME_QUIT + "' />"
+	ui_info  += "    </menu>"
+	ui_info  += "    <menu action='" + NAME_EDITMENU + "'>"
+	ui_info  += "      <menuitem action='" + NAME_COPY + "' />"
+	ui_info  += "      <menuitem action='" + NAME_PASTE + "' />"
+	ui_info  += "    </menu>"
+	ui_info  += "    <menu action='" + NAME_CHOICESMENU + "'>"
+	ui_info  += "      <menuitem action='" + NAME_CHOICEONE + "'/>"
+	ui_info  += "      <menuitem action='" + NAME_CHOICETWO + "'/>"
+	ui_info  += "      <separator />"
+	ui_info  += "      <menuitem action='" + NAME_CHOICETHREE + "'/>"
+	ui_info  += "    </menu>"
+	ui_info  += "  </menubar>"
+	ui_info  += "  <toolbar name='" + NAME_TOOLBAR + "'>"
+	ui_info  += "    <toolitem action='" + NAME_NEWHOGE + "' />"
+	ui_info  += "    <toolitem action='" + NAME_NEWFUGA + "' />"
+	ui_info  += "    <toolitem action='" + NAME_QUIT + "' />"
+	ui_info  += "  </toolbar>"
+	ui_info  += "  <popup name='" + NAME_POPUPMENU + "'>"
+	ui_info  += "    <menuitem action='" + NAME_COPY + "' />"
+	ui_info  += "    <menuitem action='" + NAME_PASTE + "' />"
+	ui_info  += "  </popup>"
+	ui_info  += "</ui>"
+
+	; UIManager生成
+	gtk_ui_manager_new
+	uim	= stat
+
+	; ActionGroup生成
+	gtk_action_group_new	"cmds"
+	acts	= stat
+
+	; FileメニューAction生成
+	gtk_action_new	NAME_FILEMENU, u( "ファイル(_F)" ), NULL, NULL
+	act_file	= stat
+
+	; NewメニューAction生成
+	gtk_action_new	NAME_NEWMENU, u( "新規作成(_N)" ), NULL, NULL
+	act_new	= stat
+
+#define GTK_STOCK_NEW	"gtk-new"
+	; NewHogeコマンドAction生成
+	gtk_action_new	NAME_NEWHOGE, u( "_Hoge作成" ), u( "新しいHogeを作成します。" ), GTK_STOCK_NEW
+	act_new_hoge	= stat
+	setcallbk	cbactnewhoge, cb_act_new_hoge, *on_act_new_hoge
+	g_signal_connect	act_new_hoge, "activate", varptr( cbactnewhoge ), NULL
+
+	; NewFugaコマンドAction生成
+	gtk_action_new	NAME_NEWFUGA, u( "_Fuga作成" ), u( "新しいfugaを作成します。" ), GTK_STOCK_NEW
+	act_new_fuga	= stat
+	setcallbk	cbactnewfuga, cb_act_new_fuga, *on_act_new_fuga
+	g_signal_connect	act_new_fuga, "activate", varptr( cbactnewfuga ), NULL
+
+	; QuitコマンドAction生成
+#define GTK_STOCK_QUIT	"gtk-quit"
+	gtk_action_new	NAME_QUIT, u( "終了(_Q)" ), NULL, GTK_STOCK_QUIT
+	act_quit	= stat
+	setcallbk	cbactquit, cb_act_quit, *on_act_quit
+	g_signal_connect	act_quit, "activate", varptr( cbactquit ), NULL
+
+	; EditメニューAction生成
+	gtk_action_new	NAME_EDITMENU, u( "編集(_E)" ), NULL, NULL
+	act_edit	= stat
+
+	; CopyコマンドAction生成
+#define GTK_STOCK_COPY	"gtk-copy"
+	gtk_action_new	NAME_COPY, u( "コピー(_C)" ), NULL, GTK_STOCK_COPY
+	act_copy	= stat
+	setcallbk	cbactcopy, cb_act_copy, *on_act_copy
+	g_signal_connect	act_copy, "activate", varptr( cbactcopy ), NULL
+
+	; PasteコマンドAction生成
+#define GTK_STOCK_PASTE	"gtk-paste"
+	gtk_action_new	NAME_PASTE, u( "貼り付け(_P)" ), NULL, GTK_STOCK_PASTE
+	act_paste	= stat
+	setcallbk	cbactpaste, cb_act_paste, *on_act_paste
+	g_signal_connect	act_paste, "activate", varptr( cbactpaste ), NULL
+
+	; ChoicesメニューAction生成
+	gtk_action_new	NAME_CHOICESMENU, u( "選択(_C)" ), NULL, NULL
+	act_choices	= stat
+
+	; ChoiceOneコマンドAction生成
+#const	VALUE_CHOICE_ONE	1
+	gtk_radio_action_new	NAME_CHOICEONE, u( "選択肢1(_1)" ), NULL, NULL, VALUE_CHOICE_ONE
+	act_choice_one	= stat
+	setcallbk	cbactone, cb_act_one, *on_act_one
+	g_signal_connect	act_choice_one, "changed", varptr( cbactone ), NULL
+	gtk_radio_action_set_current_value	act_choice_one, VALUE_CHOICE_ONE
+
+	; ChoiceTwoコマンドAction生成
+#const	VALUE_CHOICE_TWO	2
+	gtk_radio_action_new	NAME_CHOICETWO, u( "選択肢2(_2)" ), NULL, NULL, VALUE_CHOICE_TWO
+	act_choice_two	= stat
+	setcallbk	cbacttwo, cb_act_two, *on_act_two
+	g_signal_connect	act_choice_two, "changed", varptr( cbacttwo ), NULL
+	gtk_radio_action_join_group	act_choice_two, act_choice_one
+
+	; ChoiceThreeコマンドAction生成
+	gtk_toggle_action_new	NAME_CHOICETHREE, u( "オプション(_3)" ), NULL, NULL
+	act_choice_three	= stat
+	setcallbk	cbactthree, cb_act_three, *on_act_three
+	g_signal_connect	act_choice_three, "toggled", varptr( cbactthree ), NULL
+
+	; Action群をActionGroupに登録
+	gtk_action_group_add_action	acts, act_file
+	gtk_action_group_add_action	acts, act_new
+	gtk_action_group_add_action_with_accel	acts, act_new_hoge, "<control>N"
+	gtk_action_group_add_action_with_accel	acts, act_new_fuga, "<control><Shift>N"
+	gtk_action_group_add_action_with_accel	acts, act_quit, "<control>Q"
+	gtk_action_group_add_action	acts, act_edit
+	gtk_action_group_add_action_with_accel	acts, act_copy, "<control>C"
+	gtk_action_group_add_action_with_accel	acts, act_paste, "<control>V"
+	gtk_action_group_add_action	acts, act_choices
+	gtk_action_group_add_action	acts, act_choice_one
+	gtk_action_group_add_action	acts, act_choice_two
+	gtk_action_group_add_action	acts, act_choice_three
+
+	; UI生成
+	gtk_ui_manager_insert_action_group	uim, acts, 0
+	gtk_ui_manager_add_ui_from_string	uim, varptr( ui_info ), -1, NULL
+
+	; キーボードショートカットをウィンドウに登録
+	gtk_ui_manager_get_accel_group	uim
+	gtk_window_add_accel_group		win, stat
+
+	; メニューバーウィジェット取得
+	path	= "/" + NAME_MENUBAR
+	gtk_ui_manager_get_widget	uim, path
+	mbar	= stat
+
+	; ツールバーウィジェット取得
+	path	= "/" + NAME_TOOLBAR
+	gtk_ui_manager_get_widget	uim, path
+	tbar	= stat
+
+	; ポップアップメニューウィジェット取得
+	path	= "/" + NAME_POPUPMENU
+	gtk_ui_manager_get_widget	uim, path
+	pum	= stat
+
+	// GtkEventBox生成
+	gtk_event_box_new
+	ebox	= stat
+	setcallbk	cbeboxbuttonreleaseevent, cb_ebox_button_release_event, *on_ebox_button_release_event
+	g_signal_connect	ebox, "button-release-event", varptr( cbeboxbuttonreleaseevent ), NULL
+
+	// ウィンドウ組み立て
+	gtk_container_add	win, vbox
+	gtk_box_pack_start	vbox, mbar, FALSE, FALSE, 0
+	gtk_box_pack_start	vbox, tbar, FALSE, FALSE, 0
+	gtk_box_pack_start	vbox, ebox, TRUE, TRUE, 0
+
+	// ウィンドウの表示とメインループの開始
+	gtk_widget_show_all	win
+	gtk_main
+	end
+
+/* シグナルハンドラ */
+*on_window_delete_event
+	gtk_main_quit
+	return
+
+*on_act_new_hoge
+	mes	"Hoge作成 コマンドが実行されました。"
+	return
+
+*on_act_new_fuga
+	mes	"Fuga作成 コマンドが実行されました。"
+	return
+
+*on_act_quit
+	gtk_main_quit
+	return
+
+*on_act_copy
+	mes	"コピー コマンドが実行されました。"
+	return
+
+*on_act_paste
+	mes	"貼り付け コマンドが実行されました。"
+	return
+
+*on_act_one
+	gtk_radio_action_get_current_value act_choice_one
+	if ( stat = VALUE_CHOICE_ONE ) {
+		mes	"選択肢1 メニューが選択されました。"
+	}
+	return
+
+*on_act_two
+	gtk_radio_action_get_current_value act_choice_one
+	if ( stat = VALUE_CHOICE_TWO ) {
+		mes	"選択肢2 メニューが選択されました。"
+	}
+	return
+
+*on_act_three
+	gtk_toggle_action_get_active	act_choice_three
+	if stat {
+		mes	"オプション メニューがオンになりました。"
+	}
+	else {
+		mes	"オプション メニューがオフになりました。"
+	}
+	return
+
+#define	GDK_BUTTON_SECONDARY	3
+*on_ebox_button_release_event
+	evt	= callbkarg( 1 )
+	gdk_event_get_button	evt, varptr( num )
+	if ( num = GDK_BUTTON_SECONDARY ) {
+		mes	"GtkEventBoxが右クリックされました。"
+		gdk_event_get_time	evt
+		gtk_menu_popup	pum, NULL, NULL, NULL, NULL, 0, stat
+	}
+	return

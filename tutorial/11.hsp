@@ -1,0 +1,155 @@
+// コールバック関数を使うための準備
+#include "hscallbk.as"
+#uselib ""
+#func cb_win_delete_event ""
+#func cb_btn_copy_text_clicked ""
+#func cb_btn_paste_text_clicked ""
+#func cb_btn_copy_image_clicked ""
+#func cb_btn_paste_image_clicked ""
+
+// GTK+の関数を使うための準備
+#uselib "libgtk-3-0.dll"
+#func global gtk_init "gtk_init" sptr, sptr
+#func global gtk_window_new "gtk_window_new" int
+#const	GTK_WINDOW_TOPLEVEL	0
+#func global gtk_widget_show_all "gtk_widget_show_all" sptr
+#func global gtk_main "gtk_main"
+#func global gtk_main_quit "gtk_main_quit"
+#func global gtk_container_add "gtk_container_add" sptr, sptr
+#func global gtk_table_new "gtk_table_new" int, int, int
+#func global gtk_table_attach_defaults "gtk_table_attach_defaults" sptr, sptr, int, int, int, int
+#func global gtk_entry_new "gtk_entry_new" 
+#func global gtk_entry_get_text "gtk_entry_get_text" sptr
+#func global gtk_entry_set_text "gtk_entry_set_text" sptr, sptr
+#func global gtk_entry_get_text_length "gtk_entry_get_text_length" sptr
+#func global gtk_entry_get_buffer "gtk_entry_get_buffer" sptr
+#func global gtk_entry_buffer_get_text "gtk_entry_buffer_get_text" sptr
+#func global gtk_image_new_from_stock "gtk_image_new_from_stock" str, int
+#define	GTK_STOCK_STOP	"gtk-stop"
+#const	GTK_ICON_SIZE_MENU	1
+#func global gtk_image_get_storage_type "gtk_image_get_storage_type" sptr
+#const	GTK_IMAGE_PIXBUF	1
+#func global gtk_image_get_pixbuf "gtk_image_get_pixbuf" sptr
+#func global gtk_image_set_from_pixbuf "gtk_image_set_from_pixbuf" sptr, sptr
+#func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
+#func global gtk_clipboard_get "gtk_clipboard_get" int
+#const GDK_SELECTION_CLIPBOARD  69
+#func global gtk_clipboard_set_text "gtk_clipboard_set_text" sptr, sptr, int
+#func global gtk_clipboard_wait_for_text "gtk_clipboard_wait_for_text" sptr
+#func global gtk_clipboard_set_image "gtk_clipboard_set_image" sptr, sptr
+#func global gtk_clipboard_wait_for_image "gtk_clipboard_wait_for_image" sptr
+
+#uselib "libgobject-2.0-0.dll"
+#define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+#func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+
+// よく使う定数
+; ヌルポインタ
+#const	NULL	0
+; 真偽値
+#const	FALSE	0
+#const	TRUE	1
+
+	// GTK+初期化
+	gtk_init	NULL, NULL
+
+	// ウィンドウ生成
+	gtk_window_new	GTK_WINDOW_TOPLEVEL
+	win	= stat
+	setcallbk	cbwindeleteevent, cb_win_delete_event, *on_win_delete_event
+	g_signal_connect	win, "delete-event", varptr( cbwindeleteevent ), NULL
+
+	// テーブル生成
+	gtk_table_new	2, 3, FALSE
+	tbl	= stat
+
+	// エントリ生成
+	gtk_entry_new
+	ent	= stat
+
+	// イメージ生成
+	gtk_image_new_from_stock	GTK_STOCK_STOP, GTK_ICON_SIZE_MENU
+	img	= stat
+
+	// ボタン群生成
+	gtk_button_new_with_label	"Copy Text"
+	btn_copy_text	= stat
+	setcallbk	cbbtncopytextclicked, cb_btn_copy_text_clicked, *on_btn_copy_text_clicked
+	g_signal_connect	btn_copy_text, "clicked", varptr( cbbtncopytextclicked ), NULL
+
+	gtk_button_new_with_label	"Paste Text"
+	btn_paste_text	= stat
+	setcallbk	cbbtnpastetextclicked, cb_btn_paste_text_clicked, *on_btn_paste_text_clicked
+	g_signal_connect	btn_paste_text, "clicked", varptr( cbbtnpastetextclicked ), NULL
+
+	gtk_button_new_with_label	"Copy Image"
+	btn_copy_image	= stat
+	setcallbk	cbbtncopyimageclicked, cb_btn_copy_image_clicked, *on_btn_copy_image_clicked
+	g_signal_connect	btn_copy_image, "clicked", varptr( cbbtncopyimageclicked ), NULL
+
+	gtk_button_new_with_label	"Paste Image"
+	btn_paste_image	= stat
+	setcallbk	cbbtnpasteimageclicked, cb_btn_paste_image_clicked, *on_btn_paste_image_clicked
+	g_signal_connect	btn_paste_image, "clicked", varptr( cbbtnpasteimageclicked ), NULL
+
+	// クリップボード生成
+	gtk_clipboard_get	GDK_SELECTION_CLIPBOARD
+	clp	= stat
+
+	// ウィンドウの組み立て
+	gtk_table_attach_defaults	tbl, ent, 0, 1, 0, 1
+	gtk_table_attach_defaults	tbl, img, 0, 1, 1, 2
+	gtk_table_attach_defaults	tbl, btn_copy_text, 1, 2, 0, 1
+	gtk_table_attach_defaults	tbl, btn_paste_text, 2, 3, 0, 1
+	gtk_table_attach_defaults	tbl, btn_copy_image, 1, 2, 1, 2
+	gtk_table_attach_defaults	tbl, btn_paste_image, 2, 3, 1, 2
+	gtk_container_add	win, tbl
+
+	// ウィンドウの表示とメインループの開始
+	gtk_widget_show_all	win
+	gtk_main
+	end
+
+/* シグナルハンドラ */
+*on_win_delete_event
+	gtk_main_quit
+	return
+
+*on_btn_copy_text_clicked
+	gtk_entry_get_text	ent
+	gtk_clipboard_set_text	clp, stat, -1
+	return
+
+*on_btn_paste_text_clicked
+	gtk_clipboard_wait_for_text	clp
+	ptr	= stat
+	if ptr {
+		gtk_entry_set_text	ent, ptr
+	}
+	else {
+		mes	"No text on the clipboard."
+	}
+	return
+
+*on_btn_copy_image_clicked
+	gtk_image_get_storage_type	img
+	type	= stat
+	if ( type = GTK_IMAGE_PIXBUF ) {
+		gtk_image_get_pixbuf	img
+		gtk_clipboard_set_image	clp, stat
+	}
+	else {
+		mes	"No Pixbuf has been pasted yet."
+	}
+	return
+
+*on_btn_paste_image_clicked
+	gtk_clipboard_wait_for_image	clp
+	pixbuf	= stat
+	if pixbuf {	
+		gtk_image_set_from_pixbuf	img, pixbuf
+	}
+	else {
+		mes	"No Pixbuf on the clipboard."
+	}
+	return

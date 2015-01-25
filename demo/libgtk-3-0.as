@@ -8,40 +8,43 @@
 
 
 #uselib "libgtk-3-0.dll"
-;#func global gtk_about_dialog_get_artists "" 
-;#func global gtk_about_dialog_get_authors "" 
-;#func global gtk_about_dialog_get_comments "" 
-;#func global gtk_about_dialog_get_copyright "" 
-;#func global gtk_about_dialog_get_documenters "" 
-;#func global gtk_about_dialog_get_license "" 
-;#func global gtk_about_dialog_get_logo "" 
-;#func global gtk_about_dialog_get_logo_icon_name "" 
-;#func global gtk_about_dialog_get_name "" 
-;#func global gtk_about_dialog_get_program_name "" 
-;#func global gtk_about_dialog_get_translator_credits "" 
-;#func global gtk_about_dialog_get_type "" 
-;#func global gtk_about_dialog_get_version "" 
-;#func global gtk_about_dialog_get_website "" 
-;#func global gtk_about_dialog_get_website_label "" 
-;#func global gtk_about_dialog_get_wrap_license "" 
-;#func global gtk_about_dialog_new "" 
-;#func global gtk_about_dialog_set_artists "" 
-;#func global gtk_about_dialog_set_authors "" 
-;#func global gtk_about_dialog_set_comments "" 
-;#func global gtk_about_dialog_set_copyright "" 
-;#func global gtk_about_dialog_set_documenters "" 
-;#func global gtk_about_dialog_set_email_hook "" 
-;#func global gtk_about_dialog_set_license "" 
-;#func global gtk_about_dialog_set_logo "" 
-;#func global gtk_about_dialog_set_logo_icon_name "" 
-;#func global gtk_about_dialog_set_name "" 
-;#func global gtk_about_dialog_set_program_name "" 
-;#func global gtk_about_dialog_set_translator_credits "" 
-;#func global gtk_about_dialog_set_url_hook "" 
-;#func global gtk_about_dialog_set_version "" 
-;#func global gtk_about_dialog_set_website "" 
-;#func global gtk_about_dialog_set_website_label "" 
-;#func global gtk_about_dialog_set_wrap_license "" 
+;#func gtk_about_dialog_add_credit_section "gtk_about_dialog_add_credit_section" sptr, sptr, sptr
+;#func global gtk_about_dialog_get_artists "gtk_about_dialog_get_artists" sptr
+;#func global gtk_about_dialog_get_authors "gtk_about_dialog_get_authors" sptr
+;#func global gtk_about_dialog_get_comments "gtk_about_dialog_get_comments" sptr
+;#func global gtk_about_dialog_get_copyright "gtk_about_dialog_get_copyright" sptr
+;#func global gtk_about_dialog_get_documenters "gtk_about_dialog_get_documenters" sptr
+;#func global gtk_about_dialog_get_license "gtk_about_dialog_get_license" sptr
+;#func global gtk_about_dialog_get_license_type "gtk_about_dialog_get_license_type" sptr
+;#func global gtk_about_dialog_get_logo "gtk_about_dialog_get_logo" sptr
+;#func global gtk_about_dialog_get_logo_icon_name "gtk_about_dialog_get_logo_icon_name" sptr
+;;#func global gtk_about_dialog_get_name "" 
+;#func global gtk_about_dialog_get_program_name "gtk_about_dialog_get_program_name" sptr
+;#func global gtk_about_dialog_get_translator_credits "gtk_about_dialog_get_translator_credits" sptr
+;;#func global gtk_about_dialog_get_type "" 
+;#func global gtk_about_dialog_get_version "gtk_about_dialog_get_version" sptr
+;#func global gtk_about_dialog_get_website "gtk_about_dialog_get_website" sptr
+;#func global gtk_about_dialog_get_website_label "gtk_about_dialog_get_website_label" sptr
+;#func global gtk_about_dialog_get_wrap_license "gtk_about_dialog_get_wrap_license" sptr
+;#func global gtk_about_dialog_new "gtk_about_dialog_new"
+;#func global gtk_about_dialog_set_artists "gtk_about_dialog_set_artists" sptr, sptr
+;#func global gtk_about_dialog_set_authors "gtk_about_dialog_set_authors" sptr, sptr
+;#func global gtk_about_dialog_set_comments "gtk_about_dialog_set_comments" sptr, sptr
+;#func global gtk_about_dialog_set_copyright "gtk_about_dialog_set_copyright" sptr, sptr
+;#func global gtk_about_dialog_set_documenters "gtk_about_dialog_set_documenters" sptr, sptr
+;;#func global gtk_about_dialog_set_email_hook "" 
+;#func global gtk_about_dialog_set_license "gtk_about_dialog_set_license" sptr, sptr
+;#func global gtk_about_dialog_set_license_type "gtk_about_dialog_get_license_type" sptr, sptr
+;#func global gtk_about_dialog_set_logo "gtk_about_dialog_set_logo" sptr, sptr
+;#func global gtk_about_dialog_set_logo_icon_name "gtk_about_dialog_set_logo_icon_name" sptr, sptr
+;;#func global gtk_about_dialog_set_name "" 
+;#func global gtk_about_dialog_set_program_name "gtk_about_dialog_set_program_name" sptr, sptr
+;#func global gtk_about_dialog_set_translator_credits "gtk_about_dialog_set_translator_credits" sptr, sptr
+;;#func global gtk_about_dialog_set_url_hook "" 
+;#func global gtk_about_dialog_set_version "gtk_about_dialog_set_version" sptr, sptr
+;#func global gtk_about_dialog_set_website "gtk_about_dialog_set_website" sptr, sptr
+;#func global gtk_about_dialog_set_website_label "gtk_about_dialog_set_website_label" sptr, sptr
+;#func global gtk_about_dialog_set_wrap_license "gtk_about_dialog_set_wrap_license" sptr, int
 ;#func global gtk_accel_flags_get_type "" 
 ;#func global gtk_accel_group_activate "" 
 ;#func global gtk_accel_group_connect "" 
@@ -434,7 +437,7 @@
 ;#func global gtk_check_menu_item_toggled "" 
 ;#func global gtk_check_version "" 
 ;#func global gtk_clipboard_clear "" 
-;#func global gtk_clipboard_get "" 
+#func global gtk_clipboard_get "gtk_clipboard_get" int
 ;#func global gtk_clipboard_get_display "" 
 ;#func global gtk_clipboard_get_for_display "" 
 ;#func global gtk_clipboard_get_owner "" 
@@ -446,16 +449,16 @@
 ;#func global gtk_clipboard_request_text "" 
 ;#func global gtk_clipboard_request_uris "" 
 ;#func global gtk_clipboard_set_can_store "" 
-;#func global gtk_clipboard_set_image "" 
-;#func global gtk_clipboard_set_text "" 
+#func global gtk_clipboard_set_image "gtk_clipboard_set_image" sptr, sptr
+#func global gtk_clipboard_set_text "gtk_clipboard_set_text" sptr, sptr, int
 ;#func global gtk_clipboard_set_with_data "" 
 ;#func global gtk_clipboard_set_with_owner "" 
 ;#func global gtk_clipboard_store "" 
 ;#func global gtk_clipboard_wait_for_contents "" 
-;#func global gtk_clipboard_wait_for_image "" 
+#func global gtk_clipboard_wait_for_image "gtk_clipboard_wait_for_image" sptr
 ;#func global gtk_clipboard_wait_for_rich_text "" 
 ;#func global gtk_clipboard_wait_for_targets "" 
-;#func global gtk_clipboard_wait_for_text "" 
+#func global gtk_clipboard_wait_for_text "gtk_clipboard_wait_for_text" sptr
 ;#func global gtk_clipboard_wait_for_uris "" 
 ;#func global gtk_clipboard_wait_is_image_available "" 
 ;#func global gtk_clipboard_wait_is_rich_text_available "" 
@@ -548,6 +551,8 @@
 ;#func global gtk_color_button_set_color "" 
 ;#func global gtk_color_button_set_title "" 
 ;#func global gtk_color_button_set_use_alpha "" 
+#func global gtk_color_chooser_dialog_new "gtk_color_chooser_dialog_new" sptr, sptr
+#func global gtk_color_chooser_get_rgba "gtk_color_chooser_get_rgba" sptr, sptr
 ;#func global gtk_color_selection_dialog_get_color_selection "" 
 ;#func global gtk_color_selection_dialog_get_type "" 
 ;#func global gtk_color_selection_dialog_new "" 
@@ -762,17 +767,18 @@
 ;#func global gtk_delete_type_get_type "" 
 ;#func global gtk_dest_defaults_get_type "" 
 ;#func global gtk_dialog_add_action_widget "" 
-;#func global gtk_dialog_add_button "" 
+#func global gtk_dialog_add_button "gtk_dialog_add_button" sptr, sptr, int
 ;#func global gtk_dialog_add_buttons "" 
 ;#func global gtk_dialog_flags_get_type "" 
 #func global gtk_dialog_get_action_area "gtk_dialog_get_action_area" sptr
-;#func global gtk_dialog_get_content_area "" 
+#func global gtk_dialog_get_content_area "gtk_dialog_get_content_area" sptr
 ;#func global gtk_dialog_get_has_separator "" 
 ;#func global gtk_dialog_get_response_for_widget "" 
 ;#func global gtk_dialog_get_type "" 
-;#func global gtk_dialog_get_widget_for_response "" 
+#func global gtk_dialog_get_widget_for_response "gtk_dialog_get_widget_for_response" sptr, int
 #func global gtk_dialog_new "gtk_dialog_new"
 ;#func global gtk_dialog_new_with_buttons "" 
+#func global gtk_dialog_new_with_buttons2 "gtk_dialog_new_with_buttons" sptr, sptr, int, sptr, int, sptr, int, int
 ;#func global gtk_dialog_response "" 
 #func global gtk_dialog_run "gtk_dialog_run" sptr
 ;#func global gtk_dialog_set_alternative_button_order "" 
@@ -865,7 +871,7 @@
 ;#func global gtk_entry_buffer_get_bytes "" 
 ;#func global gtk_entry_buffer_get_length "" 
 ;#func global gtk_entry_buffer_get_max_length "" 
-;#func global gtk_entry_buffer_get_text "" 
+#func global gtk_entry_buffer_get_text "gtk_entry_buffer_get_text" sptr
 ;#func global gtk_entry_buffer_get_type "" 
 ;#func global gtk_entry_buffer_insert_text "" 
 ;#func global gtk_entry_buffer_new "" 
@@ -899,7 +905,7 @@
 ;#func global gtk_entry_completion_set_text_column "" 
 ;#func global gtk_entry_get_activates_default "" 
 ;#func global gtk_entry_get_alignment "" 
-;#func global gtk_entry_get_buffer "" 
+#func global gtk_entry_get_buffer "gtk_entry_get_buffer" sptr
 ;#func global gtk_entry_get_completion "" 
 ;#func global gtk_entry_get_current_icon_drag_source "" 
 ;#func global gtk_entry_get_cursor_hadjustment "" 
@@ -923,8 +929,8 @@
 ;#func global gtk_entry_get_overwrite_mode "" 
 ;#func global gtk_entry_get_progress_fraction "" 
 ;#func global gtk_entry_get_progress_pulse_step "" 
-;#func global gtk_entry_get_text "" 
-;#func global gtk_entry_get_text_length "" 
+#func global gtk_entry_get_text "gtk_entry_get_text" sptr
+#func global gtk_entry_get_text_length "gtk_entry_get_text_length" sptr
 ;#func global gtk_entry_get_text_window "" 
 ;#func global gtk_entry_get_type "" 
 ;#func global gtk_entry_get_visibility "" 
@@ -1084,7 +1090,7 @@
 ;#func global gtk_file_chooser_unselect_filename_utf8 "" 
 ;#func global gtk_file_chooser_unselect_uri "" 
 ;#func global gtk_file_chooser_widget_get_type "" 
-;#func global gtk_file_chooser_widget_new "gtk_file_chooser_widget_new" int
+#func global gtk_file_chooser_widget_new "gtk_file_chooser_widget_new" int
 ;#func global gtk_file_chooser_widget_new_with_backend "" 
 ;#func global gtk_file_filter_add_custom "" 
 ;#func global gtk_file_filter_add_mime_type "" 
@@ -1403,11 +1409,11 @@
 ;#func global gtk_image_get_icon_name "" 
 ;#func global gtk_image_get_icon_set "" 
 ;#func global gtk_image_get_image "" 
-;#func global gtk_image_get_pixbuf "" 
+#func global gtk_image_get_pixbuf "gtk_image_get_pixbuf" sptr
 ;#func global gtk_image_get_pixel_size "" 
 ;#func global gtk_image_get_pixmap "" 
 ;#func global gtk_image_get_stock "" 
-;#func global gtk_image_get_storage_type "" 
+#func global gtk_image_get_storage_type "gtk_image_get_storage_type" sptr
 ;#func global gtk_image_get_type "" 
 ;#func global gtk_image_menu_item_get_always_show_image "" 
 ;#func global gtk_image_menu_item_get_image "" 
@@ -1440,7 +1446,7 @@
 ;#func global gtk_image_set_from_icon_name "" 
 ;#func global gtk_image_set_from_icon_set "" 
 ;#func global gtk_image_set_from_image "" 
-;#func global gtk_image_set_from_pixbuf "" 
+#func global gtk_image_set_from_pixbuf "gtk_image_set_from_pixbuf" sptr, sptr
 ;#func global gtk_image_set_from_pixmap "" 
 ;#func global gtk_image_set_from_stock "" 
 ;#func global gtk_image_set_pixel_size "" 
@@ -1736,10 +1742,12 @@
 ;#func global gtk_menu_tool_button_set_menu "" 
 ;#func global gtk_message_dialog_format_secondary_markup "" 
 ;#func global gtk_message_dialog_format_secondary_text "" 
+#func global gtk_message_dialog_format_secondary_text0 "gtk_message_dialog_format_secondary_text" sptr, str
 ;#func global gtk_message_dialog_get_image "" 
 #func global gtk_message_dialog_get_message_area "gtk_message_dialog_get_message_area" sptr
 ;#func global gtk_message_dialog_get_type "" 
-#func global gtk_message_dialog_new "gtk_message_dialog_new" sptr, int, int, int, str
+;#func global gtk_message_dialog_new "gtk_message_dialog_new" sptr, int, int, int, str
+#func global gtk_message_dialog_new0 "gtk_message_dialog_new" sptr, int, int, int, str
 ;#func global gtk_message_dialog_new_with_markup "" 
 ;#func global gtk_message_dialog_set_image "" 
 ;#func global gtk_message_dialog_set_markup "" 
@@ -2119,24 +2127,26 @@
 ;#func global gtk_print_win32_devnames_to_win32 "" 
 ;#func global gtk_private_flags_get_type "" 
 ;#func global gtk_progress_bar_get_ellipsize "" 
-;#func global gtk_progress_bar_get_fraction "" 
+#func global gtk_progress_bar_get_fraction "gtk_progress_bar_get_fraction" sptr
 ;#func global gtk_progress_bar_get_orientation "" 
 ;#func global gtk_progress_bar_get_pulse_step "" 
 ;#func global gtk_progress_bar_get_text "" 
 ;#func global gtk_progress_bar_get_type "" 
-;#func global gtk_progress_bar_new "" 
+#func global gtk_progress_bar_new "gtk_progress_bar_new"
 ;#func global gtk_progress_bar_new_with_adjustment "" 
 ;#func global gtk_progress_bar_orientation_get_type "" 
-;#func global gtk_progress_bar_pulse "" 
+#func global gtk_progress_bar_pulse "gtk_progress_bar_pulse" sptr
 ;#func global gtk_progress_bar_set_activity_blocks "" 
 ;#func global gtk_progress_bar_set_activity_step "" 
 ;#func global gtk_progress_bar_set_bar_style "" 
 ;#func global gtk_progress_bar_set_discrete_blocks "" 
 ;#func global gtk_progress_bar_set_ellipsize "" 
-;#func global gtk_progress_bar_set_fraction "" 
+#func global gtk_progress_bar_set_fraction "gtk_progress_bar_set_fraction" sptr, double
+#func global gtk_progress_bar_set_inverted "gtk_progress_bar_set_inverted" sptr, int
 ;#func global gtk_progress_bar_set_orientation "" 
 ;#func global gtk_progress_bar_set_pulse_step "" 
-;#func global gtk_progress_bar_set_text "" 
+#func global gtk_progress_bar_set_show_text "gtk_progress_bar_set_show_text" sptr, int
+#func global gtk_progress_bar_set_text "gtk_progress_bar_set_text" sptr, sptr
 ;#func global gtk_progress_bar_style_get_type "" 
 ;#func global gtk_progress_bar_update "" 
 ;#func global gtk_progress_configure "" 
@@ -2150,7 +2160,6 @@
 ;#func global gtk_progress_set_adjustment "" 
 ;#func global gtk_progress_set_format_string "" 
 ;#func global gtk_progress_set_percentage "" 
-;#func global gtk_progress_set_show_text "" 
 ;#func global gtk_progress_set_text_alignment "" 
 ;#func global gtk_progress_set_value "" 
 ;#func global gtk_propagate_event "" 
@@ -2476,7 +2485,22 @@
 ;#func global gtk_settings_set_property_value "" 
 #func global gtk_settings_set_string_property "gtk_settings_set_string_property" sptr, sptr, sptr, sptr
 ;#func global gtk_shadow_type_get_type "" 
-;#func global gtk_show_about_dialog "" 
+#func global gtk_show_about_dialog0 "gtk_show_about_dialog" sptr, int
+#func global gtk_show_about_dialog1 "gtk_show_about_dialog" sptr, sptr, sptr, int
+#func global gtk_show_about_dialog2 "gtk_show_about_dialog" sptr, sptr, sptr, sptr, sptr, int
+#func global gtk_show_about_dialog3 "gtk_show_about_dialog" sptr, sptr, sptr, sptr, sptr, sptr, sptr, int
+#func global gtk_show_about_dialog4 "gtk_show_about_dialog" sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, int
+#func global gtk_show_about_dialog5 "gtk_show_about_dialog" sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, int
+#func global gtk_show_about_dialog6 "gtk_show_about_dialog" sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, int
+#func global gtk_show_about_dialog7 "gtk_show_about_dialog" sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, int
+#func global gtk_show_about_dialog8 "gtk_show_about_dialog" sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, int
+#func global gtk_show_about_dialog9 "gtk_show_about_dialog" sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, int
+#func global gtk_show_about_dialog10 "gtk_show_about_dialog" sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, int
+#func global gtk_show_about_dialog11 "gtk_show_about_dialog" sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, int
+#func global gtk_show_about_dialog12 "gtk_show_about_dialog" sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, int
+#func global gtk_show_about_dialog13 "gtk_show_about_dialog" sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, int
+#func global gtk_show_about_dialog14 "gtk_show_about_dialog" sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, int
+#func global gtk_show_about_dialog15 "gtk_show_about_dialog" sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, sptr, int
 ;#func global gtk_show_uri "" 
 ;#func global gtk_side_type_get_type "" 
 ;#func global gtk_signal_compat_matched "" 
@@ -2536,9 +2560,9 @@
 ;#func global gtk_spin_button_update_policy_get_type "" 
 ;#func global gtk_spin_type_get_type "" 
 ;#func global gtk_spinner_get_type "" 
-;#func global gtk_spinner_new "" 
-;#func global gtk_spinner_start "" 
-;#func global gtk_spinner_stop "" 
+#func global gtk_spinner_new "gtk_spinner_new"
+#func global gtk_spinner_start "gtk_spinner_start" sptr
+#func global gtk_spinner_stop "gtk_spinner_stop" sptr
 ;#func global gtk_state_type_get_type "" 
 ;#func global gtk_status_icon_get_blinking "" 
 ;#func global gtk_status_icon_get_geometry "" 
@@ -3675,7 +3699,7 @@
 ;#func global gtk_widget_has_rc_style "" 
 ;#func global gtk_widget_has_screen "" 
 ;#func global gtk_widget_help_type_get_type "" 
-;#func global gtk_widget_hide "" 
+#func global gtk_widget_hide "gtk_widget_hide" sptr
 ;#func global gtk_widget_hide_all "" 
 ;#func global gtk_widget_hide_on_delete "" 
 ;#func global gtk_widget_input_shape_combine_mask "" 
@@ -3752,7 +3776,7 @@
 ;#func global gtk_widget_set_receives_default "" 
 ;#func global gtk_widget_set_redraw_on_allocate "" 
 ;#func global gtk_widget_set_scroll_adjustments "" 
-;#func global gtk_widget_set_sensitive "" 
+#func global gtk_widget_set_sensitive "gtk_widget_set_sensitive" sptr, int
 #func global gtk_widget_set_size_request "gtk_widget_set_size_request" sptr, int, int
 ;#func global gtk_widget_set_state "" 
 ;#func global gtk_widget_set_style "" 
@@ -4010,11 +4034,11 @@
 #enum GTK_ENTRY_ICON_PRIMARY = 0
 #enum GTK_ENTRY_ICON_SECONDARY
 
-;// GtkFileChooserAction
-;#enum GTK_FILE_CHOOSER_ACTION_OPEN = 0
-;#enum GTK_FILE_CHOOSER_ACTION_SAVE
-;#enum GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER
-;#enum GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER
+// GtkFileChooserAction
+#enum GTK_FILE_CHOOSER_ACTION_OPEN = 0
+#enum GTK_FILE_CHOOSER_ACTION_SAVE
+#enum GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER
+#enum GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER
 
 // GtkJustification
 #enum GTK_JUSTIFY_LEFT = 0
@@ -4078,6 +4102,24 @@
 // GtkSpinButtonUpdatePolicy
 #enum	GTK_UPDATE_ALWAYS = 0
 #enum	GTK_UPDATE_IF_VALID
+
+// GtkGtkIconSize
+#enum GTK_ICON_SIZE_INVALID = 0
+#enum GTK_ICON_SIZE_MENU
+#enum GTK_ICON_SIZE_SMALL_TOOLBAR
+#enum GTK_ICON_SIZE_LARGE_TOOLBAR
+#enum GTK_ICON_SIZE_BUTTON
+#enum GTK_ICON_SIZE_DND
+#enum GTK_ICON_SIZE_DIALOG
+
+// GtkImageType
+#enum GTK_IMAGE_EMPTY = 0
+#enum GTK_IMAGE_PIXBUF
+#enum GTK_IMAGE_STOCK
+#enum GTK_IMAGE_ICON_SET
+#enum GTK_IMAGE_ANIMATION
+#enum GTK_IMAGE_ICON_NAME
+#enum GTK_IMAGE_GICON
 
 
 #endif

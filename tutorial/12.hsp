@@ -1,0 +1,151 @@
+// コールバック関数を使うための準備
+#include "hscallbk.as"
+#uselib ""
+#func cb_window_delete_event ""
+#func cb_btn_text_toggled ""
+#func cb_btn_mode_toggled ""
+#func cb_btn_direction_toggled ""
+#func cb_timeout "" int
+
+// GTK+の関数を使うための準備
+#uselib "libgtk-3-0.dll"
+#func global gtk_init "gtk_init" sptr, sptr
+#func global gtk_window_new "gtk_window_new" int
+#const	GTK_WINDOW_TOPLEVEL	0
+#func global gtk_widget_show_all "gtk_widget_show_all" sptr
+#func global gtk_main "gtk_main"
+#func global gtk_main_quit "gtk_main_quit"
+#func global gtk_container_set_border_width "gtk_container_set_border_width" sptr, int
+#func global gtk_container_add "gtk_container_add" sptr, sptr
+#func global gtk_vbox_new "gtk_vbox_new" int, int
+#func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
+#func global gtk_progress_bar_new "gtk_progress_bar_new"
+#func global gtk_progress_bar_set_text "gtk_progress_bar_set_text" sptr, sptr
+#func global gtk_progress_bar_set_show_text "gtk_progress_bar_set_show_text" sptr, int
+#func global gtk_progress_bar_set_inverted "gtk_progress_bar_set_inverted" sptr, int
+#func global gtk_progress_bar_pulse "gtk_progress_bar_pulse" sptr
+#cfunc global gtk_progress_bar_get_fraction "gtk_progress_bar_get_fraction" sptr
+#func global gtk_progress_bar_set_fraction "gtk_progress_bar_set_fraction" sptr, double
+#func global gtk_check_button_new_with_label "gtk_check_button_new_with_label" sptr
+#func global gtk_toggle_button_get_active "gtk_toggle_button_get_active" sptr
+#func global gtk_toggle_button_set_active "gtk_toggle_button_set_active" sptr, int
+#func global gtk_widget_set_sensitive "gtk_widget_set_sensitive" sptr, int
+
+#uselib "libgobject-2.0-0.dll"
+#define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+#func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+
+#uselib "libglib-2.0-0.dll"
+#func global g_timeout_add "g_timeout_add" int, sptr, sptr
+
+// よく使う定数
+; ヌルポインタ
+#const	NULL	0
+; 真偽値
+#const	FALSE	0
+#const	TRUE	1
+
+	// GTK+初期化
+	gtk_init	NULL, NULL
+
+	// ウィンドウ生成
+	gtk_window_new	GTK_WINDOW_TOPLEVEL
+	win	= stat
+	gtk_container_set_border_width	win, 10
+	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
+	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+
+	// VBox生成
+	gtk_vbox_new	FALSE, 6
+	vbox	= stat
+
+	// プログレスバー生成
+	gtk_progress_bar_new
+	pbar	= stat
+	percent	= 0
+	gosub	*update_fraction
+	gtk_progress_bar_set_show_text	pbar, TRUE
+
+	// チェックボタン群生成
+	gtk_check_button_new_with_label	"Show text"
+	btn_text	= stat
+	gtk_toggle_button_set_active	btn_text, TRUE
+	setcallbk	cbbtntexttoggled, cb_btn_text_toggled, *on_btn_text_toggled
+	g_signal_connect	btn_text, "toggled", varptr( cbbtntexttoggled ), NULL
+
+	gtk_check_button_new_with_label	"Activity mode"
+	btn_mode	= stat
+	setcallbk	cbbtnmodetoggled, cb_btn_mode_toggled, *on_btn_mode_toggled
+	g_signal_connect	btn_mode, "toggled", varptr( cbbtnmodetoggled ), NULL
+
+	gtk_check_button_new_with_label	"Right to Left"
+	btn_direction	= stat
+	setcallbk	cbbtndirectiontoggled, cb_btn_direction_toggled, *on_btn_direction_toggled
+	g_signal_connect	btn_direction, "toggled", varptr( cbbtndirectiontoggled ), NULL
+
+	// ウィンドウの組み立て
+	gtk_box_pack_start	vbox, pbar, TRUE, TRUE, 0
+	gtk_box_pack_start	vbox, btn_text, TRUE, TRUE, 0
+	gtk_box_pack_start	vbox, btn_mode, TRUE, TRUE, 0
+	gtk_box_pack_start	vbox, btn_direction, TRUE, TRUE, 0
+	gtk_container_add	win, vbox
+
+	// プログレスバー更新関数の登録
+	setcallbk	cbtimeout, cb_timeout, *on_timeout
+	g_timeout_add	200, varptr( cbtimeout ), NULL
+
+	// ウィンドウの表示とメインループの開始
+	gtk_widget_show_all	win
+	gtk_main
+	end
+
+/* シグナルハンドラ */
+*on_window_delete_event
+	gtk_main_quit
+	return
+
+*on_btn_text_toggled
+	gtk_toggle_button_get_active	btn_text
+	gtk_progress_bar_set_show_text	pbar, stat
+	return
+
+*on_btn_mode_toggled
+	gtk_toggle_button_get_active	btn_mode
+	if stat {
+		gtk_progress_bar_set_show_text	pbar, FALSE
+		gtk_progress_bar_pulse	pbar
+		gtk_widget_set_sensitive	btn_text, FALSE
+	}
+	else {
+		percent	= 0
+		gosub	*update_fraction
+		gtk_widget_set_sensitive	btn_text, TRUE
+		gosub	*on_btn_text_toggled
+	}
+	return
+
+*on_btn_direction_toggled
+	gtk_toggle_button_get_active	btn_direction
+	gtk_progress_bar_set_inverted	pbar, stat
+	return
+
+/* その他のコールバック関数 */
+*on_timeout
+	gtk_toggle_button_get_active	btn_mode
+	if stat {
+		gtk_progress_bar_pulse	pbar
+	}
+	else {
+		percent	+= 1
+		if percent > 100 {
+			percent	= 0
+		}
+		gosub	*update_fraction
+	}
+	return
+
+/* サブルーチン */
+*update_fraction
+	gtk_progress_bar_set_fraction	pbar, ( double( percent ) / 100 )
+	gtk_progress_bar_set_text	pbar, "" + percent + "%"
+	return

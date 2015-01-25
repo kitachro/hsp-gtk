@@ -222,7 +222,11 @@
 ;#func global g_signal_chain_from_overridden_handler "" 
 ;#func global g_signal_connect_closure "" 
 ;#func global g_signal_connect_closure_by_id "" 
+// GConnectFlags
+#const  G_CONNECT_AFTER ( 1 << 0 )
+#const  G_CONNECT_SWAPPED ( 1 << 1 )
 #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+#define g_signal_connect_swapped(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, G_CONNECT_SWAPPED
 #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
 ;#func global g_signal_connect_object "" 
 ;#func global g_signal_emit "" 

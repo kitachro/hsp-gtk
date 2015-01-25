@@ -4,7 +4,7 @@
 : chrono (<https://github.com/kitachro>)
 
 最終更新日:
-: 2014年12月29日
+: 2015年1月25日
 
 ライセンス（Copyright）:
 : GNU Free Documentation License 1.3 with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts
@@ -23,9 +23,9 @@
 
 　このチュートリアルでは、[The GTK+ Project](http://www.gtk.org/)で公開されているall-in-one bundleアーカイブのGTK+3を動作確認に利用しています。ダウンロードは、Downloadのページからリンクされている、32bit Windows用アーカイブのページで行えます。アーカイブはただのzipファイルなので、ダウンロード後、解凍してください。
 
-　アーカイブに含まれるファイルの中で、HSPスクリプトのデバッグ実行、およびスクリプトから作った実行ファイルの動作に必ず必要なのは、binフォルダにあるDLLファイルです。まずはデバッグ実行用に、これらのDLLファイルをすべて、HSP用プラグインを使う時と同じようにHSPのインストールフォルダにコピーしてください。
+　最も簡単なインストール方法は、アーカイブのフォルダを任意の場所に移動してから、アーカイブのbinフォルダをPATH環境変数に追加します。念のために、フォルダの移動先は、パスに日本語や半角スペースを含まない場所にしてください。
 
-　実行ファイルの動作に必要なDLLは、スクリプトから利用しているものとそれらが依存しているDLLになります。DLLの依存関係を調べるには、Dependency Walkerというフリーウェアが便利です。Dependency Walkerは、他にもDLLに含まれている関数名を表示したり、その一覧をクリップボードにコピーできたりするのでおすすめです。ただしDependency Walkerを使わなくても、エラーなしで実行ファイルが起動するかどうかでDLLがそろっているかどうかを確認できます。
+　PATH環境変数を設定せずに、DLLファイルをコピーするだけでも、ある程度は動作しますが、DLL以外のファイルが必要などの理由で一部動作しない機能もあります。解決方法を確認しているものについては、チュートリアルの中で随時説明します。
 
 　なお、アーカイブフォルダ以下の、"\share\gtk-doc\html"フォルダに英語のマニュアルが収録されていますので、プログラミングの参考にしてください。このマニュアルは、基本的に[GNOME 開発センター](https://developer.gnome.org/)のサイトにあるAPIリファレンスと同じものですが、アーカイブのバージョンに合った情報が載っており、なおかつ、定数のC言語での定義も載っています。
 
@@ -52,21 +52,33 @@
 ====================
 # 2　GTK+の基礎
 
-　この章では、GTK+において重要な、「GTK+におけるクラス」、「ウィジェットのプロパティ」、「ウィジェットの表示サイズ」、「メインループとシグナル」の4つの特徴や概念について説明します。
+　この章では、GTK+を利用するにあたって意識しておくと良い、「ライブラリの基本的な構成と使い方」、「ウィジェット（オブジェクト）のプロパティ」、「ウィジェットの表示サイズ」、「メインループとシグナル」の4つの特徴や概念について説明します。
 
 　この章で挙げているスクリプトの断片は、それだけで実行することはできません。プログラムとして動作するサンプルスクリプトは、3章および5章以降で挙げています。
 
 ====================
-## 2.1　GTK+におけるクラス
+## 2.1　ライブラリの基本的な構成と使い方
 
-ツリー構造の継承関係
+　GTK+は、もともとC言語から使えるように作られたライブラリですが、オブジェクト指向の考え方に沿って利用することを前提としており、部品同士がツリー形の継承関係によって関連付けられたクラスライブラリのような構成になっています。
 
-GTK+での継承の形
+　ただ、クラスライブラリと言っても、C言語用ですので、何らかの機能を利用する際のコードの見た目は、クラスに属するメソッドを呼び出すという感じではなく、関数を呼び出す際に、その関数が受け入れ可能なクラスのインスタンスを引数として指定する、という形になります。
+
+　GTK+では、クラスライブラリにおけるクラスを、「ウィジェット」（widget）、または、「オブジェクト」（object）と呼びます。GTK+で作成したプログラムのユーザが、画面上で見たり操作したりできるGUI部品であるクラスを「ウィジェット」、その他のものを「オブジェクト」と呼びます。
+
+　オブジェクトという言葉は、プログラミング用語として、いろいろな意味で使われるので紛らわしいのですが、このチュートリアルでは、主に上記の意味で用います。
+
+　添付マニュアルの、"\share\gtk-doc\html\gtk3\ch03.html"のページで、ウィジェットのスクリーンショット一覧を見ることができます。
+
+　各ウィジェット、および、オブジェクトの継承関係は、マニュアルの"\share\gtk-doc\html\gtk3\ch02.html"のページで確認することができます。
+
+　このページからリンクされている、個々のウィジェットやオブジェクトのリファレンスのページには、それらのインスタンス（このチュートリアルでは、以後、プログラム上で生成済みのウィジェットやオブジェクトのことをこう書きます）を引数として受け入れ可能な関数の一覧、つまり、ウィジェットやオブジェクトの機能の一覧や、その他の関連情報が載っています。一覧には、インスタンス生成のための関数も含まれています。
+
+　GTK+における継承は、この関数を、子孫のウィジェットやオブジェクトのインスタンスに対しても使える、という形で実現されています。（インスタンス生成関数を除く）
 
 ====================
-## 2.2　ウィジェットのプロパティ
+## 2.2　ウィジェット（オブジェクト）のプロパティ
 
-　GTK+のウィジェット（widget。GTK+が提供するGUI部品。例えば、ウィンドウやボタン）は、インスタンス（プログラム上で生成済みのウィジェット）ごとにプロパティ（property）というものを持っています。
+　GTK+のウィジェットやオブジェクトは、インスタンスごとにプロパティ（property）というものを持っています。
 
 　プロパティは、インスタンスの内部情報や状態を表し、ウィジェットの種類ごとにどんなプロパティを持つかが決まっています。例えば、GtkButtonウィジェットであれば、ボタン上に表示される文字列を表すlabelプロパティを持っています。
 
@@ -151,7 +163,7 @@ GTK+での継承の形
 
 　3番目の*callback*には、コールバック関数実装プラグインhscallbk.dllの、setcallbk命令の引数に指定したコールバック型の変数を指定します。hscallbk.dllを使用した場合、コールバック関数はラベルで始まりreturn命令で終わることになりますが、既に説明した通り、このラベルとreturnの間に、イベントが起こった時に実行したい処理を記述します。
 
-　そして、最後の4つ目の引数ですが、本来ここには、コールバック関数を呼び出す時に引数として渡したいテータが入った変数のポインタを指定できるのですが、HSPからGTK+を利用する場合、g_signal_connect関数で関連付けしたコールバック関数の引数を利用しようとすると、エラーが発生して、スクリプトが強制終了してしまうことがあるため、この引数には、常に0を指定して、機能を利用しないようにすることをおすすめします。
+　そして、最後の4つ目の引数ですが、本来ここには、コールバック関数が呼び出される時に引数として受け取りたいデータが入った変数のポインタを指定できるのですが、HSPからGTK+を利用する場合、g_signal_connect関数で関連付けしたコールバック関数の引数を利用しようとすると、エラーが発生して、スクリプトが強制終了してしまうことがあるため、この機能は、できる限り利用しないようにすることをおすすめします。その場合には、この引数には0を指定してください。
 
 ====================
 ### 2.4.3　シグナルとコールバック関数の関連付けを削除する
@@ -172,17 +184,23 @@ GTK+での継承の形
 
 　最後に、GTK+におけるシグナルとコールバック関数（シグナルハンドラ）のよくある使用例について説明して、この節を終わります。
 
-　たいていのGTK+アプリケーションは、トップレベルウィンドウ（＝デスクトップ画面に単独で存在できるウィンドウ）のdelete-eventシグナルに、gtk_main_quit関数を呼び出す処理を含むシグナルハンドラをconnectしています。delete-eventシグナルは、プログラムのユーザがウィンドウを閉じようとした時、例えばクローズボタンを押した時などに発生するシグナルです。
+　たいていのGTK+アプリケーションは、トップレベルウィンドウ（＝デスクトップ画面に単独で存在できるウィンドウ。例えば、GtkWindowウィジェット）のdelete-eventシグナルに、gtk_main_quit関数を呼び出す処理を含むシグナルハンドラをconnectしています。delete-eventシグナルは、プログラムのユーザがウィンドウを閉じようとした時、例えばクローズボタンを押した時などに発生するシグナルです。
 
 　プログラマが上記のようなdelete-eventシグナルのハンドラをconnectするのには理由があり、原因はdelete-eventシグナルのデフォルトのハンドラの仕様にあります。デフォルトハンドラとは、プログラマが明示的にconnectするハンドラとは別に、文字通りデフォルトでconnectされているハンドラのことです。
 
-　このdelete-eventシグナルのデフォルトハンドラ内では、トップレベルウィンドウが破棄される（＝プログラムのユーザはもちろんプログラマからも利用できなくなる）のですが、ハンドラを抜けた後もプログラムのメインループは回り続けます。
+　このdelete-eventシグナルのデフォルトハンドラ内では、トップレベルウィンドウが破棄される（＝画面上・メモリ上から消滅して、プログラムのユーザはもちろんプログラマからも利用できなくなる）のですが、ハンドラを抜けた後もプログラムのメインループは回り続けます。このハンドラは、あくまでウィンドウを破棄する責任のみを負っているからです。
 
-　つまり、プログラムが動き続けるにもかかわらず、プログラムのユーザがプログラムを終了する手段がなくなってしまうということです。そこでこれを防ぐために、メインループから抜けるためのgtk_main_quit関数を呼び出すシグナルハンドラをconnectする必要があるというわけです（ちなみにメインループに入るにはgtk_main関数を実行します）。gtk_main_quit関数を呼び出す責任はプログラマにあります。
+　このことは、プログラムが動き続けるにもかかわらず、プログラムのユーザが、（通常の方法では）プログラムを終了する手段がなくなってしまうことを意味します。そして、この動作にどう対処するかは、プログラマが決める必要があります。具体的には、自分で適切な処理を記述したハンドラをdelete-eventシグナルにconnectします。
 
-　ただし、ユーザがトップレベルウィンドウを閉じようとした時でも、それをキャンセルしたい場合があります。その場合には、プログラマがconnectしたdelete-eventシグナルのハンドラで1を返すことによって、デフォルトハンドラの実行はキャンセルされ、ウィンドウは破棄されずにそのまま残ります。
+　ここで言う適切な処理には、おもに2種類あり、1つは、メインループを抜けてプログラムを終了させるもので、もう1つは、デフォルトハンドラの実行をキャンセルして、ユーザのウィンドウを閉じる操作をなかったことにするものです。通常、プログラマがconnectしたハンドラは、デフォルトハンドラよりも先に実行されるため、このような処理が可能になっています。
 
-　gtk_main_quit関数によってメインループを抜けると、プログラムの実行位置はgtk_main関数の呼び出しの直後に戻ります。通常その後ろにはHSPのend命令を書いてプログラムを終了させます。
+　メインループを抜けてプログラムを終了させる場合には、この項の冒頭に挙げたgtk_main_quit関数を呼び出します。この場合、すべてのシグナルハンドラからreturn後、プログラムの実行位置が、メインループに入るためのgtk_main関数の呼び出しの直後に戻りますので、その場所にend命令を書いておいて、実際にプログラムを終了させてください。
+
+　デフォルトハンドラの実行をキャンセルしたい場合には、0以外の数値（C言語で真と評価される値）をreturnします。この場合、ウィンドウは破棄されずにそのまま表示され続け、引き続き操作が可能です。
+
+　これら2つの処理のどちらを実行するかは、状況によってif文などで選択します。例えば、ユーザにウィンドウを閉じて良いか確認するダイアログを表示して、その結果を条件として判断するなどします。あるいは、もし状況判断が必要なく、常に終了させたいのであれば、gtk_main_quitの呼び出しだけを書いておけばOKです。
+
+　以上で説明した、gtk_main_quit関数を呼び出すシグナルハンドラは、どんなGTK+アプリケーションでも必要なので、覚えておくようにしてください。
 
 ====================
 # 3　はじめの一歩
@@ -526,7 +544,7 @@ GTK+での継承の形
     	gtk_button_new_with_label u( "クリック！" )
 ********************
 
-　次の章からは、GTK+が提供するウィジェットやその他機能について、詳しく説明していきます。
+　次の章からは、GTK+が提供するウィジェットやオブジェクト、その他機能について、詳しく説明していきます。
 
 ====================
 # 5　ボタン系ウィジェット
@@ -558,7 +576,7 @@ GTK+での継承の形
 
 　また、GtkButtonには、ニーモニックを設定することができます。
 
-　ニーモニックとは、キーボードアクセラレータとも呼ばれる機能で、キーボード操作によってウィジェットを動作させるためのものです。プログラム上では、アンダーライン付きの文字として表示され、Windowsでは、[Alt+(アルファベット)]キーを押すことによって作動します。
+　ニーモニックとは、キーボード操作によってウィジェットを動作させるための機能です。プログラム上では、アンダーライン付きの文字として表示され、Windowsでは、[Alt+(アルファベット)]キーを押すことによって作動します。
 
 　ニーモニックも、GtkButton上のGtkLabelが持つ機能の1つですが、設定のためにGtkLabelを直接操作する必要はなく、GtkButtonウィジェットに用意された関数を利用します。
 
@@ -915,12 +933,12 @@ GTK+での継承の形
     	setcallbk cbbutton1toggled, cb_button1_toggled, *on_button1_toggled
     	g_signal_connect btn1, "toggled", varptr( cbbutton1toggled ), NULL
     
-    	gtk_radio_button_new_with_label_from_widget btn1, "_Button 2"
+    	gtk_radio_button_new_with_label_from_widget btn1, "Button _2"
     	btn2 = stat
     	setcallbk cbbutton2toggled, cb_button2_toggled, *on_button2_toggled
     	g_signal_connect btn2, "toggled", varptr( cbbutton2toggled ), NULL
     
-    	gtk_radio_button_new_with_mnemonic_from_widget btn1, "_Button 3"
+    	gtk_radio_button_new_with_mnemonic_from_widget btn1, "Button _3"
     	btn3 = stat
     	setcallbk cbbutton3toggled, cb_button3_toggled, *on_button3_toggled
     	g_signal_connect btn3, "toggled", varptr( cbbutton3toggled ), NULL
@@ -1614,7 +1632,7 @@ GTK+での継承の形
 
 ![サンプル7](7.png)
 
-　GtkLabelウィジェットは、GTK+のウィンドウ内に編集の必要がない文字列を配置するのに、最も簡便な手段です。例えば、エントリ（GtkEntry）ウィジェットのとなりに名前や説明を表示したりするのに使います。
+　GtkLabelウィジェットは、GTK+のウィンドウ内に編集の必要がない文字列を配置するのに、最も簡便な手段です。例えば、GtkEntryウィジェットのとなりに名前や説明を表示したりするのに使います。
 
 　文字列は、ウィジェット生成時に設定することもできますし、後で、gtk_label_set_text関数やgtk_label_set_markup関数を使って設定することもできます。
 
@@ -1714,19 +1732,19 @@ GTK+での継承の形
     	gtk_label_new u( "デフォルト状態のラベルです。\n次の行です。" )
     	lbl1 = stat
     
-    	text = "テキストを左寄せしたラベルです。\n"
+    	text = "文字列を左寄せしたラベルです。\n"
     	text += "次の行です。\nデフォルトは左寄せです。"
     	gtk_label_new u( text )
     	lbl2 = stat
     	gtk_label_set_justify lbl2, GTK_JUSTIFY_LEFT
     
-    	text = "テキストを中央寄せしたラベルです。\n"
+    	text = "文字列を中央寄せしたラベルです。\n"
     	text += "次の行です。"
     	gtk_label_new u( text )
     	lbl3 = stat
     	gtk_label_set_justify lbl3, GTK_JUSTIFY_CENTER
     
-    	gtk_label_new u( "テキストを右寄せしたラベルです。\n次の行です。" )
+    	gtk_label_new u( "文字列を右寄せしたラベルです。\n次の行です。" )
     	lbl4 = stat
     	gtk_label_set_justify lbl4, GTK_JUSTIFY_RIGHT
     
@@ -1739,7 +1757,7 @@ GTK+での継承の形
     	gtk_label_set_line_wrap lbl5, TRUE
     
     	text = "[Alt+_P]キーを押すと、右側のボタンが動作します。\n"
-    	text += "このラベルのテキストは選択できます。"
+    	text += "このラベルの文字列は選択できます。"
     	gtk_label_new_with_mnemonic u( text )
     	lbl6 = stat
     	gtk_label_set_selectable lbl6, TRUE
@@ -1750,9 +1768,9 @@ GTK+での継承の形
     	text += "wraps the words to fit.\n\n"
     	text += "このラベルも行の折り返しがオンになっています。\n"
     	text += "1行に入り切らない単語（文字）は次の行に送られます。\n"
-    	text += "テキストは左寄せなので、折り返しによってできた"
+    	text += "文字列は左寄せなので、折り返しによってできた"
     	text += "右側の余白はそのままです。\n"
-    	text += "テキスト中の  空白も  そのまま  表示  されます。"
+    	text += "文字列中の  空白も  そのまま  表示  されます。"
     	gtk_label_new u( text )
     	lbl7 = stat
     	gtk_label_set_line_wrap lbl7, TRUE
@@ -1760,7 +1778,7 @@ GTK+での継承の形
     	text = "This is an example of a line-wrapped, filled label. "
     	text += "It should be taking "
     	text += "up the entire width allocated to it.\n\n"
-    	text += "このラベルは、行の折り返しがオンで、なおかつテキストが"
+    	text += "このラベルは、行の折り返しがオンで、なおかつ文字列が"
     	text += "両側寄せになっています。\n"
     	text += "折り返しによって左右に余白ができないようになっています。\n"
     	gtk_label_new u( text )
@@ -2003,31 +2021,1133 @@ GTK+での継承の形
 ********************
 
 ====================
-# 9　メニュー（GtkMenu）
+# 9　メニューバー（GtkMenuBar）とツールバー（GtkToolbar）
+
+![サンプル9](9.png)
+
+　この章では、GtkMenuBarやGtkToolbarといったコマンド系ウィジェットを取り上げます。
+
+　これらの作成方法には、コードのみで作成するものと、XML風フォーマットで書かれた構造定義を読み込んで作成するものの2つがありますが、ここでは、後者の方法について説明します。
+
+　この方法では、GtkAction、GtkActionGroup、GtkUIManager、の3つのオブジェクトを使う必要があります。
+
+　GtkActionは、プログラムのインターフェース上でメニュー項目やツールバー項目として表示される、ユーザがアプリケーションで利用できるコマンドや機能を表します。場合によって、派生オブジェクトのGtkRadioActionやGtkToggleActionを使う必要があります。
+
+　GtkActionGroupは、生成したGtkActionのインスタンスを分類するためのフォルダのようなものです。ただ、分類する必要がなくても、必ず1つは作って、そこに生成したGtkActionを登録する必要があります。
+
+　GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActionGroupを元に、各ウィジェットを生成してくれます。
+
+　これらのオブジェクトを使って、コマンド系ウィジェットをウィンドウに組み込むまでの流れは、以下のようになります。
+
+1. 　UIManager、ActionGroup、および必要な数のActionを生成
+
+2. 　生成したAction群をActionGroupに登録
+
+3. 　UIManagerに、ActionGroupとUI構造を定義した文字列を渡して、ウィジェットを生成
+
+4. 　UIManagerがAction群から集めたキーボードショートカット情報をウィンドウに登録
+
+5. 　UIManagerからウィジェットを受け取って、他のウィジェットと同様に、ウィンドウ（上のレイアウトコンテナ）に組み込む
+
+　次のページから、サンプルプログラムのスクリプトとその説明になります。
+
+　プログラム全体としては長めですが、各種プリプロセッサ命令、似た作業の繰り返し、シグナルハンドラがかなりの割合を占めているので、構成としては、今までのサンプルとあまり変わりません。
+
+====================
+## 9.1　サンプルプログラムの全体
+
+********************
+    // コールバック関数を使うための準備
+    #include "hscallbk.as"
+    #uselib ""
+    #func cb_window_delete_event ""
+    #func cb_act_new_hoge ""
+    #func cb_act_new_fuga ""
+    #func cb_act_quit ""
+    #func cb_act_copy ""
+    #func cb_act_paste ""
+    #func cb_act_one ""
+    #func cb_act_two ""
+    #func cb_act_three ""
+    #func cb_ebox_button_release_event "" int, int
+    
+    // GTK+の関数を使うための準備
+    #uselib "libgtk-3-0.dll"
+    #func global gtk_init "gtk_init" sptr, sptr
+    #func global gtk_settings_get_default "gtk_settings_get_default"
+    #func global gtk_settings_set_string_property "gtk_settings_set_string_property" sptr, sptr, sptr, sptr
+    #func global gtk_window_new "gtk_window_new" int
+    #const GTK_WINDOW_TOPLEVEL 0
+    #func global gtk_window_add_accel_group "gtk_window_add_accel_group" sptr, sptr
+    #func global gtk_container_add "gtk_container_add" sptr, sptr
+    #func global gtk_widget_set_size_request "gtk_widget_set_size_request" sptr, int, int
+    #func global gtk_widget_show_all "gtk_widget_show_all" sptr
+    #func global gtk_main "gtk_main"
+    #func global gtk_main_quit "gtk_main_quit"
+    #func global gtk_vbox_new "gtk_vbox_new" int, int
+    #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
+    #func global gtk_action_group_new "gtk_action_group_new" sptr
+    #func global gtk_action_group_add_action "gtk_action_group_add_action" sptr, sptr
+    #func global gtk_action_group_add_action_with_accel "gtk_action_group_add_action_with_accel" sptr, sptr, sptr
+    #func global gtk_action_new "gtk_action_new" sptr, sptr, sptr, sptr
+    #func global gtk_radio_action_new "gtk_radio_action_new" sptr, sptr, sptr, sptr, int
+    #func global gtk_radio_action_set_current_value "gtk_radio_action_set_current_value" sptr, int
+    #func global gtk_radio_action_join_group "gtk_radio_action_join_group" sptr, sptr
+    #func global gtk_radio_action_get_current_value "gtk_radio_action_get_current_value" sptr
+    #func global gtk_toggle_action_new "gtk_toggle_action_new" sptr, sptr, sptr, sptr
+    #func global gtk_toggle_action_get_active "gtk_toggle_action_get_active" sptr
+    #func global gtk_ui_manager_new "gtk_ui_manager_new"
+    #func global gtk_ui_manager_get_widget "gtk_ui_manager_get_widget" sptr, str
+    #func global gtk_ui_manager_insert_action_group "gtk_ui_manager_insert_action_group" sptr, sptr, int
+    #func global gtk_ui_manager_add_ui_from_string "gtk_ui_manager_add_ui_from_string" sptr, sptr, int, sptr
+    #func global gtk_ui_manager_get_accel_group "gtk_ui_manager_get_accel_group" sptr
+    #func global gtk_event_box_new "gtk_event_box_new"
+    #func global gtk_menu_popup "gtk_menu_popup" sptr, sptr, sptr, sptr, sptr, int, int
+    
+    #uselib "libgobject-2.0-0.dll"
+    #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+    #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+    
+    #uselib "libgdk-3-0.dll"
+    #func global gdk_event_get_button "gdk_event_get_button" sptr, sptr
+    #func global gdk_event_get_time "gdk_event_get_time" sptr
+    
+    // よく使う関数
+    #include "hspinet.as"
+    #module
+    #defcfunc u str chars_ // shift-jis文字列をutf-8に変換
+    	chars = chars_
+    	nkfcnv@ chars, chars, "Sw"
+    	return chars
+    #global
+    
+    // よく使う定数
+    ; 真偽値
+    #const TRUE 1
+    #const FALSE 0
+    ; ヌルポインタ
+    #const NULL 0
+    
+    	// GTK+初期化
+    	gtk_init NULL, NULL
+    
+    	// GTK+のデフォルトGUIフォントを変更
+    	gtk_settings_get_default
+    	gtk_settings_set_string_property stat, "gtk-font-name", "meiryo, bold 11", NULL
+    
+    	// Window生成
+    	gtk_window_new GTK_WINDOW_TOPLEVEL
+    	win = stat
+    	gtk_widget_set_size_request win, 300, 200
+    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
+    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+    
+    	// VBox生成
+    	gtk_vbox_new FALSE, 2
+    	vbox = stat
+    
+    	// コマンド系UI生成
+    #define NAME_MENUBAR "MenuBar"
+    #define NAME_FILEMENU "FileMenu"
+    #define NAME_NEWMENU "NewMenu"
+    #define NAME_NEWHOGE "NewHoge"
+    #define NAME_NEWFUGA "NewFuga"
+    #define NAME_QUIT "Quit"
+    #define NAME_EDITMENU "EditMenu"
+    #define NAME_COPY "Copy"
+    #define NAME_PASTE "Paste"
+    #define NAME_CHOICESMENU "ChoicesMenu"
+    #define NAME_CHOICEONE "ChoiceOne"
+    #define NAME_CHOICETWO "ChoiceTwo"
+    #define NAME_CHOICETHREE "ChoiceThree"
+    #define NAME_TOOLBAR "ToolBar"
+    #define NAME_POPUPMENU "PopupMenu"
+    
+    	; UI構造定義
+    	ui_info  = "<ui>"
+    	ui_info  += "  <menubar name='" + NAME_MENUBAR + "'>"
+    	ui_info  += "    <menu action='" + NAME_FILEMENU + "'>"
+    	ui_info  += "      <menu action='" + NAME_NEWMENU + "'>"
+    	ui_info  += "        <menuitem action='" + NAME_NEWHOGE + "' />"
+    	ui_info  += "        <menuitem action='" + NAME_NEWFUGA + "' />"
+    	ui_info  += "      </menu>"
+    	ui_info  += "      <separator />"
+    	ui_info  += "      <menuitem action='" + NAME_QUIT + "' />"
+    	ui_info  += "    </menu>"
+    	ui_info  += "    <menu action='" + NAME_EDITMENU + "'>"
+    	ui_info  += "      <menuitem action='" + NAME_COPY + "' />"
+    	ui_info  += "      <menuitem action='" + NAME_PASTE + "' />"
+    	ui_info  += "    </menu>"
+    	ui_info  += "    <menu action='" + NAME_CHOICESMENU + "'>"
+    	ui_info  += "      <menuitem action='" + NAME_CHOICEONE + "'/>"
+    	ui_info  += "      <menuitem action='" + NAME_CHOICETWO + "'/>"
+    	ui_info  += "      <separator />"
+    	ui_info  += "      <menuitem action='" + NAME_CHOICETHREE + "'/>"
+    	ui_info  += "    </menu>"
+    	ui_info  += "  </menubar>"
+    	ui_info  += "  <toolbar name='" + NAME_TOOLBAR + "'>"
+    	ui_info  += "    <toolitem action='" + NAME_NEWHOGE + "' />"
+    	ui_info  += "    <toolitem action='" + NAME_NEWFUGA + "' />"
+    	ui_info  += "    <toolitem action='" + NAME_QUIT + "' />"
+    	ui_info  += "  </toolbar>"
+    	ui_info  += "  <popup name='" + NAME_POPUPMENU + "'>"
+    	ui_info  += "    <menuitem action='" + NAME_COPY + "' />"
+    	ui_info  += "    <menuitem action='" + NAME_PASTE + "' />"
+    	ui_info  += "  </popup>"
+    	ui_info  += "</ui>"
+    
+    	; UIManager生成
+    	gtk_ui_manager_new
+    	uim = stat
+    
+    	; ActionGroup生成
+    	gtk_action_group_new "cmds"
+    	acts = stat
+    
+    	; FileメニューAction生成
+    	gtk_action_new NAME_FILEMENU, u( "ファイル(_F)" ), NULL, NULL
+    	act_file = stat
+    
+    	; NewメニューAction生成
+    	gtk_action_new NAME_NEWMENU, u( "新規作成(_N)" ), NULL, NULL
+    	act_new = stat
+    
+    #define GTK_STOCK_NEW "gtk-new"
+    	; NewHogeコマンドAction生成
+    	gtk_action_new NAME_NEWHOGE, u( "_Hoge作成" ), u( "新しいHogeを作成します。" ), GTK_STOCK_NEW
+    	act_new_hoge = stat
+    	setcallbk cbactnewhoge, cb_act_new_hoge, *on_act_new_hoge
+    	g_signal_connect act_new_hoge, "activate", varptr( cbactnewhoge ), NULL
+    
+    	; NewFugaコマンドAction生成
+    	gtk_action_new NAME_NEWFUGA, u( "_Fuga作成" ), u( "新しいfugaを作成します。" ), GTK_STOCK_NEW
+    	act_new_fuga = stat
+    	setcallbk cbactnewfuga, cb_act_new_fuga, *on_act_new_fuga
+    	g_signal_connect act_new_fuga, "activate", varptr( cbactnewfuga ), NULL
+    
+    	; QuitコマンドAction生成
+    #define GTK_STOCK_QUIT "gtk-quit"
+    	gtk_action_new NAME_QUIT, u( "終了(_Q)" ), NULL, GTK_STOCK_QUIT
+    	act_quit = stat
+    	setcallbk cbactquit, cb_act_quit, *on_act_quit
+    	g_signal_connect act_quit, "activate", varptr( cbactquit ), NULL
+    
+    	; EditメニューAction生成
+    	gtk_action_new NAME_EDITMENU, u( "編集(_E)" ), NULL, NULL
+    	act_edit = stat
+    
+    	; CopyコマンドAction生成
+    #define GTK_STOCK_COPY "gtk-copy"
+    	gtk_action_new NAME_COPY, u( "コピー(_C)" ), NULL, GTK_STOCK_COPY
+    	act_copy = stat
+    	setcallbk cbactcopy, cb_act_copy, *on_act_copy
+    	g_signal_connect act_copy, "activate", varptr( cbactcopy ), NULL
+    
+    	; PasteコマンドAction生成
+    #define GTK_STOCK_PASTE "gtk-paste"
+    	gtk_action_new NAME_PASTE, u( "貼り付け(_P)" ), NULL, GTK_STOCK_PASTE
+    	act_paste = stat
+    	setcallbk cbactpaste, cb_act_paste, *on_act_paste
+    	g_signal_connect act_paste, "activate", varptr( cbactpaste ), NULL
+    
+    	; ChoicesメニューAction生成
+    	gtk_action_new NAME_CHOICESMENU, u( "選択(_C)" ), NULL, NULL
+    	act_choices = stat
+    
+    	; ChoiceOneコマンドAction生成
+    #const VALUE_CHOICE_ONE 1
+    	gtk_radio_action_new NAME_CHOICEONE, u( "選択肢1(_1)" ), NULL, NULL, VALUE_CHOICE_ONE
+    	act_choice_one = stat
+    	setcallbk cbactone, cb_act_one, *on_act_one
+    	g_signal_connect act_choice_one, "changed", varptr( cbactone ), NULL
+    	gtk_radio_action_set_current_value act_choice_one, VALUE_CHOICE_ONE
+    
+    	; ChoiceTwoコマンドAction生成
+    #const VALUE_CHOICE_TWO 2
+    	gtk_radio_action_new NAME_CHOICETWO, u( "選択肢2(_2)" ), NULL, NULL, VALUE_CHOICE_TWO
+    	act_choice_two = stat
+    	setcallbk cbacttwo, cb_act_two, *on_act_two
+    	g_signal_connect act_choice_two, "changed", varptr( cbacttwo ), NULL
+    	gtk_radio_action_join_group act_choice_two, act_choice_one
+    
+    	; ChoiceThreeコマンドAction生成
+    	gtk_toggle_action_new NAME_CHOICETHREE, u( "オプション(_3)" ), NULL, NULL
+    	act_choice_three = stat
+    	setcallbk cbactthree, cb_act_three, *on_act_three
+    	g_signal_connect act_choice_three, "toggled", varptr( cbactthree ), NULL
+    
+    	; Action群をActionGroupに登録
+    	gtk_action_group_add_action acts, act_file
+    	gtk_action_group_add_action acts, act_new
+    	gtk_action_group_add_action_with_accel acts, act_new_hoge, "<control>N"
+    	gtk_action_group_add_action_with_accel acts, act_new_fuga, "<control><Shift>N"
+    	gtk_action_group_add_action_with_accel acts, act_quit, "<control>Q"
+    	gtk_action_group_add_action acts, act_edit
+    	gtk_action_group_add_action_with_accel acts, act_copy, "<control>C"
+    	gtk_action_group_add_action_with_accel acts, act_paste, "<control>V"
+    	gtk_action_group_add_action acts, act_choices
+    	gtk_action_group_add_action acts, act_choice_one
+    	gtk_action_group_add_action acts, act_choice_two
+    	gtk_action_group_add_action acts, act_choice_three
+    
+    	; UI生成
+    	gtk_ui_manager_insert_action_group uim, acts, 0
+    	gtk_ui_manager_add_ui_from_string uim, varptr( ui_info ), -1, NULL
+    
+    	; キーボードショートカットをウィンドウに登録
+    	gtk_ui_manager_get_accel_group uim
+    	gtk_window_add_accel_group win, stat
+    
+    	; メニューバーウィジェット取得
+    	path = "/" + NAME_MENUBAR
+    	gtk_ui_manager_get_widget uim, path
+    	mbar = stat
+    
+    	; ツールバーウィジェット取得
+    	path = "/" + NAME_TOOLBAR
+    	gtk_ui_manager_get_widget uim, path
+    	tbar = stat
+    
+    	; ポップアップメニューウィジェット取得
+    	path = "/" + NAME_POPUPMENU
+    	gtk_ui_manager_get_widget uim, path
+    	pum = stat
+    
+    	// GtkEventBox生成
+    	gtk_event_box_new
+    	ebox = stat
+    	setcallbk cbeboxbuttonreleaseevent, cb_ebox_button_release_event, *on_ebox_button_release_event
+    	g_signal_connect ebox, "button-release-event", varptr( cbeboxbuttonreleaseevent ), NULL
+    
+    	// ウィンドウ組み立て
+    	gtk_container_add win, vbox
+    	gtk_box_pack_start vbox, mbar, FALSE, FALSE, 0
+    	gtk_box_pack_start vbox, tbar, FALSE, FALSE, 0
+    	gtk_box_pack_start vbox, ebox, TRUE, TRUE, 0
+    
+    	// ウィンドウの表示とメインループの開始
+    	gtk_widget_show_all win
+    	gtk_main
+    	end
+    
+    /* シグナルハンドラ */
+    *on_window_delete_event
+    	gtk_main_quit
+    	return
+    
+    *on_act_new_hoge
+    	mes "Hoge作成 コマンドが実行されました。"
+    	return
+    
+    *on_act_new_fuga
+    	mes "Fuga作成 コマンドが実行されました。"
+    	return
+    
+    *on_act_quit
+    	gtk_main_quit
+    	return
+    
+    *on_act_copy
+    	mes "コピー コマンドが実行されました。"
+    	return
+    
+    *on_act_paste
+    	mes "貼り付け コマンドが実行されました。"
+    	return
+    
+    *on_act_one
+    	gtk_radio_action_get_current_value act_choice_one
+    	if ( stat = VALUE_CHOICE_ONE ) {
+    		mes "選択肢1 メニューが選択されました。"
+    	}
+    	return
+    
+    *on_act_two
+    	gtk_radio_action_get_current_value act_choice_one
+    	if ( stat = VALUE_CHOICE_TWO ) {
+    		mes "選択肢2 メニューが選択されました。"
+    	}
+    	return
+    
+    *on_act_three
+    	gtk_toggle_action_get_active act_choice_three
+    	if stat {
+    		mes "オプション メニューがオンになりました。"
+    	}
+    	else {
+    		mes "オプション メニューがオフになりました。"
+    	}
+    	return
+    
+    #define GDK_BUTTON_SECONDARY 3
+    *on_ebox_button_release_event
+    	evt = callbkarg( 1 )
+    	gdk_event_get_button evt, varptr( num )
+    	if ( num = GDK_BUTTON_SECONDARY ) {
+    		mes "GtkEventBoxが右クリックされました。"
+    		gdk_event_get_time evt
+    		gtk_menu_popup pum, NULL, NULL, NULL, NULL, 0, stat
+    	}
+    	return
+********************
 
 ====================
 # 10　ダイアログ系ウィジェット
 
 ====================
+# 10.1　メッセージダイアログ（GtkMessageDialog）
+
+![サンプル10-1-1](10-1-1.png)
+![サンプル10-1-2](10-1-2.png)
+![サンプル10-1-3](10-1-3.png)
+
+====================
+## 10.1.1　サンプルプログラムの全体
+
+********************
+    // コールバック関数を使うための準備
+    #include "hscallbk.as"
+    #uselib ""
+    #func cb_win_delete_event ""
+    #func cb_btn1_clicked ""
+    #func cb_btn2_clicked ""
+    #func cb_dlg2_delete_event ""
+    #func cb_btn_close_clicked ""
+    
+    // GTK+の関数を使うための準備
+    #uselib "libgtk-3-0.dll"
+    #func global gtk_init "gtk_init" sptr, sptr
+    #func global gtk_settings_get_default "gtk_settings_get_default"
+    #func global gtk_settings_set_string_property "gtk_settings_set_string_property" sptr, sptr, sptr, sptr
+    #func global gtk_window_new "gtk_window_new" int
+    #const GTK_WINDOW_TOPLEVEL 0
+    #func global gtk_container_add "gtk_container_add" sptr, sptr
+    #func global gtk_widget_show_all "gtk_widget_show_all" sptr
+    #func global gtk_main "gtk_main"
+    #func global gtk_main_quit "gtk_main_quit"
+    #func global gtk_vbox_new "gtk_vbox_new" int, int
+    #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
+    #func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
+    #func global gtk_window_set_title "gtk_window_set_title" sptr, sptr
+    #func global gtk_dialog_run "gtk_dialog_run" sptr
+    #func global gtk_widget_hide "gtk_widget_hide" sptr
+    #func global gtk_message_dialog_new0 "gtk_message_dialog_new" sptr, int, int, int, str
+    #func global gtk_message_dialog_format_secondary_text0 "gtk_message_dialog_format_secondary_text" sptr, str
+    #func global gtk_dialog_get_widget_for_response "gtk_dialog_get_widget_for_response" sptr, int
+    ; GtkMessageType
+    #const GTK_MESSAGE_INFO 0
+    #const GTK_MESSAGE_WARNING 1
+    ; GtkButtonsType
+    #const GTK_BUTTONS_OK 1
+    #const GTK_BUTTONS_CLOSE 2
+    ; GtkResponseType
+    ;#const GTK_RESPONSE_DELETE_EVENT -4
+    ;#const GTK_RESPONSE_OK -5
+    #const GTK_RESPONSE_CLOSE -7
+    
+    #uselib "libgobject-2.0-0.dll"
+    #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+    #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+    
+    // よく使う関数
+    #include "hspinet.as"
+    #module
+    #defcfunc u str chars_ ; shift-jis文字列をutf-8に変換
+    	chars = chars_
+    	nkfcnv@ chars, chars, "Sw"
+    	return chars
+    #global
+    
+    // よく使う定数
+    ; ヌルポインタ
+    #const NULL 0
+    ; 真偽値
+    #const FALSE 0
+    #const TRUE 1
+    
+    	// GTK+初期化
+    	gtk_init NULL, NULL
+    
+    	// GTK+のデフォルトGUIフォントを変更
+    	gtk_settings_get_default
+    	gtk_settings_set_string_property stat, "gtk-font-name", "ms ui gothic, 10", NULL
+    
+    	// ウィンドウ生成
+    	gtk_window_new GTK_WINDOW_TOPLEVEL
+    	win = stat
+    	setcallbk cbwindeleteevent, cb_win_delete_event, *on_win_delete_event
+    	g_signal_connect win, "delete-event", varptr( cbwindeleteevent ), NULL
+    
+    	// HBox生成
+    	gtk_vbox_new FALSE, 3
+    	vbox = stat
+    
+    	// ボタン群生成
+    	; ボタン1
+    	gtk_button_new_with_label "MessageDialog (modal)"
+    	btn1 = stat
+    	setcallbk cbbtn1clicked, cb_btn1_clicked, *on_btn1_clicked
+    	g_signal_connect btn1, "clicked", varptr( cbbtn1clicked ), 0
+    
+    	; ボタン2
+    	gtk_button_new_with_label "MessageDialog (non-modal)"
+    	btn2 = stat
+    	setcallbk cbbtn2clicked, cb_btn2_clicked, *on_btn2_clicked
+    	g_signal_connect btn2, "clicked", varptr( cbbtn2clicked ), 0
+    
+    	// ウィンドウの組み立て
+    	gtk_box_pack_start vbox, btn1, TRUE, TRUE, 0
+    	gtk_box_pack_start vbox, btn2, TRUE, TRUE, 0
+    	gtk_container_add win, vbox
+    
+    	// ウィンドウの表示とメインループの開始
+    	gtk_widget_show_all win
+    	gtk_main
+    	end
+    
+    /* シグナルハンドラ */
+    *on_win_delete_event
+    	gtk_main_quit
+    	return
+    
+    *on_btn1_clicked
+    	if dlg1 = NULL {
+    		msg = u( "これは、モーダルなINFO MessageDialogのメインテキストです。" )
+    		gtk_message_dialog_new0 win, 0, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, msg
+    		dlg1 = stat
+    		gtk_window_set_title dlg1, "Modal MessageDialog"
+    		gtk_message_dialog_format_secondary_text0 dlg1, u( "これはサブテキストです。" )
+    	}
+    	gtk_dialog_run dlg1
+    	response = stat : mes "response id: " + response
+    	gtk_widget_hide dlg1
+    	return
+    
+    *on_btn2_clicked
+    	if dlg2 = NULL {
+    		msg = u( "これは、ノンモーダルなINFO MessageDialogのメインテキストです。" )
+    		gtk_message_dialog_new0 win, 0, GTK_MESSAGE_WARNING, GTK_BUTTONS_CLOSE, msg
+    		dlg2 = stat
+    		gtk_window_set_title dlg2, "Non-modal MessageDialog"
+    		gtk_message_dialog_format_secondary_text0 dlg2, u( "これはサブテキストです。" )
+    
+    		setcallbk cbdlg2deleteevent, cb_dlg2_delete_event, *on_dlg2_delete_event
+    		g_signal_connect dlg2, "delete-event", varptr( cbdlg2deleteevent ), NULL
+    		gtk_dialog_get_widget_for_response dlg2, GTK_RESPONSE_CLOSE
+    		btn_close = stat
+    		setcallbk cbbtncloseclicked, cb_btn_close_clicked, *on_btn_close_clicked
+    		g_signal_connect btn_close, "clicked", varptr( cbbtncloseclicked ), NULL
+    	}
+    	gtk_widget_show_all dlg2
+    	return
+    
+    *on_dlg2_delete_event
+    	gtk_widget_hide dlg2
+    	return TRUE
+    
+    *on_btn_close_clicked
+    	gtk_widget_hide dlg2
+    	return
+********************
+
+====================
+# 10.2　色選択ダイアログ（GtkColorChooserDialog）
+
+![サンプル10-2-1](10-2-1.png)
+![サンプル10-2-2](10-2-2.png)
+
+====================
+## 10.2.1　サンプルプログラムの全体
+
+********************
+    // コールバック関数を使うための準備
+    #include "hscallbk.as"
+    #uselib ""
+    #func cb_win_delete_event ""
+    #func cb_btn_clicked ""
+    
+    // GTK+の関数を使うための準備
+    #uselib "libgtk-3-0.dll"
+    #func global gtk_init "gtk_init" sptr, sptr
+    #func global gtk_settings_get_default "gtk_settings_get_default"
+    #func global gtk_settings_set_string_property "gtk_settings_set_string_property" sptr, sptr, sptr, sptr
+    #func global gtk_window_new "gtk_window_new" int
+    #const GTK_WINDOW_TOPLEVEL 0
+    #func global gtk_container_add "gtk_container_add" sptr, sptr
+    #func global gtk_widget_show_all "gtk_widget_show_all" sptr
+    #func global gtk_main "gtk_main"
+    #func global gtk_main_quit "gtk_main_quit"
+    #func global gtk_vbox_new "gtk_vbox_new" int, int
+    #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
+    #func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
+    #func global gtk_color_chooser_dialog_new "gtk_color_chooser_dialog_new" sptr, sptr
+    #func global gtk_color_chooser_get_rgba "gtk_color_chooser_get_rgba" sptr, sptr
+    #func global gtk_dialog_run "gtk_dialog_run" sptr
+    #func global gtk_widget_hide "gtk_widget_hide" sptr
+    ; GtkResponseType
+    ;#const GTK_RESPONSE_DELETE_EVENT -4
+    #const GTK_RESPONSE_OK           -5
+    ;#const GTK_RESPONSE_CANCEL       -6
+    
+    #uselib "libgdk-3-0.dll"
+    #func global gdk_rgba_to_string "gdk_rgba_to_string" sptr
+    
+    #uselib "libgobject-2.0-0.dll"
+    #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+    #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+    
+    // よく使う定数
+    ; ヌルポインタ
+    #const NULL 0
+    ; 真偽値
+    #const FALSE 0
+    #const TRUE 1
+    
+    	// GTK+初期化
+    	gtk_init NULL, NULL
+    
+    	// GTK+のデフォルトGUIフォントを変更
+    	gtk_settings_get_default
+    	gtk_settings_set_string_property stat, "gtk-font-name", "ms ui gothic, 10", NULL
+    
+    	// ウィンドウ生成
+    	gtk_window_new GTK_WINDOW_TOPLEVEL
+    	win = stat
+    	setcallbk cbwindeleteevent, cb_win_delete_event, *on_win_delete_event
+    	g_signal_connect win, "delete-event", varptr( cbwindeleteevent ), NULL
+    
+    	// ボタン生成
+    	gtk_button_new_with_label "Show Dialog"
+    	btn = stat
+    	setcallbk cbbtnclicked, cb_btn_clicked, *on_btn_clicked
+    	g_signal_connect btn, "clicked", varptr( cbbtnclicked ), 0
+    
+    	// ウィンドウの組み立て
+    	gtk_container_add win, btn
+    
+    	// ウィンドウの表示とメインループの開始
+    	gtk_widget_show_all win
+    	gtk_main
+    	end
+    
+    /* シグナルハンドラ */
+    *on_win_delete_event
+    	gtk_main_quit
+    	return
+    
+    *on_btn_clicked
+    	if dlg = NULL {
+    		gtk_color_chooser_dialog_new "ColorChooserDialog", win
+    		dlg = stat
+    	}
+    	gtk_dialog_run dlg
+    	response = stat : mes "response id: " + response
+    	gtk_widget_hide dlg
+    	if response = GTK_RESPONSE_OK {
+    		sdim rgba, 32
+    		gtk_color_chooser_get_rgba dlg, rgba
+    		gdk_rgba_to_string rgba
+    		ptr = stat
+    		dupptr str_rgba, ptr, 100, 2 : mes str_rgba
+    	}
+    	return
+********************
+
+====================
+# 10.3　フォント選択ダイアログ（GtkFontChooserDialog）
+
+![サンプル10-3](10-3.png)
+
+====================
+## 10.3.1　サンプルプログラムの全体
+
+********************
+********************
+
+====================
+# 10.4　ファイル選択ダイアログ（GtkFileChooserDialog）
+
+![サンプル10-4](10-4.png)
+
+====================
+## 10.4.1　サンプルプログラムの全体
+
+********************
+********************
+
+====================
+# 10.5　カスタムダイアログ
+
+![サンプル10-5](10-5.png)
+
+====================
+## 10.5.1　サンプルプログラムの全体
+
+********************
+********************
+
+====================
 # 11　クリップボード（GtkClipboard）
+
+![サンプル11](11.png)
+
+　GtkClipboardは、複数のプログラムで共有することができる、テキストや画像などの様々なデータを一時的に保存するための場所、いわゆるクリップボードを操作するためのオブジェクトです。
+
+　Windows以外の環境では、複数の種類のクリップボードを使うことができる場合もあるようですが、Windowsでは1つのみです。
+
+====================
+## 11.1　サンプルプログラムの全体
+
+********************
+    // コールバック関数を使うための準備
+    #include "hscallbk.as"
+    #uselib ""
+    #func cb_win_delete_event ""
+    #func cb_btn_copy_text_clicked ""
+    #func cb_btn_paste_text_clicked ""
+    #func cb_btn_copy_image_clicked ""
+    #func cb_btn_paste_image_clicked ""
+    
+    // GTK+の関数を使うための準備
+    #uselib "libgtk-3-0.dll"
+    #func global gtk_init "gtk_init" sptr, sptr
+    #func global gtk_window_new "gtk_window_new" int
+    #const GTK_WINDOW_TOPLEVEL 0
+    #func global gtk_widget_show_all "gtk_widget_show_all" sptr
+    #func global gtk_main "gtk_main"
+    #func global gtk_main_quit "gtk_main_quit"
+    #func global gtk_container_add "gtk_container_add" sptr, sptr
+    #func global gtk_table_new "gtk_table_new" int, int, int
+    #func global gtk_table_attach_defaults "gtk_table_attach_defaults" sptr, sptr, int, int, int, int
+    #func global gtk_entry_new "gtk_entry_new" 
+    #func global gtk_entry_get_text "gtk_entry_get_text" sptr
+    #func global gtk_entry_set_text "gtk_entry_set_text" sptr, sptr
+    #func global gtk_entry_get_text_length "gtk_entry_get_text_length" sptr
+    #func global gtk_entry_get_buffer "gtk_entry_get_buffer" sptr
+    #func global gtk_entry_buffer_get_text "gtk_entry_buffer_get_text" sptr
+    #func global gtk_image_new_from_stock "gtk_image_new_from_stock" str, int
+    #define GTK_STOCK_STOP "gtk-stop"
+    #const GTK_ICON_SIZE_MENU 1
+    #func global gtk_image_get_storage_type "gtk_image_get_storage_type" sptr
+    #const GTK_IMAGE_PIXBUF 1
+    #func global gtk_image_get_pixbuf "gtk_image_get_pixbuf" sptr
+    #func global gtk_image_set_from_pixbuf "gtk_image_set_from_pixbuf" sptr, sptr
+    #func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
+    #func global gtk_clipboard_get "gtk_clipboard_get" int
+    #const GDK_SELECTION_CLIPBOARD  69
+    #func global gtk_clipboard_set_text "gtk_clipboard_set_text" sptr, sptr, int
+    #func global gtk_clipboard_wait_for_text "gtk_clipboard_wait_for_text" sptr
+    #func global gtk_clipboard_set_image "gtk_clipboard_set_image" sptr, sptr
+    #func global gtk_clipboard_wait_for_image "gtk_clipboard_wait_for_image" sptr
+    
+    #uselib "libgobject-2.0-0.dll"
+    #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+    #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+    
+    // よく使う定数
+    ; ヌルポインタ
+    #const NULL 0
+    ; 真偽値
+    #const FALSE 0
+    #const TRUE 1
+    
+    	// GTK+初期化
+    	gtk_init NULL, NULL
+    
+    	// ウィンドウ生成
+    	gtk_window_new GTK_WINDOW_TOPLEVEL
+    	win = stat
+    	setcallbk cbwindeleteevent, cb_win_delete_event, *on_win_delete_event
+    	g_signal_connect win, "delete-event", varptr( cbwindeleteevent ), NULL
+    
+    	// テーブル生成
+    	gtk_table_new 2, 3, FALSE
+    	tbl = stat
+    
+    	// エントリ生成
+    	gtk_entry_new
+    	ent = stat
+    
+    	// イメージ生成
+    	gtk_image_new_from_stock GTK_STOCK_STOP, GTK_ICON_SIZE_MENU
+    	img = stat
+    
+    	// ボタン群生成
+    	gtk_button_new_with_label "Copy Text"
+    	btn_copy_text = stat
+    	setcallbk cbbtncopytextclicked, cb_btn_copy_text_clicked, *on_btn_copy_text_clicked
+    	g_signal_connect btn_copy_text, "clicked", varptr( cbbtncopytextclicked ), NULL
+    
+    	gtk_button_new_with_label "Paste Text"
+    	btn_paste_text = stat
+    	setcallbk cbbtnpastetextclicked, cb_btn_paste_text_clicked, *on_btn_paste_text_clicked
+    	g_signal_connect btn_paste_text, "clicked", varptr( cbbtnpastetextclicked ), NULL
+    
+    	gtk_button_new_with_label "Copy Image"
+    	btn_copy_image = stat
+    	setcallbk cbbtncopyimageclicked, cb_btn_copy_image_clicked, *on_btn_copy_image_clicked
+    	g_signal_connect btn_copy_image, "clicked", varptr( cbbtncopyimageclicked ), NULL
+    
+    	gtk_button_new_with_label "Paste Image"
+    	btn_paste_image = stat
+    	setcallbk cbbtnpasteimageclicked, cb_btn_paste_image_clicked, *on_btn_paste_image_clicked
+    	g_signal_connect btn_paste_image, "clicked", varptr( cbbtnpasteimageclicked ), NULL
+    
+    	// クリップボード取得
+    	gtk_clipboard_get GDK_SELECTION_CLIPBOARD
+    	clp = stat
+    
+    	// ウィンドウの組み立て
+    	gtk_table_attach_defaults tbl, ent, 0, 1, 0, 1
+    	gtk_table_attach_defaults tbl, img, 0, 1, 1, 2
+    	gtk_table_attach_defaults tbl, btn_copy_text, 1, 2, 0, 1
+    	gtk_table_attach_defaults tbl, btn_paste_text, 2, 3, 0, 1
+    	gtk_table_attach_defaults tbl, btn_copy_image, 1, 2, 1, 2
+    	gtk_table_attach_defaults tbl, btn_paste_image, 2, 3, 1, 2
+    	gtk_container_add win, tbl
+    
+    	// ウィンドウの表示とメインループの開始
+    	gtk_widget_show_all win
+    	gtk_main
+    	end
+    
+    /* シグナルハンドラ */
+    *on_win_delete_event
+    	gtk_main_quit
+    	return
+    
+    *on_btn_copy_text_clicked
+    	gtk_entry_get_text ent
+    	gtk_clipboard_set_text clp, stat, -1
+    	return
+    
+    *on_btn_paste_text_clicked
+    	gtk_clipboard_wait_for_text clp
+    	ptr = stat
+    	if ptr {
+    		gtk_entry_set_text ent, ptr
+    	}
+    	else {
+    		mes "No text on the clipboard."
+    	}
+    	return
+    
+    *on_btn_copy_image_clicked
+    	gtk_image_get_storage_type img
+    	type = stat
+    	if ( type = GTK_IMAGE_PIXBUF ) {
+    		gtk_image_get_pixbuf img
+    		gtk_clipboard_set_image clp, stat
+    	}
+    	else {
+    		mes "No Pixbuf has been pasted yet."
+    	}
+    	return
+    
+    *on_btn_paste_image_clicked
+    	gtk_clipboard_wait_for_image clp
+    	pixbuf = stat
+    	if pixbuf {
+    		gtk_image_set_from_pixbuf img, pixbuf
+    	}
+    	else {
+    		mes "No Pixbuf on the clipboard."
+    	}
+    	return
+********************
 
 ====================
 # 12　プログレスバー（GtkProgressBar）
 
+![サンプル12](12.png)
+
+　GtkProgressBarウィジェットは、通常、長い時間がかかる作業の進行状況を表示するのに使われます。GtkProgressBarがあると、作業がどれくらい進んだか、あるいは、作業が正常に進んでいること、を視覚的に示すことができます。
+
+　GtkProgressBarには、2種類の動作モードがあり、プログラムが行う作業の質によって、それらを使い分けられるようになっています。
+
+　1つは、作業の詳細な進行度を表示することができる、パーセンテージ（percentage）モードです。
+
+　このモードは、プログラムが行う作業の量と進行度が計算可能な場合に利用します。このとき、バーは、進行度のパーセンテージを表す値を与えると、アナログの温度計のように目盛りが伸び縮みします。
+
+　そして、もう1つのモードは、上記の計算が難しい場合に利用する、アクティビティ（activity）モードです。
+
+　このモードでは、バーの表示エリア内を、一定の大きさのブロックが、左右に移動することによって、作業が進行中であることをユーザに伝えます。
+
+　GtkProgressBarは、この他に、ウィジェット自体の縦向き横向きを変更する、パーセンテージモードの目盛りが伸びる方向を変更する、文字列をバーに重ねて表示する、などの機能を持っています。
+
+====================
+## 12.1　サンプルプログラムの全体
+
+********************
+    // コールバック関数を使うための準備
+    #include "hscallbk.as"
+    #uselib ""
+    #func cb_window_delete_event ""
+    #func cb_btn_text_toggled ""
+    #func cb_btn_mode_toggled ""
+    #func cb_btn_direction_toggled ""
+    #func cb_timeout ""
+    
+    // GTK+の関数を使うための準備
+    #uselib "libgtk-3-0.dll"
+    #func global gtk_init "gtk_init" sptr, sptr
+    #func global gtk_settings_get_default "gtk_settings_get_default"
+    #func global gtk_settings_set_string_property "gtk_settings_set_string_property" sptr, sptr, sptr, sptr
+    #func global gtk_window_new "gtk_window_new" int
+    #const GTK_WINDOW_TOPLEVEL 0
+    #func global gtk_widget_show_all "gtk_widget_show_all" sptr
+    #func global gtk_main "gtk_main"
+    #func global gtk_main_quit "gtk_main_quit"
+    #func global gtk_container_set_border_width "gtk_container_set_border_width" sptr, int
+    #func global gtk_container_add "gtk_container_add" sptr, sptr
+    #func global gtk_vbox_new "gtk_vbox_new" int, int
+    #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
+    #func global gtk_progress_bar_new "gtk_progress_bar_new"
+    #func global gtk_progress_bar_set_text "gtk_progress_bar_set_text" sptr, sptr
+    #func global gtk_progress_bar_set_show_text "gtk_progress_bar_set_show_text" sptr, int
+    #func global gtk_progress_bar_set_inverted "gtk_progress_bar_set_inverted" sptr, int
+    #func global gtk_progress_bar_pulse "gtk_progress_bar_pulse" sptr
+    #cfunc global gtk_progress_bar_get_fraction "gtk_progress_bar_get_fraction" sptr
+    #func global gtk_progress_bar_set_fraction "gtk_progress_bar_set_fraction" sptr, double
+    #func global gtk_check_button_new_with_label "gtk_check_button_new_with_label" sptr
+    #func global gtk_toggle_button_get_active "gtk_toggle_button_get_active" sptr
+    #func global gtk_toggle_button_set_active "gtk_toggle_button_set_active" sptr, int
+    #func global gtk_widget_set_sensitive "gtk_widget_set_sensitive" sptr, int
+    
+    #uselib "libgobject-2.0-0.dll"
+    #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+    #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+    
+    #uselib "libglib-2.0-0.dll"
+    #func global g_timeout_add "g_timeout_add" int, sptr, sptr
+    
+    // よく使う定数
+    ; ヌルポインタ
+    #const NULL 0
+    ; 真偽値
+    #const FALSE 0
+    #const TRUE 1
+    
+    	// GTK+初期化
+    	gtk_init NULL, NULL
+    
+    	// ウィンドウ生成
+    	gtk_window_new GTK_WINDOW_TOPLEVEL
+    	win = stat
+    	gtk_container_set_border_width win, 10
+    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
+    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+    
+    	// VBox生成
+    	gtk_vbox_new FALSE, 6
+    	vbox = stat
+    
+    	// プログレスバー生成
+    	gtk_progress_bar_new
+    	pbar = stat
+    	percent = 0
+    	gosub *update_fraction
+    	gtk_progress_bar_set_show_text pbar, TRUE
+    
+    	// チェックボタン群生成
+    	gtk_check_button_new_with_label "Show text"
+    	btn_text = stat
+    	gtk_toggle_button_set_active btn_text, TRUE
+    	setcallbk cbbtntexttoggled, cb_btn_text_toggled, *on_btn_text_toggled
+    	g_signal_connect btn_text, "toggled", varptr( cbbtntexttoggled ), NULL
+    
+    	gtk_check_button_new_with_label "Activity mode"
+    	btn_mode = stat
+    	setcallbk cbbtnmodetoggled, cb_btn_mode_toggled, *on_btn_mode_toggled
+    	g_signal_connect btn_mode, "toggled", varptr( cbbtnmodetoggled ), NULL
+    
+    	gtk_check_button_new_with_label "Right to Left"
+    	btn_direction = stat
+    	setcallbk cbbtndirectiontoggled, cb_btn_direction_toggled, *on_btn_direction_toggled
+    	g_signal_connect btn_direction, "toggled", varptr( cbbtndirectiontoggled ), NULL
+    
+    	// ウィンドウの組み立て
+    	gtk_box_pack_start vbox, pbar, TRUE, TRUE, 0
+    	gtk_box_pack_start vbox, btn_text, TRUE, TRUE, 0
+    	gtk_box_pack_start vbox, btn_mode, TRUE, TRUE, 0
+    	gtk_box_pack_start vbox, btn_direction, TRUE, TRUE, 0
+    	gtk_container_add win, vbox
+    
+    	// プログレスバー更新関数の登録
+    	setcallbk cbtimeout, cb_timeout, *on_timeout
+    	g_timeout_add 200, varptr( cbtimeout ), NULL
+    
+    	// ウィンドウの表示とメインループの開始
+    	gtk_widget_show_all win
+    	gtk_main
+    	end
+    
+    /* シグナルハンドラ */
+    *on_window_delete_event
+    	gtk_main_quit
+    	return
+    
+    *on_btn_text_toggled
+    	gtk_toggle_button_get_active btn_text
+    	gtk_progress_bar_set_show_text pbar, stat
+    	return
+    
+    *on_btn_mode_toggled
+    	gtk_toggle_button_get_active btn_mode
+    	if stat {
+    		gtk_progress_bar_set_show_text pbar, FALSE
+    		gtk_progress_bar_pulse pbar
+    		gtk_widget_set_sensitive btn_text, FALSE
+    	}
+    	else {
+    		percent = 0
+    		gosub *update_fraction
+    		gtk_widget_set_sensitive btn_text, TRUE
+    		gosub *on_btn_text_toggled
+    	}
+    	return
+    
+    *on_btn_direction_toggled
+    	gtk_toggle_button_get_active btn_direction
+    	gtk_progress_bar_set_inverted pbar, stat
+    	return
+    
+    /* その他のコールバック関数 */
+    *on_timeout
+    	gtk_toggle_button_get_active btn_mode
+    	if stat {
+    		gtk_progress_bar_pulse pbar
+    	}
+    	else {
+    		percent += 1
+    		if percent > 100 {
+    			percent = 0
+    		}
+    		gosub *update_fraction
+    	}
+    	return
+    
+    /* サブルーチン */
+    *update_fraction
+    	gtk_progress_bar_set_fraction pbar, ( double( percent ) / 100 )
+    	gtk_progress_bar_set_text pbar, "" + percent + "%"
+    	return
+********************
+
 ====================
 # 13　スピナー（GtkSpinner）
 
+![サンプル13](13.png)
+
+　GtkSpinnerウィジェットは、アイコンサイズのイメージがアニメーションするだけのウィジェットです。作業量や作業の進行度が計りにくい処理を行うときなどに、しばしば、GtkProgressBarウィジェットの代わりに使われます。
+
+　機能はとてもシンプルで、アニメーションの開始と停止のみです。
+
 ====================
-# 14　テキストエディタ（GtkTextView）
+## 13.1　サンプルプログラムの全体
+
+********************
+    // コールバック関数を使うための準備
+    #include "hscallbk.as"
+    #uselib ""
+    #func cb_window_delete_event ""
+    #func cb_btn_toggled ""
+    
+    // GTK+の関数を使うための準備
+    #uselib "libgtk-3-0.dll"
+    #func global gtk_init "gtk_init" sptr, sptr
+    #func global gtk_window_new "gtk_window_new" int
+    #const GTK_WINDOW_TOPLEVEL 0
+    #func global gtk_widget_show_all "gtk_widget_show_all" sptr
+    #func global gtk_main "gtk_main"
+    #func global gtk_main_quit "gtk_main_quit"
+    #func global gtk_container_set_border_width "gtk_container_set_border_width" sptr, int
+    #func global gtk_container_add "gtk_container_add" sptr, sptr
+    #func global gtk_vbox_new "gtk_vbox_new" int, int
+    #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
+    #func global gtk_toggle_button_new_with_label "gtk_toggle_button_new_with_label" sptr
+    #func global gtk_toggle_button_set_active "gtk_toggle_button_get_active" sptr, int
+    #func global gtk_toggle_button_get_active "gtk_toggle_button_get_active" sptr
+    #func global gtk_button_set_label "gtk_button_set_label" sptr, sptr
+    #func global gtk_spinner_new "gtk_spinner_new"
+    #func global gtk_spinner_start "gtk_spinner_start" sptr
+    #func global gtk_spinner_stop "gtk_spinner_stop" sptr
+    
+    #uselib "libgobject-2.0-0.dll"
+    #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+    #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+    
+    // よく使う定数
+    ; ヌルポインタ
+    #const NULL 0
+    ; 真偽値
+    #const FALSE 0
+    #const TRUE 1
+    
+    	// GTK+初期化
+    	gtk_init NULL, NULL
+    
+    	// ウィンドウ生成
+    	gtk_window_new GTK_WINDOW_TOPLEVEL
+    	win = stat
+    	gtk_container_set_border_width win, 5
+    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
+    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+    
+    	// VBox生成
+    	gtk_vbox_new FALSE, 6
+    	vbox = stat
+    
+    	// トグルボタン生成
+    	gtk_toggle_button_new_with_label "Start Spinning"
+    	btn = stat
+    	gtk_toggle_button_set_active btn, FALSE
+    	setcallbk cbbtntoggled, cb_btn_toggled, *on_btn_toggled
+    	g_signal_connect btn, "toggled", varptr( cbbtntoggled ), NULL
+    
+    	// スピナー生成
+    	gtk_spinner_new
+    	spn = stat
+    
+    	// ウィンドウの組み立て
+    	gtk_box_pack_start vbox, btn, TRUE, TRUE, 0
+    	gtk_box_pack_start vbox, spn, TRUE, TRUE, 10
+    	gtk_container_add win, vbox
+    
+    	// ウィンドウの表示とメインループの開始
+    	gtk_widget_show_all win
+    	gtk_main
+    	end
+    
+    /* シグナルハンドラ */
+    *on_window_delete_event
+    	gtk_main_quit
+    	return
+    
+    *on_btn_toggled
+    	gtk_toggle_button_get_active btn
+    	if stat {
+    		gtk_spinner_start spn
+    		gtk_button_set_label btn, "Stop Spinning"
+    	}
+    	else {
+    		gtk_spinner_stop spn
+    		gtk_button_set_label btn, "Start Spinning"
+    	}
+    	return
+********************
+
+====================
+# 14　テキストビュー（GtkTextView）
 
 ====================
 # 15　コンボボックス（GtkComboBox）
 
 ![サンプル15](15.png)
 
-　コンボボックスウィジェットは、プログラムのユーザに複数の選択肢から1つを選んでもらう機能を作れる、という点では、GtkRadioButtonと似ていますが、選択肢をドロップダウンメニューとして表示するので、ウィンドウ上のスペースを節約したい時には、コンボボックスの方が便利です。
+　コンボボックスは、プログラムのユーザに複数の選択肢から1つを選んでもらう機能を作れる、という点では、ラジオボタンと似ていますが、選択肢をドロップダウンメニューとして表示するので、ウィンドウ上のスペースを節約したい時には、コンボボックスの方が向いています。
 
-　GTK+のコンボボックスには、ドロップダウンメニューに文字列しか表示できない代わりに、より簡単に使うことができるGtkComboBoxTextウィジェットと、メニュー項目内に色々ななものを表示できる一方、使い方が少々複雑なGtkComboBoxウィジェットの2種類があります。
+　GTK+のコンボボックスには、ドロップダウンメニューに文字列しか表示できない代わりに、より簡単に使うことができるGtkComboBoxTextウィジェットと、メニュー項目内に色々なものを表示できる一方、使い方が少々複雑なGtkComboBoxウィジェットの2種類があります。
 
 　これらのうち、高機能な方のGtkComboBoxウィジェットをうまく使いこなすには、全体の器としてのGtkComboBox、メニューに表示するためのデータを表すGtkListStore、データの表示方法の詳細をコントロールするためのGtkCellRenderer群、の3つのクラスを適切に連携させる必要があります。
 
@@ -2115,7 +3235,7 @@ GTK+での継承の形
     	gtk_vbox_new FALSE, 5
     	vbx = stat
     
-    	// コンボボックス1（テキスト専用）生成
+    	// コンボボックス1（文字列専用）生成
     	gtk_combo_box_text_new
     	cmb1 = stat
     	gtk_combo_box_text_append cmb1, "1", "item1(1)"
@@ -2124,7 +3244,7 @@ GTK+での継承の形
     	setcallbk cbcombobox1changed, cb_combobox1_changed, *on_combobox1_changed
     	g_signal_connect cmb1, "changed", varptr( cbcombobox1changed ), NULL
     
-    	// コンボボックス2（テキスト専用、エントリ付き）生成
+    	// コンボボックス2（文字列専用、エントリ付き）生成
     	gtk_combo_box_text_new_with_entry
     	cmb2 = stat
     	gtk_combo_box_text_append_text cmb2, "item1(2)"
@@ -2295,11 +3415,8 @@ GTK+での継承の形
 # 18　アイコンビュー（GtkIconView）
 
 ====================
-# 19　GTK+のドラッグアンドドロップ機能
+# 19　ドラッグアンドドロップ機能
 
 ====================
-# 20　GladeインターフェースデザイナーとGtkBuilderクラス
-
-====================
-# 21　オブジェクト
+# 20　GladeインターフェースデザイナとGtkBuilderオブジェクト
 

@@ -53,12 +53,12 @@
 	setcallbk	cbbutton1toggled, cb_button1_toggled, *on_button1_toggled
 	g_signal_connect	btn1, "toggled", varptr( cbbutton1toggled ), NULL
 
-	gtk_radio_button_new_with_label_from_widget	btn1, "_Button 2"
+	gtk_radio_button_new_with_label_from_widget	btn1, "Button _2"
 	btn2	= stat
 	setcallbk	cbbutton2toggled, cb_button2_toggled, *on_button2_toggled
 	g_signal_connect	btn2, "toggled", varptr( cbbutton2toggled ), NULL
 
-	gtk_radio_button_new_with_mnemonic_from_widget	btn1, "_Button 3"
+	gtk_radio_button_new_with_mnemonic_from_widget	btn1, "Button _3"
 	btn3	= stat
 	setcallbk	cbbutton3toggled, cb_button3_toggled, *on_button3_toggled
 	g_signal_connect	btn3, "toggled", varptr( cbbutton3toggled ), NULL

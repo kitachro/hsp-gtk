@@ -264,13 +264,13 @@
 ;#func global gdk_rectangle_get_type "" 
 ;#func global gdk_rectangle_intersect "" 
 ;#func global gdk_rectangle_union "" 
-;#func global gdk_rgba_copy "" 
-;#func global gdk_rgba_equal "" 
-;#func global gdk_rgba_free "" 
+#func global gdk_rgba_copy "gdk_rgba_copy" sptr
+#func global gdk_rgba_equal "gdk_rgba_equal" sptr, sptr
+#func global gdk_rgba_free "gdk_rgba_free" sptr
 ;#func global gdk_rgba_get_type "" 
-;#func global gdk_rgba_hash "" 
-;#func global gdk_rgba_parse "" 
-;#func global gdk_rgba_to_string "" 
+#func global gdk_rgba_hash "gdk_rgba_hash" sptr
+#func global gdk_rgba_parse "gdk_rgba_parse" sptr, sptr
+#func global gdk_rgba_to_string "gdk_rgba_to_string" sptr
 ;#func global gdk_screen_get_active_window "" 
 ;#func global gdk_screen_get_default "" 
 ;#func global gdk_screen_get_display "" 
@@ -526,6 +526,23 @@
 #define GDK_BUTTON_PRIMARY    1
 #define GDK_BUTTON_MIDDLE     2
 #define GDK_BUTTON_SECONDARY  3
+
+#const GDK_SELECTION_PRIMARY  1
+#const GDK_SELECTION_SECONDARY  2
+#const GDK_SELECTION_CLIPBOARD  69
+#const GDK_TARGET_BITMAP  5
+#const GDK_TARGET_COLORMAP  7
+#const GDK_TARGET_DRAWABLE  17
+#const GDK_TARGET_PIXMAP  20
+#const GDK_TARGET_STRING  31
+#const GDK_SELECTION_TYPE_ATOM  4
+#const GDK_SELECTION_TYPE_BITMAP  5
+#const GDK_SELECTION_TYPE_COLORMAP  7
+#const GDK_SELECTION_TYPE_DRAWABLE  17
+#const GDK_SELECTION_TYPE_INTEGER 19
+#const GDK_SELECTION_TYPE_PIXMAP  20
+#const GDK_SELECTION_TYPE_WINDOW  33
+#const GDK_SELECTION_TYPE_STRING  31
 
 
 #endif

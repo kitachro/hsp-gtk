@@ -85,8 +85,7 @@
 		sdim	rgba, 32
 		gtk_color_chooser_get_rgba	dlg, rgba
 		gdk_rgba_to_string	rgba
-		ptr	= stat
-		dupptr	str_rgba, ptr, 100, 2	: mes	str_rgba
+		dupptr	str_rgba, stat, 100, 2	: mes	str_rgba
 	}
 	return
 

@@ -129,7 +129,7 @@
 ;#func global g_object_freeze_notify "" 
 ;#func global g_object_get "" 
 #func global g_object_get_data "g_object_get_data" sptr, sptr
-;#func global g_object_get_property "" 
+#func global g_object_get_property "g_object_get_property" sptr, sptr, sptr
 ;#func global g_object_get_qdata "" 
 ;#func global g_object_get_type "" 
 ;#func global g_object_get_valist "" 
@@ -152,7 +152,7 @@
 ;#func global g_object_set "" 
 #func global g_object_set_data "g_object_set_data" sptr, sptr, sptr
 ;#func global g_object_set_data_full "" 
-;#func global g_object_set_property "" 
+#func global g_object_set_property "g_object_set_property" sptr, sptr, sptr
 ;#func global g_object_set_qdata "" 
 ;#func global g_object_set_qdata_full "" 
 ;#func global g_object_set_valist "" 

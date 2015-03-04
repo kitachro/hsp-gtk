@@ -783,7 +783,7 @@
 #func global gtk_dialog_run "gtk_dialog_run" sptr
 ;#func global gtk_dialog_set_alternative_button_order "" 
 ;#func global gtk_dialog_set_alternative_button_order_from_array "" 
-;#func global gtk_dialog_set_default_response "" 
+#func global gtk_dialog_set_default_response "gtk_dialog_set_default_response" sptr, int
 ;#func global gtk_dialog_set_has_separator "" 
 ;#func global gtk_dialog_set_response_sensitive "" 
 ;#func global gtk_direction_type_get_type "" 
@@ -1019,7 +1019,7 @@
 ;#func global gtk_file_chooser_dialog_get_type "" 
 ;#func global gtk_file_chooser_dialog_new "" 
 ;#func global gtk_file_chooser_dialog_new1 "gtk_file_chooser_dialog_new" sptr, sptr, int, str, int, int
-;#func global gtk_file_chooser_dialog_new2 "gtk_file_chooser_dialog_new" sptr, sptr, int, str, int, str, int, int
+#func global gtk_file_chooser_dialog_new2 "gtk_file_chooser_dialog_new" sptr, sptr, int, str, int, str, int, int
 ;#func global gtk_file_chooser_dialog_new_with_backend "" 
 ;#func global gtk_file_chooser_error_get_type "" 
 ;#func global gtk_file_chooser_error_quark "" 
@@ -1032,7 +1032,7 @@
 ;#func global gtk_file_chooser_get_do_overwrite_confirmation "" 
 ;#func global gtk_file_chooser_get_extra_widget "" 
 ;#func global gtk_file_chooser_get_file "" 
-;#func global gtk_file_chooser_get_filename "gtk_file_chooser_get_filename" sptr
+#func global gtk_file_chooser_get_filename "gtk_file_chooser_get_filename" sptr
 ;#func global gtk_file_chooser_get_filename_utf8 "" 
 ;#func global gtk_file_chooser_get_filenames "" 
 ;#func global gtk_file_chooser_get_filenames_utf8 "" 
@@ -1070,11 +1070,11 @@
 ;#func global gtk_file_chooser_set_current_folder_file "" 
 ;#func global gtk_file_chooser_set_current_folder_uri "" 
 ;#func global gtk_file_chooser_set_current_folder_utf8 "" 
-;#func global gtk_file_chooser_set_current_name "" 
-;#func global gtk_file_chooser_set_do_overwrite_confirmation "" 
+#func global gtk_file_chooser_set_current_name "gtk_file_chooser_set_current_name" sptr, sptr
+#func global gtk_file_chooser_set_do_overwrite_confirmation "gtk_file_chooser_set_do_overwrite_confirmation" sptr, int
 ;#func global gtk_file_chooser_set_extra_widget "" 
 ;#func global gtk_file_chooser_set_file "" 
-;#func global gtk_file_chooser_set_filename "" 
+#func global gtk_file_chooser_set_filename "gtk_file_chooser_set_filename" sptr, sptr
 ;#func global gtk_file_chooser_set_filename_utf8 "" 
 ;#func global gtk_file_chooser_set_filter "" 
 ;#func global gtk_file_chooser_set_local_only "" 
@@ -1137,6 +1137,23 @@
 ;#func global gtk_font_button_set_title "" 
 ;#func global gtk_font_button_set_use_font "" 
 ;#func global gtk_font_button_set_use_size "" 
+;#func global gtk_font_chooser_dialog_get_type "" 
+#func global gtk_font_chooser_dialog_new "gtk_font_chooser_dialog_new" sptr, sptr
+#func global gtk_font_chooser_get_font "gtk_font_chooser_get_font" sptr
+#func global gtk_font_chooser_get_font_desc "gtk_font_chooser_get_font_desc" sptr
+#func global gtk_font_chooser_get_font_face "gtk_font_chooser_get_font_face" sptr
+#func global gtk_font_chooser_get_font_family "gtk_font_chooser_get_font_family" sptr
+#func global gtk_font_chooser_get_font_size "gtk_font_chooser_get_font_size" sptr
+#func global gtk_font_chooser_get_preview_text "gtk_font_chooser_get_preview_text" sptr
+#func global gtk_font_chooser_get_show_preview_entry "gtk_font_chooser_get_show_preview_entry" sptr
+;#func global gtk_font_chooser_get_type "" 
+#func global gtk_font_chooser_set_filter_func "gtk_font_chooser_set_filter_func" sptr, sptr, sptr, sptr
+#func global gtk_font_chooser_set_font "gtk_font_chooser_set_font" sptr, sptr
+#func global gtk_font_chooser_set_font_desc "gtk_font_chooser_set_font_desc" sptr, sptr
+#func global gtk_font_chooser_set_preview_text "gtk_font_chooser_set_preview_text" sptr, sptr
+#func global gtk_font_chooser_set_show_preview_entry "gtk_font_chooser_set_show_preview_entry" sptr, int
+;#func global gtk_font_chooser_widget_get_type "" 
+#func global gtk_font_chooser_widget_new "gtk_font_chooser_widget_new"
 ;#func global gtk_font_selection_dialog_get_apply_button "" 
 ;#func global gtk_font_selection_dialog_get_cancel_button "" 
 ;#func global gtk_font_selection_dialog_get_font "" 
@@ -3901,7 +3918,7 @@
 ;#func global gtk_window_set_keep_below "" 
 ;#func global gtk_window_set_mnemonic_modifier "" 
 ;#func global gtk_window_set_mnemonics_visible "" 
-;#func global gtk_window_set_modal "" 
+#func global gtk_window_set_modal "gtk_window_set_modal" sptr, int
 ;#func global gtk_window_set_opacity "" 
 ;#func global gtk_window_set_policy "" 
 ;#func global gtk_window_set_position "" 

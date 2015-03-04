@@ -1,0 +1,172 @@
+// コールバック関数を使うための準備
+#include "hscallbk.as"
+#uselib ""
+#func cb_win_delete_event ""
+#func cb_btn1_clicked ""
+#func cb_btn2_clicked ""
+#func cb_btn3_clicked ""
+
+// GTK+の関数を使うための準備
+#uselib "libgtk-3-0.dll"
+#func global gtk_init "gtk_init" sptr, sptr
+#func global gtk_settings_get_default "gtk_settings_get_default"
+#func global gtk_settings_set_string_property "gtk_settings_set_string_property" sptr, sptr, sptr, sptr
+#func global gtk_window_new "gtk_window_new" int
+#const	GTK_WINDOW_TOPLEVEL	0
+#func global gtk_container_add "gtk_container_add" sptr, sptr
+#func global gtk_widget_show_all "gtk_widget_show_all" sptr
+#func global gtk_main "gtk_main"
+#func global gtk_main_quit "gtk_main_quit"
+#func global gtk_hbox_new "gtk_hbox_new" int, int
+#func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
+#func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
+#func global gtk_file_chooser_dialog_new2 "gtk_file_chooser_dialog_new" sptr, sptr, int, str, int, str, int, int
+#func global gtk_window_set_modal "gtk_window_set_modal" sptr, int
+#func global gtk_file_chooser_set_current_name "gtk_file_chooser_set_current_name" sptr, sptr
+#func global gtk_file_chooser_set_do_overwrite_confirmation "gtk_file_chooser_set_do_overwrite_confirmation" sptr, int
+; GtkFileChooserAction
+#enum GTK_FILE_CHOOSER_ACTION_OPEN = 0
+#enum GTK_FILE_CHOOSER_ACTION_SAVE
+#enum GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER
+; GtkStockItem
+#define GTK_STOCK_CANCEL           "gtk-cancel"
+#define GTK_STOCK_OPEN             "gtk-open"
+#define GTK_STOCK_SAVE_AS          "gtk-save-as"
+; GtkResponseType
+;#const GTK_RESPONSE_DELETE_EVENT -4
+;#const GTK_RESPONSE_CANCEL       -6
+#const GTK_RESPONSE_APPLY        -10
+#func global gtk_dialog_run "gtk_dialog_run" sptr
+#func global gtk_widget_hide "gtk_widget_hide" sptr
+#func global gtk_file_chooser_get_filename "gtk_file_chooser_get_filename" sptr
+
+#uselib "libgobject-2.0-0.dll"
+#func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+#define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+
+// よく使う関数
+#include "hspinet.as"
+#module
+#defcfunc u str chars_ ; shift-jis文字列をutf-8に変換
+	chars	= chars_
+	nkfcnv@	chars, chars, "Sw"
+	return	chars
+#defcfunc s str chars_ ; utf-8文字列をshift-jisに変換
+	chars	= chars_
+	nkfcnv@	chars, chars, "Ws"
+	return	chars
+#global
+
+// よく使う定数
+; ヌルポインタ
+#const	NULL	0
+; 真偽値
+#const	FALSE	0
+#const	TRUE	1
+
+	// GTK+初期化
+	gtk_init	NULL, NULL
+
+	// GTK+のデフォルトGUIフォントを変更
+	gtk_settings_get_default
+	gtk_settings_set_string_property	stat, "gtk-font-name", "ms ui gothic, 10 bold", NULL
+
+	// ウィンドウ生成
+	gtk_window_new	GTK_WINDOW_TOPLEVEL
+	win	= stat
+	setcallbk	cbwindeleteevent, cb_win_delete_event, *on_win_delete_event
+	g_signal_connect	win, "delete-event", varptr( cbwindeleteevent ), NULL
+
+	// HBox生成
+	gtk_hbox_new	FALSE, 10
+	hbox	= stat
+
+	// ボタン群生成
+	gtk_button_new_with_label	"Select File"
+	btn1	= stat
+	setcallbk	cbbtn1clicked, cb_btn1_clicked, *on_btn1_clicked
+	g_signal_connect	btn1, "clicked", varptr( cbbtn1clicked ), 0
+
+	gtk_button_new_with_label	"Select Folder"
+	btn2	= stat
+	setcallbk	cbbtn2clicked, cb_btn2_clicked, *on_btn2_clicked
+	g_signal_connect	btn2, "clicked", varptr( cbbtn2clicked ), 0
+
+	gtk_button_new_with_label	"Save File As"
+	btn3	= stat
+	setcallbk	cbbtn3clicked, cb_btn3_clicked, *on_btn3_clicked
+	g_signal_connect	btn3, "clicked", varptr( cbbtn3clicked ), 0
+
+	// ウィンドウの組み立て
+	gtk_box_pack_start	hbox, btn1, FALSE, FALSE, 0
+	gtk_box_pack_start	hbox, btn2, FALSE, FALSE, 0
+	gtk_box_pack_start	hbox, btn3, FALSE, FALSE, 0
+	gtk_container_add	win, hbox
+
+	// ウィンドウの表示とメインループの開始
+	gtk_widget_show_all	win
+	gtk_main
+	end
+
+/* シグナルハンドラ */
+*on_win_delete_event
+	gtk_main_quit
+	return
+
+*on_btn1_clicked
+	// ファイルオープンダイアログ
+	dlg		= dlg1
+	caption	= u( "ファイルを選択してください" )
+	action	= GTK_FILE_CHOOSER_ACTION_OPEN
+	btn_apply	= GTK_STOCK_OPEN
+
+	gosub	*create_dialog
+	dlg1	= dlg
+	gosub	*run_dialog
+	return
+
+*on_btn2_clicked
+	// フォルダオープンダイアログ
+	dlg		= dlg2
+	caption	= u( "フォルダを選択してください" )
+	action	= GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER
+	btn_apply	= GTK_STOCK_OPEN
+
+	gosub	*create_dialog
+	dlg2	= dlg
+	gosub	*run_dialog
+	return
+
+*on_btn3_clicked
+	// ファイルセーブダイアログ
+	dlg		= dlg3
+	caption	= u( "保存ファイル名を入力してください" )
+	action	= GTK_FILE_CHOOSER_ACTION_SAVE
+	btn_apply	= GTK_STOCK_SAVE_AS
+
+	gosub	*create_dialog
+	dlg3	= dlg
+	gosub	*run_dialog
+	return
+
+/* サブルーチン */
+*create_dialog
+	if dlg = NULL {
+		gtk_file_chooser_dialog_new2	caption, win, action, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, btn_apply, GTK_RESPONSE_APPLY, NULL
+		dlg	= stat
+		gtk_window_set_modal	dlg, TRUE
+		gtk_file_chooser_set_current_name	dlg, "untitled"
+		gtk_file_chooser_set_do_overwrite_confirmation	dlg, TRUE
+	}
+	return
+
+*run_dialog
+	gtk_dialog_run	dlg
+	if stat = GTK_RESPONSE_APPLY {
+		gtk_file_chooser_get_filename	dlg
+		ptr	= stat
+		dupptr	filename, ptr, 1024, 2
+		mes	s( filename ) + " selected"
+	}
+	gtk_widget_hide	dlg
+	return

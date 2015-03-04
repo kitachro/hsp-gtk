@@ -4,7 +4,7 @@
 : chrono (<https://github.com/kitachro>)
 
 最終更新日:
-: 2015年1月25日
+: 2015年3月1日
 
 ライセンス（Copyright）:
 : GNU Free Documentation License 1.3 with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts
@@ -31,7 +31,7 @@
 
 　このチュートリアルを読むにあたっては、"\share\gtk-doc\html\gtk3\api-index-full.html"、"\share\gtk-doc\html\glib\api-index-full.html"、"\share\gtk-doc\html\gobject\api-index-full.html"などのページを開いておくと、関数の仕様などを簡単に調べることができます。英語ですが、引数や戻り値の型を見るだけでも役に立ちます。
 
-　また、以上で説明した以外のファイルもプログラミングに役立ちますので、捨てずに、アーカイブのフォルダごと任意の場所に移動しておいてください。さらにこれらのファイル内のテキストを一気に全文検索できるソフトウェアを用意しておくと、プログラミングが捗ります。
+　また、以上で説明した以外のファイルもプログラミングに役立ちますので、捨てないようにしてください。さらにこれらのファイル内のテキストを一気に全文検索できるソフトウェアを用意しておくと、プログラミングが捗ります。
 
 　このチュートリアルで解説、および、サンプルスクリプトの動作確認に使用しているバージョンは、3.6.4です。将来のバージョン、あるいは、Windows以外のOSで利用できる最新版のGTK+では、仕様が変更されている場合があります。
 
@@ -46,7 +46,7 @@
 ## 1.3　サンプルプログラムの動作確認環境
 
 * Windows 7 Home Premium SP1 (32-bit)
-* Hot Soup Processor 3.32a
+* Hot Soup Processor 3.4
 * GTK+ for Windows all-in-one bundle 3.6.4 (32-bit)
 
 ====================
@@ -161,7 +161,9 @@
 
 　次の"*signal*"には、関連付けしたいシグナルの名前を指定します。シグナル名は、その元となるイベントを表すものになっていることが多いです。起こるイベント（＝受け取れるシグナル）は、プロパティと同じようにウィジェットごとにあらかじめ決まっており、例えば、GtkButtonウィジェットであれば、clickedシグナルに関数をconnectする場合が圧倒的に多いでしょう。clickedシグナルは、ウィジェットがクリックされた時に発生するシグナルです。
 
-　3番目の*callback*には、コールバック関数実装プラグインhscallbk.dllの、setcallbk命令の引数に指定したコールバック型の変数を指定します。hscallbk.dllを使用した場合、コールバック関数はラベルで始まりreturn命令で終わることになりますが、既に説明した通り、このラベルとreturnの間に、イベントが起こった時に実行したい処理を記述します。
+　3番目の*callback*には、コールバック関数実装プラグインhscallbk.dllの、setcallbk命令の引数に指定したコールバック型の変数を指定します。
+
+hscallbk.dllを使用した場合、コールバック関数はラベルで始まりreturn命令で終わることになりますが、既に説明した通り、このラベルとreturnの間に、イベントが起こった時に実行したい処理を記述します。
 
 　そして、最後の4つ目の引数ですが、本来ここには、コールバック関数が呼び出される時に引数として受け取りたいデータが入った変数のポインタを指定できるのですが、HSPからGTK+を利用する場合、g_signal_connect関数で関連付けしたコールバック関数の引数を利用しようとすると、エラーが発生して、スクリプトが強制終了してしまうことがあるため、この機能は、できる限り利用しないようにすることをおすすめします。その場合には、この引数には0を指定してください。
 
@@ -190,9 +192,9 @@
 
 　このdelete-eventシグナルのデフォルトハンドラ内では、トップレベルウィンドウが破棄される（＝画面上・メモリ上から消滅して、プログラムのユーザはもちろんプログラマからも利用できなくなる）のですが、ハンドラを抜けた後もプログラムのメインループは回り続けます。このハンドラは、あくまでウィンドウを破棄する責任のみを負っているからです。
 
-　このことは、プログラムが動き続けるにもかかわらず、プログラムのユーザが、（通常の方法では）プログラムを終了する手段がなくなってしまうことを意味します。そして、この動作にどう対処するかは、プログラマが決める必要があります。具体的には、自分で適切な処理を記述したハンドラをdelete-eventシグナルにconnectします。
+　このことは、トップレベルウィンドウを1つしか使わないプログラムの場合、プログラムが動き続けるにもかかわらず、プログラムのユーザが、（通常の方法では）プログラムを終了する手段がなくなってしまうことを意味します。そして、この動作にどう対処するかは、プログラマが決める必要があります。具体的には、自分で適切な処理を記述したハンドラをdelete-eventシグナルにconnectします。
 
-　ここで言う適切な処理には、おもに2種類あり、1つは、メインループを抜けてプログラムを終了させるもので、もう1つは、デフォルトハンドラの実行をキャンセルして、ユーザのウィンドウを閉じる操作をなかったことにするものです。通常、プログラマがconnectしたハンドラは、デフォルトハンドラよりも先に実行されるため、このような処理が可能になっています。
+　ここで言う適切な処理には、おもに2種類あり、1つは、メインループを抜けてプログラムを終了させるもので、もう1つは、デフォルトハンドラの実行をキャンセルして、ユーザのウィンドウを閉じる操作をなかったことにするものです。プログラマがdelete-eventシグナルにconnectしたハンドラは、デフォルトハンドラよりも先に実行されるため、このような処理が可能になっています。
 
 　メインループを抜けてプログラムを終了させる場合には、この項の冒頭に挙げたgtk_main_quit関数を呼び出します。この場合、すべてのシグナルハンドラからreturn後、プログラムの実行位置が、メインループに入るためのgtk_main関数の呼び出しの直後に戻りますので、その場所にend命令を書いておいて、実際にプログラムを終了させてください。
 
@@ -285,6 +287,7 @@
     #func global gtk_widget_show_all "gtk_widget_show_all" sptr
     #func global gtk_main "gtk_main"
     #func global gtk_main_quit "gtk_main_quit"
+    
     #uselib "libgobject-2.0-0.dll"
     #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
     #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
@@ -292,7 +295,7 @@
 
 　この部分は、GTK+3のDLLの関数を使えるようにするためのスクリプトです。分量的に全体の半分近くを占める長さですが、他のプログラムでも再利用できる部分です。
 
-　#uselib命令と#func命令の行は、HSPから一般的なDLLを利用するためのスクリプトとしてはありふれたものなので、その意味では難しいことはないと思います。DLLの関数を直接呼び出しますので、1章で紹介した、DLL添付のAPIリファレンスに載っている関数名がそのまま使えます。引数の型についても、リファレンスで調べて指定しています。
+　#uselib命令と#func命令の行は、HSPから一般的なDLLを利用するためのスクリプトとしてはありふれたものなので、その意味では難しいことはないと思います。関数の引数の型については、リファレンスで調べて指定しています。
 
 　#const命令と#define命令の行は、GTK+3のアーカイブに添付されているC言語用ヘッダファイルの内容をHSP向けに書き直したものです。
 
@@ -334,9 +337,7 @@
 
 　GTK_WINDOW_TOPLEVELを指定すると、いわゆるメインウィンドウ、トップレベルウィンドウを生成することができます。
 
-　GTK_WINDOW_POPUPは、ポップアップメニューやポップアップのツールチップを1から作りたいときに指定します。ですが、この定数を使うよりも簡単な方法があるので、使う機会はあまりないでしょう。この定数はダイアログを生成するためのものではありません。ダイアログを生成するには、別の専用の関数を実行する必要があります。
-
-ダイアログについては、10章で詳しく説明します。
+　GTK_WINDOW_POPUPは、ポップアップメニューやポップアップのツールチップを1から作りたいときに指定します。ですが、この定数を使うよりも簡単な方法があるので、使う機会はあまりないでしょう。この定数はダイアログを生成するためのものではありません。ダイアログを生成するには、別の専用の関数を実行する必要があります。ダイアログについては、10章で詳しく説明します。
 
 ====================
 ### 3.1.7　ウィンドウのシグナルとコールバック関数の関連付け
@@ -387,7 +388,7 @@
 
 　つづいて、もう1つ、トップレベルウィンドウにウィジェットを1つ置いてそれを動作させるプログラムを挙げます。
 
-　ウィンドウには、GtkButtonウィジェットを配置します。今回挙げるサンプルでは、clickedシグナルに短いサブルーチンをconnectして利用します。
+ウィンドウには、GtkButtonウィジェットを配置します。今回挙げるサンプルでは、clickedシグナルに短いサブルーチンをconnectして利用します。
 
 　GtkButtonを初めとする、ボタン系ウィジェットについては、5章で詳しく説明します。
 
@@ -480,9 +481,7 @@
 
 　ここでは、ウィンドウに載せるためのGtkButtonウィジェットを生成しています。
 
-　GtkButtonを生成する関数は、いくつかあるのですが、ここでは、gtk_button_new_with_label関数を使っています。
-
-　この関数は、ボタン上に表示する文字列を指定してウィジェットを生成することができます。
+GtkButtonを生成する関数は、いくつかあるのですが、ここでは、gtk_button_new_with_label関数を使っています。この関数は、ボタン上に表示する文字列を指定してウィジェットを生成することができます。
 
 　GtkButtonについては、5.1で詳しく説明します。
 
@@ -495,7 +494,7 @@
 
 　この部分では、ウィンドウにボタンを追加しています。
 
-　GtkWindowウィジェットに他のウィジェットを子として追加するには、gtk_container_add関数を使います。2つのウィジェットのインスタンスを引数として指定します。
+GtkWindowウィジェットに他のウィジェットを子として追加するには、gtk_container_add関数を使います。2つのウィジェットのインスタンスを引数として指定します。
 
 　GtkWindow上に複数のウィジェットを配置する方法については、6章で説明します。
 
@@ -517,9 +516,9 @@
 
 　そこでどうすれば良いかというと、必要に応じて、随時プログラム内で変換します。
 
-　1つの手段としては、HSPに標準で添付されている拡張プラグインのhspinet.dllにあるnkfcnv命令を使うといいでしょう。
+1つの手段としては、HSPに標準で添付されている拡張プラグインのhspinet.dllにあるnkfcnv命令を使うといいでしょう。
 
-　例えば、""で囲まれる形で、HSPのスクリプト上に直接書かれている文字列は、そのままでは当然シフトJISエンコーディングなので、nkfcnv命令でUTF-8エンコーディングに変換した上でGTK+の関数に渡します。
+例えば、""で囲まれる形で、HSPのスクリプト上に直接書かれている文字列は、そのままでは当然シフトJISエンコーディングなので、nkfcnv命令でUTF-8エンコーディングに変換した上でGTK+の関数に渡します。
 
 ********************
     #include "hspinet.as"
@@ -551,9 +550,9 @@
 
 　まずはじめに紹介するボタン系ウィジェットは、非常に使いでがあるウィジェット群です。ボタンは、通常、押されるアクションがあった時に何らかの処理が行われるように設定します。
 
-　ボタンは、画像や文字列をその上に表示することができます。これらのものもウィジェットで、最もよく利用されるのは、文字列を表示するためのGtkLabelウィジェットです。
+　ボタンには、画像や文字列を表示することができます。これらのものもウィジェットで、最もよく利用されるのは、文字列を表示するためのGtkLabelウィジェットです。
 
-　単純に画像や文字列を表示するだけではない、複雑なウィジェットを載せることもできなくはないですが、載せられた方のウィジェットをクリックできないなどの制限があるので、あまり意味がありません。
+単純に画像や文字列を表示するだけではない、複雑なウィジェットを載せることもできなくはないですが、載せられた方のウィジェットをクリックできないなどの制限があるので、あまり意味がありません。
 
 　この章では、用途や機能の異なる7つのボタン系ウィジェットを紹介します。
 
@@ -2394,15 +2393,203 @@
 ====================
 # 10　ダイアログ系ウィジェット
 
+　ダイアログは、ウィンドウの一種ですが、プログラムを実行している間つねに表示するのではなく、特定の状況でユーザと情報やデータをやりとりするために使います。
+
+例えば、プログラム中で何らかの処理が正常に終了した時、あるいは逆にうまくいかなかった時、特にそれを文章でユーザに伝えたい場合に、ダイアログに表示する形で示すことがよくあります。
+
+また、プログラムの設定変更画面や、その他各種情報入力用のインターフェースとしても、ダイアログはよく使われます。
+
+　GTK+のダイアログは、あらかじめレイアウトコンテナウィジェットによって上下2つのエリアに区切られており、通常のウィンドウよりも簡単にサッと組み立てて使うことができるようになっています。
+
+ダイアログの上側のエリアには、ユーザに提示する情報を含むウィジェットや、ユーザに何らかの情報を入力してもらうためのウィジェットを配置します。
+
+一方、下側のエリアには、ダイアログに表示された情報に対する返答や、ダイアログに入力した情報をどう扱ってほしいか、などをユーザがプログラムに伝えるためのボタンを配置します。
+
+上下どちらのエリアも、GtkDialogウィジェットに用意された関数を利用することで、簡単にウィジェットを追加することができます。
+
+　次のページから、GtkDialogウィジェットを使って独自のダイアログを作る方法、および、GtkDialogを継承して作られた、限定された用途向けのダイアログである、GtkMessageDialog、GtkColorChooserDialog、GtkFontChooserDialog、GtkFileChooserDialog、の各ウィジェットについて説明します。
+
 ====================
-## 10.1　メッセージダイアログ（GtkMessageDialog）
+## 10.1　GtkDialogウィジェットで独自のダイアログを作る
 
 ![サンプル10-1-1](10-1-1.png)
 ![サンプル10-1-2](10-1-2.png)
-![サンプル10-1-3](10-1-3.png)
+
+　生成直後のGtkDialogウィジェットには、プログラムのユーザが操作できるウィジェットは何も載せられていません。ですので、章の冒頭で説明した2つのエリアに、必要なウィジェットを1つ1つ追加していきます。
+
+　まず、content areaと呼ばれる上側のエリアですが、GtkDialogウィジェットのgtk_dialog_get_content_area関数を呼び出すと、content areaを表すGtkVBoxインスタンスが取得できますので、ここにウィジェットを追加します。
+
+　一方、action areaと呼ばれる下側のエリアには、gtk_dialog_add_button関数でボタンを直接追加することができます。
+
+　ダイアログの組み立てが終わったら、gtk_dialog_run関数を実行してダイアログを表示し、ダイアログ用のイベントループに入ります。この関数を使うと、ダイアログはモーダルで動作します。モーダルとは、ダイアログが表示されている間は同じプログラムの他のウィンドウを操作できない、という意味です。
+
+イベントループ中にaction areaのいずれかのボタンが押されると、ループから抜け、どのボタンが押されたかを表す値を戻り値としてgtk_dialog_run関数からreturnします。
+
+　その後、戻り値に応じた処理を行い、ダイアログを非表示状態にします。
+
+ダイアログを非表示状態にするには、gtk_widget_destroy、gtk_widget_hideいずれかの関数を使いますが、gtk_widget_destroy関数を実行した場合、ダイアログがメモリ上から破棄されますので、再び必要になった時には、新たに作り直す必要があります。
+
+逆にgtk_widget_hide関数の場合は、ダイアログは画面上で見えなくなるだけなので、最初に作ったものを再利用します。プログラムによって都合の良い方のやり方を選んでください。
+
+　次のページから、サンプルプログラムとその説明です。
 
 ====================
 ### 10.1.1　サンプルプログラムの全体
+
+********************
+    // コールバック関数を使うための準備
+    #include "hscallbk.as"
+    #uselib ""
+    #func cb_win_delete_event ""
+    #func cb_btn_clicked ""
+    
+    // GTK+の関数を使うための準備
+    #uselib "libgtk-3-0.dll"
+    #func global gtk_init "gtk_init" sptr, sptr
+    #func global gtk_settings_get_default "gtk_settings_get_default"
+    #func global gtk_settings_set_string_property "gtk_settings_set_string_property" sptr, sptr, sptr, sptr
+    #func global gtk_window_new "gtk_window_new" int
+    #const GTK_WINDOW_TOPLEVEL 0
+    #func global gtk_container_add "gtk_container_add" sptr, sptr
+    #func global gtk_widget_show_all "gtk_widget_show_all" sptr
+    #func global gtk_widget_show "gtk_widget_show" sptr
+    #func global gtk_main "gtk_main"
+    #func global gtk_main_quit "gtk_main_quit"
+    #func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
+    #func global gtk_label_new "gtk_label_new" sptr
+    #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
+    #func global gtk_dialog_new "gtk_dialog_new"
+    #func global gtk_dialog_get_content_area "gtk_dialog_get_content_area" sptr
+    #func global gtk_dialog_add_button "gtk_dialog_add_button" sptr, sptr, int
+    #func global gtk_dialog_run "gtk_dialog_run" sptr
+    #func global gtk_widget_destroy "gtk_widget_destroy" sptr
+    ; GtkStockItem
+    #define GTK_STOCK_CANCEL           "gtk-cancel"
+    #define GTK_STOCK_OK               "gtk-ok"
+    ; GtkResponseType
+    #const GTK_RESPONSE_DELETE_EVENT -4
+    #const GTK_RESPONSE_OK           -5
+    #const GTK_RESPONSE_CANCEL       -6
+    
+    #uselib "libgobject-2.0-0.dll"
+    #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+    #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+    
+    // よく使う関数
+    #include "hspinet.as"
+    #module
+    #defcfunc u str chars_ ; shift-jis文字列をutf-8に変換
+    	chars = chars_
+    	nkfcnv@ chars, chars, "Sw"
+    	return chars
+    #global
+    
+    // よく使う定数
+    ; ヌルポインタ
+    #const NULL 0
+    ; 真偽値
+    #const FALSE 0
+    #const TRUE 1
+    
+    	// GTK+初期化
+    	gtk_init NULL, NULL
+    
+    	// GTK+のデフォルトGUIフォントを変更
+    	gtk_settings_get_default
+    	gtk_settings_set_string_property stat, "gtk-font-name", "ms ui gothic, 10", NULL
+    
+    	// ウィンドウ生成
+    	gtk_window_new GTK_WINDOW_TOPLEVEL
+    	win = stat
+    	setcallbk cbwindeleteevent, cb_win_delete_event, *on_win_delete_event
+    	g_signal_connect win, "delete-event", varptr( cbwindeleteevent ), NULL
+    
+    	// ボタン生成
+    	gtk_button_new_with_label "Open Dialog"
+    	btn = stat
+    	setcallbk cbbtnclicked, cb_btn_clicked, *on_btn_clicked
+    	g_signal_connect btn, "clicked", varptr( cbbtnclicked ), 0
+    
+    	// ウィンドウの組み立て
+    	gtk_container_add win, btn
+    
+    	// ウィンドウの表示とメインループの開始
+    	gtk_widget_show_all win
+    	gtk_main
+    	end
+    
+    /* シグナルハンドラ */
+    *on_win_delete_event
+    	gtk_main_quit
+    	return
+    
+    *on_btn_clicked
+    	// ダイアログ生成
+    	gtk_dialog_new
+    	dlg = stat
+    
+    	// content area用のラベルを生成
+    	gtk_label_new u("これはダイアログのcontent areaに追加されたラベルです。")
+    	lbl = stat
+    	gtk_widget_show lbl
+    	gtk_label_new u("これは2つ目のラベルです。")
+    	lbl2 = stat
+    	gtk_widget_show lbl2
+    
+    	// content areaにラベルを追加
+    	gtk_dialog_get_content_area dlg
+    	carea = stat
+    	gtk_box_pack_start carea, lbl, FALSE, FALSE, 10
+    	gtk_box_pack_start carea, lbl2, FALSE, FALSE, 10
+    
+    	// action areaにボタンを追加
+    	gtk_dialog_add_button dlg, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL
+    	gtk_dialog_add_button dlg, GTK_STOCK_OK, GTK_RESPONSE_OK
+    
+    	// ダイアログを表示して、ダイアログ用のイベントループに入る
+    	gtk_dialog_run dlg
+    	switch stat
+    	case GTK_RESPONSE_OK
+    		mes "ダイアログのOKボタンが押されました。"
+    		swbreak
+    	case GTK_RESPONSE_CANCEL
+    		mes "ダイアログのCancelボタンが押されました。"
+    		swbreak
+    	case GTK_RESPONSE_DELETE_EVENT
+    		mes "ダイアログのクローズボタンが押されました。"
+    		swbreak
+    	swend
+    
+    	// ダイアログを破棄
+    	gtk_widget_destroy dlg
+    	return
+********************
+
+====================
+## 10.2　メッセージダイアログ（GtkMessageDialog）
+
+![サンプル10-2-1](10-2-1.png)
+![サンプル10-2-2](10-2-2.png)
+![サンプル10-2-3](10-2-3.png)
+
+　GtkMessageDialogウィジェットは、文字列情報を提示することに特化したシンプルなダイアログです。
+
+　GtkMessageDialogのcontent areaには、2種類の文字列と、ダイアログの目的を表すアイコンを表示することができます。
+
+2つの文字列のうち、一番伝えたい重要な情報を、大きめの太字のフォントで表示されるメインテキストとして設定し、補足として付け加えたい補助的な情報を、メインテキストの下に小さめのフォントで表示されるセカンダリテキストとして設定します。
+
+また、ダイアログに表示するアイコンは、「情報（お知らせ）」、「警告」、「質問」、「エラー」を意味するもののいずれか、もしくは、非表示を選択できます。
+
+　action areaに追加するボタンは、GtkDialogのように1つずつ指定するのではなく、ボタンの組み合わせ全体を、あらかじめ用意された数パターンの中から選んで指定します。
+
+　次のページから始まるサンプルプログラムでは、モーダルなダイアログとモーダルでないダイアログの両方を作成しています。
+
+モーダルなダイアログは、前節の10.1で説明・例示したのと同じやり方で作ります。
+
+モーダルでないダイアログは、通常のウィンドウと同じやり方で、ウィジェットの表示とイベント（シグナル）への対応を行います。
+
+====================
+### 10.2.1　サンプルプログラムの全体
 
 ********************
     // コールバック関数を使うための準備
@@ -2518,6 +2705,7 @@
     		gtk_window_set_title dlg1, "Modal MessageDialog"
     		gtk_message_dialog_format_secondary_text0 dlg1, u( "これはサブテキストです。" )
     	}
+    
     	gtk_dialog_run dlg1
     	response = stat : mes "response id: " + response
     	gtk_widget_hide dlg1
@@ -2525,7 +2713,7 @@
     
     *on_btn2_clicked
     	if dlg2 = NULL {
-    		msg = u( "これは、ノンモーダルなINFO MessageDialogのメインテキストです。" )
+    		msg = u( "これは、ノンモーダルなWARNING MessageDialogのメインテキストです。" )
     		gtk_message_dialog_new0 win, 0, GTK_MESSAGE_WARNING, GTK_BUTTONS_CLOSE, msg
     		dlg2 = stat
     		gtk_window_set_title dlg2, "Non-modal MessageDialog"
@@ -2551,13 +2739,15 @@
 ********************
 
 ====================
-## 10.2　色選択ダイアログ（GtkColorChooserDialog）
+## 10.3　色選択ダイアログ（GtkColorChooserDialog）
 
-![サンプル10-2-1](10-2-1.png)
-![サンプル10-2-2](10-2-2.png)
+![サンプル10-3-1](10-3-1.png)
+![サンプル10-3-2](10-3-2.png)
+
+　GtkColorChooserDialogウィジェットは、実際の色を目で見て確認できるサンプルを並べたパレットを提示して、それを操作しながら色情報を入力してもらう機能に特化したダイアログです。
 
 ====================
-### 10.2.1　サンプルプログラムの全体
+### 10.3.1　サンプルプログラムの全体
 
 ********************
     // コールバック関数を使うための準備
@@ -2586,8 +2776,8 @@
     #func global gtk_widget_hide "gtk_widget_hide" sptr
     ; GtkResponseType
     ;#const GTK_RESPONSE_DELETE_EVENT -4
-    #const GTK_RESPONSE_OK           -5
-    ;#const GTK_RESPONSE_CANCEL       -6
+    #const GTK_RESPONSE_OK -5
+    ;#const GTK_RESPONSE_CANCEL -6
     
     #uselib "libgdk-3-0.dll"
     #func global gdk_rgba_to_string "gdk_rgba_to_string" sptr
@@ -2641,48 +2831,330 @@
     		dlg = stat
     	}
     	gtk_dialog_run dlg
-    	response = stat : mes "response id: " + response
+    	response = stat
+    	mes "response id: " + response
     	gtk_widget_hide dlg
     	if response = GTK_RESPONSE_OK {
     		sdim rgba, 32
     		gtk_color_chooser_get_rgba dlg, rgba
     		gdk_rgba_to_string rgba
-    		dupptr str_rgba, stat, 100, 2 : mes str_rgba
+    		dupptr str_rgba, stat, 100, 2
+    		mes "color: " + str_rgba
     	}
     	return
 ********************
 
 ====================
-## 10.3　フォント選択ダイアログ（GtkFontChooserDialog）
+## 10.4　フォント選択ダイアログ（GtkFontChooserDialog）
 
-![サンプル10-3](10-3.png)
+![サンプル10-4-1](10-4-1.png)
+![サンプル10-4-2](10-4-2.png)
 
-====================
-### 10.3.1　サンプルプログラムの全体
-
-********************
-********************
-
-====================
-## 10.4　ファイル選択ダイアログ（GtkFileChooserDialog）
-
-![サンプル10-4](10-4.png)
+　GtkFontChooserDialogウィジェットは、コンピュータにインストールされているフォントの、目で見て確認できるサンプルを提示して、その中から特定のフォントを選択してもらう機能に特化したダイアログです。
 
 ====================
 ### 10.4.1　サンプルプログラムの全体
 
 ********************
+    // コールバック関数を使うための準備
+    #include "hscallbk.as"
+    #uselib ""
+    #func cb_win_delete_event ""
+    #func cb_btn_clicked ""
+    
+    // GTK+の関数を使うための準備
+    #uselib "libgtk-3-0.dll"
+    #func global gtk_init "gtk_init" sptr, sptr
+    #func global gtk_settings_get_default "gtk_settings_get_default"
+    #func global gtk_settings_set_string_property "gtk_settings_set_string_property" sptr, sptr, sptr, sptr
+    #func global gtk_window_new "gtk_window_new" int
+    #const GTK_WINDOW_TOPLEVEL 0
+    #func global gtk_container_add "gtk_container_add" sptr, sptr
+    #func global gtk_widget_show_all "gtk_widget_show_all" sptr
+    #func global gtk_main "gtk_main"
+    #func global gtk_main_quit "gtk_main_quit"
+    #func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
+    #func global gtk_dialog_run "gtk_dialog_run" sptr
+    ; GtkResponseType
+    ;#const GTK_RESPONSE_DELETE_EVENT -4
+    #const GTK_RESPONSE_OK           -5
+    ;#const GTK_RESPONSE_CANCEL       -6
+    #func global gtk_widget_hide "gtk_widget_hide" sptr
+    #func global gtk_font_chooser_dialog_new "gtk_font_chooser_dialog_new" sptr, sptr
+    #func global gtk_font_chooser_set_preview_text "gtk_font_chooser_set_preview_text" sptr, sptr
+    #func global gtk_font_chooser_get_font "gtk_font_chooser_get_font" sptr
+    #func global gtk_font_chooser_get_font_desc "gtk_font_chooser_get_font_desc" sptr
+    #func global gtk_container_get_children "gtk_container_get_children" sptr
+    #func gtk_widget_override_font "gtk_widget_override_font" sptr, sptr
+    
+    #uselib "libglib-2.0-0.dll"
+    #func global g_list_nth_data "g_list_nth_data" sptr, int
+    
+    #uselib "libgobject-2.0-0.dll"
+    #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+    #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+    
+    // よく使う関数
+    #include "hspinet.as"
+    #module
+    #defcfunc u str chars_ ; shift-jis文字列をutf-8に変換
+    	chars = chars_
+    	nkfcnv@ chars, chars, "Sw"
+    	return chars
+    #global
+    
+    // よく使う定数
+    ; ヌルポインタ
+    #const NULL 0
+    ; 真偽値
+    #const FALSE 0
+    #const TRUE 1
+    
+    	// GTK+初期化
+    	gtk_init NULL, NULL
+    
+    	// GTK+のデフォルトGUIフォントを変更
+    	gtk_settings_get_default
+    	gtk_settings_set_string_property stat, "gtk-font-name", "ms ui gothic, 10", NULL
+    
+    	// ウィンドウ生成
+    	gtk_window_new GTK_WINDOW_TOPLEVEL
+    	win = stat
+    	setcallbk cbwindeleteevent, cb_win_delete_event, *on_win_delete_event
+    	g_signal_connect win, "delete-event", varptr( cbwindeleteevent ), NULL
+    
+    	// ボタン生成
+    	gtk_button_new_with_label "Show Dialog"
+    	btn = stat
+    	setcallbk cbbtnclicked, cb_btn_clicked, *on_btn_clicked
+    	g_signal_connect btn, "clicked", varptr( cbbtnclicked ), 0
+    
+    	// ウィンドウの組み立て
+    	gtk_container_add win, btn
+    
+    	// ウィンドウの表示とメインループの開始
+    	gtk_widget_show_all win
+    	gtk_main
+    	end
+    
+    /* シグナルハンドラ */
+    *on_win_delete_event
+    	gtk_main_quit
+    	return
+    
+    *on_btn_clicked
+    	if dlg = NULL {
+    		gtk_font_chooser_dialog_new "FontChooserDialog", win
+    		dlg = stat
+    		gtk_font_chooser_set_preview_text dlg, u( "HSPからGTK+を使うためのチュートリアル" )
+    	}
+    
+    	gtk_dialog_run dlg
+    	response = stat
+    	mes "response id: " + response
+    	gtk_widget_hide dlg
+    
+    	if response = GTK_RESPONSE_OK {
+    		gtk_font_chooser_get_font dlg
+    		dupptr fontname, stat, 100, 2
+    		mes fontname
+    
+    		; ボタンのラベルのフォントを設定
+    		gtk_font_chooser_get_font_desc dlg
+    		fd = stat
+    		gtk_container_get_children btn
+    		g_list_nth_data stat, 0
+    		gtk_widget_override_font stat, fd
+    	}
+    	return
 ********************
 
 ====================
-## 10.5　カスタムダイアログ
+## 10.5　ファイル選択ダイアログ（GtkFileChooserDialog）
 
-![サンプル10-5](10-5.png)
+![サンプル10-5-1](10-5-1.png)
+![サンプル10-5-2](10-5-2.png)
+![サンプル10-5-3](10-5-3.png)
+![サンプル10-5-4](10-5-4.png)
+
+　GtkFileChooserDialogウィジェットは、プログラムにファイルオープンやファイルセーブの機能を実装する時に利用します。プログラムのユーザに、既存のファイルを選択したり、新たにセーブする場所や名前を入力したりしてもらう機能に特化したダイアログです。
 
 ====================
 ### 10.5.1　サンプルプログラムの全体
 
 ********************
+    // コールバック関数を使うための準備
+    #include "hscallbk.as"
+    #uselib ""
+    #func cb_win_delete_event ""
+    #func cb_btn1_clicked ""
+    #func cb_btn2_clicked ""
+    #func cb_btn3_clicked ""
+    
+    // GTK+の関数を使うための準備
+    #uselib "libgtk-3-0.dll"
+    #func global gtk_init "gtk_init" sptr, sptr
+    #func global gtk_settings_get_default "gtk_settings_get_default"
+    #func global gtk_settings_set_string_property "gtk_settings_set_string_property" sptr, sptr, sptr, sptr
+    #func global gtk_window_new "gtk_window_new" int
+    #const GTK_WINDOW_TOPLEVEL 0
+    #func global gtk_container_add "gtk_container_add" sptr, sptr
+    #func global gtk_widget_show_all "gtk_widget_show_all" sptr
+    #func global gtk_main "gtk_main"
+    #func global gtk_main_quit "gtk_main_quit"
+    #func global gtk_hbox_new "gtk_hbox_new" int, int
+    #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
+    #func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
+    #func global gtk_file_chooser_dialog_new2 "gtk_file_chooser_dialog_new" sptr, sptr, int, str, int, str, int, int
+    #func global gtk_window_set_modal "gtk_window_set_modal" sptr, int
+    #func global gtk_file_chooser_set_current_name "gtk_file_chooser_set_current_name" sptr, sptr
+    #func global gtk_file_chooser_set_do_overwrite_confirmation "gtk_file_chooser_set_do_overwrite_confirmation" sptr, int
+    ; GtkFileChooserAction
+    #enum GTK_FILE_CHOOSER_ACTION_OPEN = 0
+    #enum GTK_FILE_CHOOSER_ACTION_SAVE
+    #enum GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER
+    ; GtkStockItem
+    #define GTK_STOCK_CANCEL "gtk-cancel"
+    #define GTK_STOCK_OPEN "gtk-open"
+    #define GTK_STOCK_SAVE_AS "gtk-save-as"
+    ; GtkResponseType
+    ;#const GTK_RESPONSE_DELETE_EVENT -4
+    ;#const GTK_RESPONSE_CANCEL -6
+    #const GTK_RESPONSE_APPLY -10
+    #func global gtk_dialog_run "gtk_dialog_run" sptr
+    #func global gtk_widget_hide "gtk_widget_hide" sptr
+    #func global gtk_file_chooser_get_filename "gtk_file_chooser_get_filename" sptr
+    
+    #uselib "libgobject-2.0-0.dll"
+    #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+    #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+    
+    // よく使う関数
+    #include "hspinet.as"
+    #module
+    #defcfunc u str chars_ ; shift-jis文字列をutf-8に変換
+    	chars = chars_
+    	nkfcnv@ chars, chars, "Sw"
+    	return chars
+    #defcfunc s str chars_ ; utf-8文字列をshift-jisに変換
+    	chars = chars_
+    	nkfcnv@ chars, chars, "Ws"
+    	return chars
+    #global
+    
+    // よく使う定数
+    ; ヌルポインタ
+    #const NULL 0
+    ; 真偽値
+    #const FALSE 0
+    #const TRUE 1
+    
+    	// GTK+初期化
+    	gtk_init NULL, NULL
+    
+    	// GTK+のデフォルトGUIフォントを変更
+    	gtk_settings_get_default
+    	gtk_settings_set_string_property stat, "gtk-font-name", "ms ui gothic, 10 bold", NULL
+    
+    	// ウィンドウ生成
+    	gtk_window_new GTK_WINDOW_TOPLEVEL
+    	win = stat
+    	setcallbk cbwindeleteevent, cb_win_delete_event, *on_win_delete_event
+    	g_signal_connect win, "delete-event", varptr( cbwindeleteevent ), NULL
+    
+    	// HBox生成
+    	gtk_hbox_new FALSE, 10
+    	hbox = stat
+    
+    	// ボタン群生成
+    	gtk_button_new_with_label "Select File"
+    	btn1 = stat
+    	setcallbk cbbtn1clicked, cb_btn1_clicked, *on_btn1_clicked
+    	g_signal_connect btn1, "clicked", varptr( cbbtn1clicked ), 0
+    
+    	gtk_button_new_with_label "Select Folder"
+    	btn2 = stat
+    	setcallbk cbbtn2clicked, cb_btn2_clicked, *on_btn2_clicked
+    	g_signal_connect btn2, "clicked", varptr( cbbtn2clicked ), 0
+    
+    	gtk_button_new_with_label "Save File As"
+    	btn3 = stat
+    	setcallbk cbbtn3clicked, cb_btn3_clicked, *on_btn3_clicked
+    	g_signal_connect btn3, "clicked", varptr( cbbtn3clicked ), 0
+    
+    	// ウィンドウの組み立て
+    	gtk_box_pack_start hbox, btn1, FALSE, FALSE, 0
+    	gtk_box_pack_start hbox, btn2, FALSE, FALSE, 0
+    	gtk_box_pack_start hbox, btn3, FALSE, FALSE, 0
+    	gtk_container_add win, hbox
+    
+    	// ウィンドウの表示とメインループの開始
+    	gtk_widget_show_all win
+    	gtk_main
+    	end
+    
+    /* シグナルハンドラ */
+    *on_win_delete_event
+    	gtk_main_quit
+    	return
+    
+    *on_btn1_clicked
+    	// ファイルオープンダイアログ
+    	dlg = dlg1
+    	caption = u( "ファイルを選択してください" )
+    	action = GTK_FILE_CHOOSER_ACTION_OPEN
+    	btn_apply = GTK_STOCK_OPEN
+    
+    	gosub *create_dialog
+    	dlg1 = dlg
+    	gosub *run_dialog
+    	return
+    
+    *on_btn2_clicked
+    	// フォルダオープンダイアログ
+    	dlg = dlg2
+    	caption = u( "フォルダを選択してください" )
+    	action = GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER
+    	btn_apply = GTK_STOCK_OPEN
+    
+    	gosub *create_dialog
+    	dlg2 = dlg
+    	gosub *run_dialog
+    	return
+    
+    *on_btn3_clicked
+    	// ファイルセーブダイアログ
+    	dlg = dlg3
+    	caption = u( "保存ファイル名を入力してください" )
+    	action = GTK_FILE_CHOOSER_ACTION_SAVE
+    	btn_apply = GTK_STOCK_SAVE_AS
+    
+    	gosub *create_dialog
+    	dlg3 = dlg
+    	gosub *run_dialog
+    	return
+    
+    /* サブルーチン */
+    *create_dialog
+    	if dlg = NULL {
+    		gtk_file_chooser_dialog_new2 caption, win, action, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, btn_apply, GTK_RESPONSE_APPLY, NULL
+    		dlg = stat
+    		gtk_window_set_modal dlg, TRUE
+    		gtk_file_chooser_set_current_name dlg, "untitled"
+    		gtk_file_chooser_set_do_overwrite_confirmation dlg3, TRUE
+    	}
+    	return
+    
+    *run_dialog
+    	gtk_dialog_run dlg
+    	if stat = GTK_RESPONSE_APPLY {
+    		gtk_file_chooser_get_filename dlg
+    		ptr = stat
+    		dupptr filename, ptr, 1024, 2
+    		mes s( filename ) + " selected"
+    	}
+    	gtk_widget_hide dlg
+    	return
 ********************
 
 ====================

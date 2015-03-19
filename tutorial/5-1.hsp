@@ -76,7 +76,7 @@
 	gtk_container_get_children	btn1
 	g_list_nth_data	stat, 0
 	lbl	= stat
-	pango_font_description_from_string	"ms ui gothic 10"
+	pango_font_description_from_string	"ms ui gothic, italic 12"
 	gtk_widget_override_font	lbl, stat
 
 	; ƒ{ƒ^ƒ“2

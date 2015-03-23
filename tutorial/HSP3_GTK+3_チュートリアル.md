@@ -3740,29 +3740,54 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
 ====================
 # 14　テキストビュー（GtkTextView）
 
-　GtkTextViewウィジェットは、大きなサイズのテキストデータを整形して表示するのに適しています。
+　GtkTextViewウィジェットは、いわゆるテキストエディタの機能をプログラムに実装するための部品です。単にテキストを表示するだけでなく、一部分を装飾したり、途中に画像を挿入したりもできます。（このチュートリアルでは、テキストデータを操作する機能のみ取り上げます）
 
 　GtkTextViewは「モデル／ビュー」パターンに則って設計されており、文字通りビューにあたるGtkTextViewが、表示・編集されるテキストを表すGtkTextBufferというオブジェクトをモデルとして利用する構造になっています。
 
 GtkTextViewとGtkTextBufferが分離されていることで、1つのGtkTextBufferインスタンスを複数のGtkTextViewで共有したり、複数のGtkTextBufferを1つのGtkTextView上で簡単に入れ替えながら表示したりすることができます。
 
-　次のページから、まずは、GtkTextViewの使い方の概要をビュー（GtkTextView）とモデル（GtkTextBuffer）に分けて説明し、その後、サンブルプログラムを挙げて、各パートについて解説します。
+　次のページから、まずは、（全体としての）GtkTextViewの使い方の概要をビュー（GtkTextView）とモデル（GtkTextBuffer）に分けて説明し、その後、サンブルプログラムを挙げて、各パートについて解説します。
 
 ====================
-# 14.1　ビューとしてのGtkTextView
+## 14.1　ビューとしてのGtkTextView
 
 　GtkTextViewは、プログラムのユーザが、テキストデータを操作するためのインターフェースとして機能するウィジェットです。
 
 　プログラム上でGtkTextViewウィジェットを生成すると、自動でデフォルトのGtkTextBufferが設定されます。gtk_text_view_get_buffer関数によって、設定されたGtkTextBufferを取得することができます。
 
-　GtkTextViewは、デフォルトでは編集機能が有効になっていますが、これのオン・オフ、および関連した機能である、カーソル表示のオン・オフは、それぞれ、gtk_text_view_set_editable関数、gtk_text_view_set_cursor_visible関数で行います。
+　GtkTextViewは、デフォルトでは編集機能が有効になっていますが、これのオン・オフ、および、関連した機能であるカーソル表示のオン・オフは、それぞれ、gtk_text_view_set_editable関数、gtk_text_view_set_cursor_visible関数で行います。
 
 　行単位のテキストのレイアウト（justification）を指定するには、gtk_text_view_set_justification関数を利用します。左寄せ・右寄せ・中央寄せ・両側寄せ、のいずれかから選択できます。
 
 　また、テキストエディタによくある、行の折り返し機能にも対応しています。gtk_text_view_set_wrap_mode関数を介して、折り返しなし・文字単位の折り返し・単語単位の折り返し、などから選んで設定します。
 
 ====================
-# 14.2　GtkTextBuffer
+## 14.2　GtkTextBufferオブジェクト、および関連オブジェクト
+
+　GtkTextBufferは、GtkTextViewに表示するデータを管理する役割を担っているオブジェクトです。GtkTextBufferを通してデータ操作を行うには、いくつかの関連オブジェクトを合わせて利用する必要があります。
+
+GtkTextBufferから既存のテキストを取得するためのgtk_text_buffer_get_text関数を始めとして、GtkTextBufferが保持するデータに対して何らかの操作を行う処理には、たいていGtkTextIterオブジェクトが必要です。
+
+その他、GtkTextBufferに深く関連したオブジェクトとして、GtkTextMark、および、GtkTextTagがあります。
+
+　以後、GtkTextIter、GtkTextMark、GtkTextTagについて説明しつつ、各オブジェクトに関連したGtkTextBufferの関数を紹介します。
+
+====================
+### 14.2.1　GtkTextIterオブジェクト
+
+　GtkTextIterは、GtkTextBufferが保持するテキストの文字と文字の間の位置を表すオブジェクトです。一度生成したGtkTextIterは、何らかの操作によってGtkTextBuffer内のデータが変更された時点で値が破棄され、その後使用することはできなくなります。
+
+====================
+### 14.2.2　GtkTextMarkオブジェクト
+
+　一方、GtkTextBuffer内のデータの変更をまたいで位置情報を管理するには、GtkTextMarkオブジェクトを利用します。GtkTextMarkは、例えるとすれば画面上に表示されないテキストカーソルのようなものです。GtkTextMarkインスタンスに影響を与える位置でテキストの追加や削除が行われると、位置情報が自動で更新されます。
+
+　GtkTextBufferが生成されると、デフォルトで2つのGtkTextMarkも生成されます。これらは、"insert"、および、"selection_bound"という名前で呼ばれ、それぞれ、通常のテキストカーソルの位置と、そこまで続くテキスト選択範囲のスタート位置を表すGtkTextMarkインスタンスです。画面上でテキストが選択されていない時には、2つのGtkTextMarkが持つ位置情報の値は同じになります。
+
+gtk_text_buffer_get_insert関数、あるいは、gtk_text_buffer_get_selection_bound関数を実行することで、それぞれのGtkTextMarkインスタンスを取得できます。
+
+====================
+### 14.2.3　GtkTextTagオブジェクト
 
 ====================
 # 15　コンボボックス（GtkComboBox）

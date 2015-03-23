@@ -3738,7 +3738,31 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
 ********************
 
 ====================
-# 14　テキストビュー（GtkTextView）（未作成）
+# 14　テキストビュー（GtkTextView）
+
+　GtkTextViewウィジェットは、大きなサイズのテキストデータを整形して表示するのに適しています。
+
+　GtkTextViewは「モデル／ビュー」パターンに則って設計されており、文字通りビューにあたるGtkTextViewが、表示・編集されるテキストを表すGtkTextBufferというオブジェクトをモデルとして利用する構造になっています。
+
+GtkTextViewとGtkTextBufferが分離されていることで、1つのGtkTextBufferインスタンスを複数のGtkTextViewで共有したり、複数のGtkTextBufferを1つのGtkTextView上で簡単に入れ替えながら表示したりすることができます。
+
+　次のページから、まずは、GtkTextViewの使い方の概要をビュー（GtkTextView）とモデル（GtkTextBuffer）に分けて説明し、その後、サンブルプログラムを挙げて、各パートについて解説します。
+
+====================
+# 14.1　ビューとしてのGtkTextView
+
+　GtkTextViewは、プログラムのユーザが、テキストデータを操作するためのインターフェースとして機能するウィジェットです。
+
+　プログラム上でGtkTextViewウィジェットを生成すると、自動でデフォルトのGtkTextBufferが設定されます。gtk_text_view_get_buffer関数によって、設定されたGtkTextBufferを取得することができます。
+
+　GtkTextViewは、デフォルトでは編集機能が有効になっていますが、これのオン・オフ、および関連した機能である、カーソル表示のオン・オフは、それぞれ、gtk_text_view_set_editable関数、gtk_text_view_set_cursor_visible関数で行います。
+
+　行単位のテキストのレイアウト（justification）を指定するには、gtk_text_view_set_justification関数を利用します。左寄せ・右寄せ・中央寄せ・両側寄せ、のいずれかから選択できます。
+
+　また、テキストエディタによくある、行の折り返し機能にも対応しています。gtk_text_view_set_wrap_mode関数を介して、折り返しなし・文字単位の折り返し・単語単位の折り返し、などから選んで設定します。
+
+====================
+# 14.2　GtkTextBuffer
 
 ====================
 # 15　コンボボックス（GtkComboBox）

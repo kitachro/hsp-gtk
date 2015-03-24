@@ -3782,9 +3782,9 @@ GtkTextBufferから既存のテキストを取得するためのgtk_text_buffer_
 
 　一方、GtkTextBuffer内のデータの変更をまたいで位置情報を管理するには、GtkTextMarkオブジェクトを利用します。GtkTextMarkは、例えるとすれば画面上に表示されないテキストカーソルのようなものです。GtkTextMarkインスタンスに影響を与える位置でテキストの追加や削除が行われると、位置情報が自動で更新されます。
 
-　GtkTextBufferが生成されると、デフォルトで2つのGtkTextMarkも生成されます。これらは、"insert"、および、"selection_bound"という名前で呼ばれ、それぞれ、通常のテキストカーソルの位置と、そこまで続くテキスト選択範囲のスタート位置を表すGtkTextMarkインスタンスです。画面上でテキストが選択されていない時には、2つのGtkTextMarkが持つ位置情報の値は同じになります。
+　GtkTextBufferが生成されると、デフォルトで2つのGtkTextMarkも生成されます。これらは、"insert"、および、"selection_bound"という名前で呼ばれ、それぞれ、通常のテキストカーソルの位置と、そこまで続くテキスト選択範囲のスタート位置を表します。画面上でテキストが選択されていない時には、2つのGtkTextMarkが持つ位置情報の値は同じになります。
 
-gtk_text_buffer_get_insert関数、あるいは、gtk_text_buffer_get_selection_bound関数を実行することで、それぞれのGtkTextMarkインスタンスを取得できます。
+gtk_text_buffer_get_insert関数、あるいは、gtk_text_buffer_get_selection_bound関数を実行することで、それぞれのインスタンスを取得できます。
 
 ====================
 ### 14.2.3　GtkTextTagオブジェクト

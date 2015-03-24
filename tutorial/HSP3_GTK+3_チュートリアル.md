@@ -3768,7 +3768,7 @@ GtkTextViewとGtkTextBufferが分離されていることで、1つのGtkTextBuf
 
 GtkTextBufferから既存のテキストを取得するためのgtk_text_buffer_get_text関数を始めとして、GtkTextBufferが保持するデータに対して何らかの操作を行う処理には、たいていGtkTextIterオブジェクトが必要です。
 
-その他、GtkTextBufferに深く関連したオブジェクトとして、GtkTextMark、および、GtkTextTagがあります。
+また、GtkTextBufferに深く関連したその他のオブジェクトとして、GtkTextMark、および、GtkTextTagがあります。
 
 　以後、GtkTextIter、GtkTextMark、GtkTextTagについて説明しつつ、各オブジェクトに関連したGtkTextBufferの関数を紹介します。
 

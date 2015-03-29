@@ -3789,15 +3789,26 @@ gtk_text_buffer_get_insert関数、あるいは、gtk_text_buffer_get_selection_
 ====================
 ### 14.2.3　GtkTextTagオブジェクト
 
-　GtkTextBufferで管理するテキストには、GtkTextTagオブジェクトを貼り付けることがてきます。GtkTextTagは、テキストの特定の範囲を指定して設定することができる「属性」を表します。
+　GtkTextBufferで管理するテキストには、GtkTextTagオブジェクトを貼り付けることがてきます。GtkTextTagは、テキストの特定の範囲を指定して設定することができる属性を表します。
 
 例えば、文字の太さを表す`weight`プロパティにデフォルトよりも大きな値をセットしたGtkTextTagを貼り付けると、その部分のテキストを太字で表示することができます。
 
 GtkTextTagのプロパティは、テキストの見栄えを操作するためのものが多いですが、テキストを編集可能にするかどうかを切り替えるための`editable`などといったものもあります。
 
-　GtkTextTagオブジェクトは、非常に多くのプロパティを持っていますが、個々のプロパティを設定・取得するための専用の関数は用意されていません。
+　GtkTextTagオブジェクトの一番簡単な使い方は、gtk_text_buffer_create_tag関数で生成し、gtk_text_buffer_apply_tag関数でテキストに貼り付けるやり方です。一度生成したGtkTextTagは、同じ属性を設定したい複数の箇所に貼り付けることができます。
 
-GtkTextTagに対しては、代わりに、g_object_set関数、および、g_object_get関数を利用する統一されたやり方でプロパティにアクセスします。
+gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが持つGtkTextTagTableオブジェクトに自動で登録されますので、後からアクセスしたいと思った時には、そちら経由でも取得できます。
+
+　以下は、GtkTextTagで操作できるテキスト表示スタイルの例です。
+
+* 文字色（`foreground`プロパティ）
+* 背景色（`background`プロパティ）
+* 下線（`underline`プロパティ）
+* 太字体（`weight`プロパティ）
+* イタリック体（`style`プロパティ）
+* 打ち消し線（`strikethrough`プロパティ）
+* 文字サイズ（`size`、`size-points`プロパティ）
+* 折り返し（`wrap-mode`プロパティ）
 
 ====================
 # 15　コンボボックス（GtkComboBox）

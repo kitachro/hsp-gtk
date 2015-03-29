@@ -3746,10 +3746,10 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
 
 GtkTextViewとGtkTextBufferが分離されていることで、1つのGtkTextBufferインスタンスを複数のGtkTextViewで共有したり、複数のGtkTextBufferを1つのGtkTextView上で簡単に入れ替えながら表示したりすることができます。
 
-　次のページから、まずは、（全体としての）GtkTextViewの使い方の概要をビュー（GtkTextView）とモデル（GtkTextBuffer）に分けて説明し、その後、サンブルプログラムを挙げて、各パートについて解説します。
+　次のページから、GtkTextViewとGtkTextBufferの使い方の概要を説明し、その後、サンブルプログラムを挙げて、各パートについて解説します。
 
 ====================
-## 14.1　ビューとしてのGtkTextView
+## 14.1　GtkTextViewウィジェット
 
 　GtkTextViewは、プログラムのユーザが、テキストデータを操作するためのインターフェースとして機能するウィジェットです。
 

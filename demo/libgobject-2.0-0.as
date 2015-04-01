@@ -1,11 +1,10 @@
 /*
-	Copyright (c) 2014 chrono
-	This software is released under the MIT License.
-	http://opensource.org/licenses/mit-license.php
+Copyright (c) 2015 chrono
+This software is released under the MIT License.
+http://opensource.org/licenses/mit-license.php
 */
 #ifndef	__LIBGOBJECT_200__
 #define	global	__LIBGOBJECT_200__
-
 
 #uselib "libgobject-2.0-0.dll"
 ;#func global g_array_get_type "" 
@@ -437,6 +436,5 @@
 #const	G_SIGNAL_MATCH_FUNC			(1 << 3)
 #const	G_SIGNAL_MATCH_DATA			(1 << 4)
 #const	G_SIGNAL_MATCH_UNBLOCKED	(1 << 5)
-
 
 #endif

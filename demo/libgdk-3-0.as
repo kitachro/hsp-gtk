@@ -1,11 +1,10 @@
 /*
-	Copyright (c) 2015 chrono
-	This software is released under the MIT License.
-	http://opensource.org/licenses/mit-license.php
+Copyright (c) 2015 chrono
+This software is released under the MIT License.
+http://opensource.org/licenses/mit-license.php
 */
 #ifndef	__LIBGDK_30__
 #define	global	__LIBGDK_30__
-
 
 #uselib "libgdk-3-0.dll"
 ;#func global gdk_add_option_entries_libgtk_only "" 
@@ -543,6 +542,5 @@
 #const GDK_SELECTION_TYPE_PIXMAP  20
 #const GDK_SELECTION_TYPE_WINDOW  33
 #const GDK_SELECTION_TYPE_STRING  31
-
 
 #endif

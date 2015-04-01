@@ -1,11 +1,10 @@
 /*
-	Copyright (c) 2014 chrono
-	This software is released under the MIT License.
-	http://opensource.org/licenses/mit-license.php
+Copyright (c) 2015 chrono
+This software is released under the MIT License.
+http://opensource.org/licenses/mit-license.php
 */
 #ifndef	__LIBGDK_PIXBUF_200__
 #define	global	__LIBGDK_PIXBUF_200__
-
 
 #uselib "libgdk_pixbuf-2.0-0.dll"
 ;#func global gdk_colorspace_get_type "" 
@@ -130,6 +129,5 @@
 ;#func global gdk_pixdata_from_pixbuf "" 
 ;#func global gdk_pixdata_serialize "" 
 ;#func global gdk_pixdata_to_csource "" 
-
 
 #endif

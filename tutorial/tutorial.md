@@ -4082,7 +4082,15 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
 # 17　ツリービューとリストビュー（GtkTreeView）（未作成）
 
 ====================
-# 18　アイコンビュー（GtkIconView）（未作成）
+# 18　アイコンビュー（GtkIconView）
+
+![サンプル18](18.png)
+
+　GtkIconViewウィジェットは、アイコンのリストを整列させて表示するための部品です。ドラッグアンドドロップによる操作や、項目の複数選択・並べ替え機能などに対応しています。
+
+GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによって表示データを管理しますが、GtkCellRenderer系オブジェクトを利用する必要はありません。代わりに、GtkListStoreのデータ項目にGdkPixbufを含めるようにします。
+
+アイコンの選択モードは、選択不可・単数選択・複数選択の3つからいずれかを選んで、gtk_icon_view_set_selection_mode関数で設定します。
 
 ====================
 # 19　ドラッグアンドドロップ機能（未作成）

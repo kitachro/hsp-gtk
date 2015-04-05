@@ -606,14 +606,14 @@ http://opensource.org/licenses/mit-license.php
 ;#func global g_list_foreach "" 
 ;#func global g_list_free "" 
 ;#func global g_list_free_1 "" 
-;#func global g_list_free_full "" 
+#func global g_list_free_full "g_list_free_full" sptr, sptr
 ;#func global g_list_index "" 
 ;#func global g_list_insert "" 
 ;#func global g_list_insert_before "" 
 ;#func global g_list_insert_sorted "" 
 ;#func global g_list_insert_sorted_with_data "" 
 ;#func global g_list_last "" 
-;#func global g_list_length "" 
+#func global g_list_length "g_list_length" sptr
 #func global g_list_nth "g_list_nth" sptr, int
 #func global g_list_nth_data "g_list_nth_data"  sptr, int
 ;#func global g_list_nth_prev "" 

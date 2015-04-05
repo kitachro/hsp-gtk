@@ -33,13 +33,13 @@
 #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
 #func global g_object_unref "g_object_unref" sptr
 
-#uselib "libgdk_pixbuf-2.0-0.dll"
-#func global gdk_pixbuf_get_type "gdk_pixbuf_get_type"
-
 #uselib "libglib-2.0-0.dll"
 #func global g_list_length "g_list_length" sptr
 #func global g_list_nth_data "g_list_nth_data"  sptr, int
 #func global g_list_free_full "g_list_free_full" sptr, sptr
+
+#uselib "libgdk_pixbuf-2.0-0.dll"
+#func global gdk_pixbuf_get_type "gdk_pixbuf_get_type"
 
 // よく使う定数
 #const	NULL	0	; ヌルポインタ
@@ -117,7 +117,7 @@
 		treepath	= stat
 		gtk_tree_path_to_string	treepath
 		dupptr	str_tp, stat, 10, 2
-		mes	"selected: "+str_tp
+		mes	"selected: " + str_tp
 	loop
 	setcallbk	cbglistfreefull, cb_g_list_free_full, *on_g_list_free_full
 	g_list_free_full	treepaths, varptr( cbglistfreefull )
@@ -127,7 +127,7 @@
 	treepath	= callbkarg( 1 )
 	gtk_tree_path_to_string	treepath
 	dupptr	str_tp, stat, 10, 2
-	mes	"activated: "+str_tp
+	mes	"activated: " + str_tp
 	gosub	*on_iconview_selection_changed
 	return
 

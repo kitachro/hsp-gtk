@@ -74,7 +74,6 @@
 #const	COL_PIXBUF	0	; GtkListStoreデータの項目インデックス
 #const	COL_TEXT	1
 	icons	= GTK_STOCK_CUT, GTK_STOCK_COPY, GTK_STOCK_PASTE
-	itheme	= stat
 	repeat	length( icons )
 		gtk_list_store_append	model, itr
 		gtk_image_new

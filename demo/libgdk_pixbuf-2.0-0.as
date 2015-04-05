@@ -130,4 +130,9 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gdk_pixdata_serialize "" 
 ;#func global gdk_pixdata_to_csource "" 
 
+#include "libgtk-3-0.as"
+   gtk_init 0, 0
+   gdk_pixbuf_get_type
+   GDK_TYPE_PIXBUF	= stat
+
 #endif

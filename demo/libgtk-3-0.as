@@ -1323,7 +1323,7 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gtk_icon_view_get_pixbuf_column "" 
 ;#func global gtk_icon_view_get_reorderable "" 
 ;#func global gtk_icon_view_get_row_spacing "" 
-;#func global gtk_icon_view_get_selected_items "" 
+#func global gtk_icon_view_get_selected_items "gtk_icon_view_get_selected_items" sptr
 ;#func global gtk_icon_view_get_selection_mode "" 
 ;#func global gtk_icon_view_get_spacing "" 
 ;#func global gtk_icon_view_get_text_column "" 
@@ -1353,7 +1353,7 @@ http://opensource.org/licenses/mit-license.php
 #func global gtk_icon_view_set_pixbuf_column "gtk_icon_view_set_pixbuf_column" sptr, int
 ;#func global gtk_icon_view_set_reorderable "" 
 ;#func global gtk_icon_view_set_row_spacing "" 
-;#func global gtk_icon_view_set_selection_mode "" 
+#func global gtk_icon_view_set_selection_mode "gtk_icon_view_set_selection_mode" sptr, int
 ;#func global gtk_icon_view_set_spacing "" 
 #func global gtk_icon_view_set_text_column "gtk_icon_view_set_text_column" sptr, int
 ;#func global gtk_icon_view_set_tooltip_cell "" 
@@ -3159,7 +3159,7 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gtk_tree_path_compare "" 
 ;#func global gtk_tree_path_copy "" 
 ;#func global gtk_tree_path_down "" 
-;#func global gtk_tree_path_free "" 
+#func global gtk_tree_path_free "gtk_tree_path_free" sptr
 ;#func global gtk_tree_path_get_depth "" 
 ;#func global gtk_tree_path_get_indices "" 
 ;#func global gtk_tree_path_get_indices_with_depth "" 
@@ -3173,7 +3173,7 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gtk_tree_path_next "" 
 ;#func global gtk_tree_path_prepend_index "" 
 ;#func global gtk_tree_path_prev "" 
-;#func global gtk_tree_path_to_string "" 
+#func global gtk_tree_path_to_string "gtk_tree_path_to_string" sptr
 ;#func global gtk_tree_path_up "" 
 ;#func global gtk_tree_row_reference_copy "" 
 ;#func global gtk_tree_row_reference_deleted "" 
@@ -4016,5 +4016,11 @@ http://opensource.org/licenses/mit-license.php
 #enum GTK_IMAGE_ANIMATION
 #enum GTK_IMAGE_ICON_NAME
 #enum GTK_IMAGE_GICON
+
+// GtkSelectionMode
+#enum GTK_SELECTION_NONE = 0
+#enum GTK_SELECTION_SINGLE
+#enum GTK_SELECTION_BROWSE
+#enum GTK_SELECTION_MULTIPLE
 
 #endif

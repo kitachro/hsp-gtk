@@ -158,7 +158,7 @@ http://opensource.org/licenses/mit-license.php
 ;#func global g_object_steal_data "" 
 ;#func global g_object_steal_qdata "" 
 ;#func global g_object_thaw_notify "" 
-;#func global g_object_unref "" 
+#func global g_object_unref "g_object_unref" sptr
 ;#func global g_object_watch_closure "" 
 ;#func global g_object_weak_ref "" 
 ;#func global g_object_weak_unref "" 
@@ -436,5 +436,30 @@ http://opensource.org/licenses/mit-license.php
 #const	G_SIGNAL_MATCH_FUNC			(1 << 3)
 #const	G_SIGNAL_MATCH_DATA			(1 << 4)
 #const	G_SIGNAL_MATCH_UNBLOCKED	(1 << 5)
+
+// Constant fundamental types
+#define G_TYPE_MAKE_FUNDAMENTAL(%1)	(%1 << 2)
+#define G_TYPE_INVALID		G_TYPE_MAKE_FUNDAMENTAL(0)
+#define G_TYPE_NONE			G_TYPE_MAKE_FUNDAMENTAL(1)
+#define G_TYPE_INTERFACE	G_TYPE_MAKE_FUNDAMENTAL(2)
+#define G_TYPE_CHAR			G_TYPE_MAKE_FUNDAMENTAL(3)
+#define G_TYPE_UCHAR		G_TYPE_MAKE_FUNDAMENTAL(4)
+#define G_TYPE_BOOLEAN		G_TYPE_MAKE_FUNDAMENTAL(5)
+#define G_TYPE_INT			G_TYPE_MAKE_FUNDAMENTAL(6)
+#define G_TYPE_UINT			G_TYPE_MAKE_FUNDAMENTAL(7)
+#define G_TYPE_LONG			G_TYPE_MAKE_FUNDAMENTAL(8)
+#define G_TYPE_ULONG		G_TYPE_MAKE_FUNDAMENTAL(9)
+#define G_TYPE_INT64		G_TYPE_MAKE_FUNDAMENTAL(10)
+#define G_TYPE_UINT64		G_TYPE_MAKE_FUNDAMENTAL(11)
+#define G_TYPE_ENUM			G_TYPE_MAKE_FUNDAMENTAL(12)
+#define G_TYPE_FLAGS		G_TYPE_MAKE_FUNDAMENTAL(13)
+#define G_TYPE_FLOAT		G_TYPE_MAKE_FUNDAMENTAL(14)
+#define G_TYPE_DOUBLE		G_TYPE_MAKE_FUNDAMENTAL(15)
+#define G_TYPE_STRING		G_TYPE_MAKE_FUNDAMENTAL(16)
+#define G_TYPE_POINTER		G_TYPE_MAKE_FUNDAMENTAL(17)
+#define G_TYPE_BOXED		G_TYPE_MAKE_FUNDAMENTAL(18)
+#define G_TYPE_PARAM		G_TYPE_MAKE_FUNDAMENTAL(19)
+#define G_TYPE_OBJECT		G_TYPE_MAKE_FUNDAMENTAL(20)
+#define	G_TYPE_VARIANT		G_TYPE_MAKE_FUNDAMENTAL(21)
 
 #endif

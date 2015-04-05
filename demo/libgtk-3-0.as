@@ -1225,7 +1225,7 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gtk_icon_info_free "" 
 ;#func global gtk_icon_info_get_attach_points "" 
 ;#func global gtk_icon_info_get_base_size "" 
-;#func global gtk_icon_info_get_builtin_pixbuf "" 
+#func global gtk_icon_info_get_builtin_pixbuf "gtk_icon_info_get_builtin_pixbuf" sptr
 ;#func global gtk_icon_info_get_display_name "" 
 ;#func global gtk_icon_info_get_embedded_rect "" 
 ;#func global gtk_icon_info_get_filename "" 
@@ -1292,7 +1292,7 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gtk_icon_theme_list_icons "" 
 #func global gtk_icon_theme_load_icon "gtk_icon_theme_load_icon" sptr, str, int, int, sptr
 ;#func global gtk_icon_theme_lookup_by_gicon "" 
-;#func global gtk_icon_theme_lookup_icon "" 
+#func global gtk_icon_theme_lookup_icon "gtk_icon_theme_lookup_icon" sptr, sptr, int, int
 ;#func global gtk_icon_theme_new "" 
 ;#func global gtk_icon_theme_prepend_search_path "" 
 ;#func global gtk_icon_theme_rescan_if_needed "" 
@@ -3626,7 +3626,7 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gtk_widget_remove_accelerator "" 
 ;#func global gtk_widget_remove_mnemonic_label "" 
 ;#func global gtk_widget_render_icon "" 
-;#func global gtk_widget_render_icon_pixbuf "" 
+#func global gtk_widget_render_icon_pixbuf "gtk_widget_render_icon_pixbuf" sptr, sptr, int
 ;#func global gtk_widget_reparent "" 
 ;#func global gtk_widget_reset_rc_styles "" 
 ;#func global gtk_widget_reset_style "" 
@@ -3999,7 +3999,7 @@ http://opensource.org/licenses/mit-license.php
 #enum	GTK_UPDATE_ALWAYS = 0
 #enum	GTK_UPDATE_IF_VALID
 
-// GtkGtkIconSize
+// GtkIconSize
 #enum GTK_ICON_SIZE_INVALID = 0
 #enum GTK_ICON_SIZE_MENU
 #enum GTK_ICON_SIZE_SMALL_TOOLBAR

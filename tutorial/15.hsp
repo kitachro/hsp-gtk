@@ -98,8 +98,8 @@
 	setcallbk	cbcombobox2changed, cb_combobox2_changed, *on_combobox2_changed
 	g_signal_connect	cmb2, "changed", varptr( cbcombobox2changed ), NULL
 
-	// TreeIterator格納用変数作成
-	sdim	struct_itr, ( 4 * 4 )	; 4*4 = GtkTreeIterator構造体サイズ
+	// TreeIter格納用変数作成
+	sdim	struct_itr, ( 4 * 4 )	; 4*4 = GtkTreeIter構造体サイズ
 	itr	= varptr( struct_itr )
 
 	// コンボボックス用セルレンダラ群生成

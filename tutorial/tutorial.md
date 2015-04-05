@@ -4088,9 +4088,152 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
 
 　GtkIconViewウィジェットは、アイコンのリストを整列させて表示するための部品です。ドラッグアンドドロップによる操作や、項目の複数選択・並べ替え機能などに対応しています。
 
-GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによって表示データを管理しますが、GtkCellRenderer系オブジェクトを利用する必要はありません。代わりに、GtkListStoreのデータ項目にGdkPixbufを含めるようにします。
+GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによって表示データを管理しますが、GtkCellRenderer系オブジェクトを利用する必要はありません。代わりに、GtkListStoreのデータ項目に必ずGdkPixbufを含めるようにします。その画像がアイコンとして表示されます。
 
 アイコンの選択モードは、選択不可・単数選択・複数選択の3つからいずれかを選んで、gtk_icon_view_set_selection_mode関数で設定します。
+
+====================
+## 18.1　サンプルプログラムの全体
+
+********************
+// コールバック関数を使うための準備
+#include "hscallbk.as"
+#uselib ""
+#func cb_window_delete_event ""
+#func cb_iconview_selection_changed "" int, int
+#func cb_iconview_item_activated "" int, int, int
+#func cb_g_list_free_full "" int
+
+// GTK+の関数を使うための準備
+#uselib "libgtk-3-0.dll"
+#func global gtk_init "gtk_init" sptr, sptr
+#func global gtk_window_new "gtk_window_new" int
+#func global gtk_widget_show_all "gtk_widget_show_all" sptr
+#func global gtk_main "gtk_main"
+#func global gtk_main_quit "gtk_main_quit"
+#func global gtk_container_add "gtk_container_add" sptr, sptr
+
+#func global gtk_list_store_new2 "gtk_list_store_new" int, int, int
+#func global gtk_list_store_append "gtk_list_store_append" sptr, sptr
+#func global gtk_list_store_set2 "gtk_list_store_set" sptr, sptr, sptr, sptr, sptr, sptr, int
+#func global gtk_image_new "gtk_image_new"
+#func global gtk_widget_render_icon_pixbuf "gtk_widget_render_icon_pixbuf" sptr, sptr, int
+#func global gtk_icon_view_new_with_model "gtk_icon_view_new_with_model" sptr
+#func global gtk_icon_view_set_pixbuf_column "gtk_icon_view_set_pixbuf_column" sptr, int
+#func global gtk_icon_view_set_text_column "gtk_icon_view_set_text_column" sptr, int
+#func global gtk_icon_view_set_selection_mode "gtk_icon_view_set_selection_mode" sptr, int
+#func global gtk_tree_path_to_string "gtk_tree_path_to_string" sptr
+#func global gtk_tree_path_free "gtk_tree_path_free" sptr
+#func global gtk_icon_view_get_selected_items "gtk_icon_view_get_selected_items" sptr
+
+#uselib "libgobject-2.0-0.dll"
+#define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+#func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+#func global g_object_unref "g_object_unref" sptr
+
+#uselib "libgdk_pixbuf-2.0-0.dll"
+#func global gdk_pixbuf_get_type "gdk_pixbuf_get_type"
+
+#uselib "libglib-2.0-0.dll"
+#func global g_list_length "g_list_length" sptr
+#func global g_list_nth_data "g_list_nth_data" sptr, int
+#func global g_list_free_full "g_list_free_full" sptr, sptr
+
+// よく使う定数
+#const NULL 0 ; ヌルポインタ
+
+	// GTK+初期化
+	gtk_init NULL, NULL
+
+	// ウィンドウ生成
+#const GTK_WINDOW_TOPLEVEL 0
+	gtk_window_new GTK_WINDOW_TOPLEVEL
+	win = stat
+	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
+	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+
+	// アイコンビュー用データ
+	; GtkTreeIter格納用変数作成
+	sdim struct_itr, ( 4 * 4 ) ; 4*4 = GtkTreeIter構造体サイズ
+	itr = varptr( struct_itr )
+
+	; GtkListStore生成
+#define G_TYPE_MAKE_FUNDAMENTAL(%1) (%1 << 2)
+#define G_TYPE_STRING G_TYPE_MAKE_FUNDAMENTAL(16)
+	gdk_pixbuf_get_type
+	gtk_list_store_new2 2, stat, G_TYPE_STRING
+	model = stat
+
+	; GtkListStoreにデータをセット
+#define GTK_STOCK_CUT "gtk-cut"
+#define GTK_STOCK_COPY "gtk-copy"
+#define GTK_STOCK_PASTE "gtk-paste"
+#const GTK_ICON_SIZE_DND 5
+#const COL_PIXBUF 0 ; GtkListStoreデータの項目インデックス
+#const COL_TEXT 1
+	icons = GTK_STOCK_CUT, GTK_STOCK_COPY, GTK_STOCK_PASTE
+	repeat length( icons )
+		gtk_list_store_append model, itr
+		gtk_image_new
+		gtk_widget_render_icon_pixbuf stat, icons( cnt ), GTK_ICON_SIZE_DND
+		pixbuf = stat
+		gtk_list_store_set2 model, itr, COL_PIXBUF, pixbuf, COL_TEXT, icons( cnt ), -1
+		g_object_unref pixbuf
+	loop
+
+	// アイコンビュー生成
+#const GTK_SELECTION_MULTIPLE 3
+	gtk_icon_view_new_with_model model
+	iview = stat
+	gtk_icon_view_set_pixbuf_column iview, COL_PIXBUF
+	gtk_icon_view_set_text_column iview, COL_TEXT
+	gtk_icon_view_set_selection_mode iview, GTK_SELECTION_MULTIPLE
+	setcallbk cbiconviewselectionchanged, cb_iconview_selection_changed, *on_iconview_selection_changed
+	g_signal_connect iview, "selection-changed", varptr( cbiconviewselectionchanged ), NULL
+	setcallbk cbiconviewitemactivated, cb_iconview_item_activated, *on_iconview_item_activated
+	g_signal_connect iview, "item-activated", varptr( cbiconviewitemactivated ), NULL
+
+	// ウィンドウの組み立て
+	gtk_container_add win, iview
+
+	// ウィンドウの表示とメインループの開始
+	gtk_widget_show_all win
+	gtk_main
+	end
+
+/* シグナルハンドラ */
+*on_window_delete_event
+	gtk_main_quit
+	return
+
+*on_iconview_selection_changed
+	gtk_icon_view_get_selected_items iview
+	treepaths = stat
+	g_list_length treepaths
+	repeat stat
+		g_list_nth_data treepaths, cnt
+		treepath = stat
+		gtk_tree_path_to_string treepath
+		dupptr str_tp, stat, 10, 2
+		mes "selected: "+str_tp
+	loop
+	setcallbk cbglistfreefull, cb_g_list_free_full, *on_g_list_free_full
+	g_list_free_full treepaths, varptr( cbglistfreefull )
+	return
+
+*on_iconview_item_activated
+	treepath = callbkarg( 1 )
+	gtk_tree_path_to_string treepath
+	dupptr str_tp, stat, 10, 2
+	mes "activated: "+str_tp
+	gosub *on_iconview_selection_changed
+	return
+
+/* GList開放用コールバック関数 */
+*on_g_list_free_full
+	gtk_tree_path_free callbkarg( 0 )
+	return
+********************
 
 ====================
 # 19　ドラッグアンドドロップ機能（未作成）

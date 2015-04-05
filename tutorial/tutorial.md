@@ -4088,9 +4088,9 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
 
 　GtkIconViewウィジェットは、アイコンのリストを整列させて表示するための部品です。ドラッグアンドドロップによる操作や、項目の複数選択・並べ替え機能などに対応しています。
 
-GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによって表示データを管理しますが、GtkCellRenderer系オブジェクトを利用する必要はありません。代わりに、GtkListStoreのデータ項目に必ずGdkPixbufを含めるようにします。その画像がアイコンとして表示されます。
+　GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによって表示データを管理しますが、GtkCellRenderer系オブジェクトを利用する必要はありません。アイコン用画像として、GtkListStoreのデータ項目に必ずGdkPixbufを含めるようにします。
 
-アイコンの選択モードは、選択不可・単数選択・複数選択の3つからいずれかを選んで、gtk_icon_view_set_selection_mode関数で設定します。
+　アイコンの選択モードは、選択不可・単数選択・複数選択の3つからいずれかを選んで、gtk_icon_view_set_selection_mode関数で設定します。
 
 ====================
 ## 18.1　サンプルプログラムの全体
@@ -4215,7 +4215,7 @@ GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによ
     		treepath = stat
     		gtk_tree_path_to_string treepath
     		dupptr str_tp, stat, 10, 2
-    		mes "selected: "+str_tp
+    		mes "selected: " + str_tp
     	loop
     	setcallbk cbglistfreefull, cb_g_list_free_full, *on_g_list_free_full
     	g_list_free_full treepaths, varptr( cbglistfreefull )
@@ -4225,7 +4225,7 @@ GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによ
     	treepath = callbkarg( 1 )
     	gtk_tree_path_to_string treepath
     	dupptr str_tp, stat, 10, 2
-    	mes "activated: "+str_tp
+    	mes "activated: " + str_tp
     	gosub *on_iconview_selection_changed
     	return
     

@@ -4100,9 +4100,13 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
     #include "hscallbk.as"
     #uselib ""
     #func cb_window_delete_event ""
+    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
     #func cb_iconview_selection_changed "" int, int
+    	setcallbk cbiconviewselectionchanged, cb_iconview_selection_changed, *on_iconview_selection_changed
     #func cb_iconview_item_activated "" int, int, int
+    	setcallbk cbiconviewitemactivated, cb_iconview_item_activated, *on_iconview_item_activated
     #func cb_g_list_free_full "" int
+    	setcallbk cbglistfreefull, cb_g_list_free_full, *on_g_list_free_full
     
     // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
@@ -4149,7 +4153,6 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
     #const GTK_WINDOW_TOPLEVEL 0
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
-    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
     	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
     
     	// アイコンビュー用データ
@@ -4188,9 +4191,7 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
     	gtk_icon_view_set_pixbuf_column iview, COL_PIXBUF
     	gtk_icon_view_set_text_column iview, COL_TEXT
     	gtk_icon_view_set_selection_mode iview, GTK_SELECTION_MULTIPLE
-    	setcallbk cbiconviewselectionchanged, cb_iconview_selection_changed, *on_iconview_selection_changed
     	g_signal_connect iview, "selection-changed", varptr( cbiconviewselectionchanged ), NULL
-    	setcallbk cbiconviewitemactivated, cb_iconview_item_activated, *on_iconview_item_activated
     	g_signal_connect iview, "item-activated", varptr( cbiconviewitemactivated ), NULL
     
     	// ウィンドウの組み立て
@@ -4217,7 +4218,6 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
     		dupptr str_tp, stat, 10, 2
     		mes "selected: " + str_tp
     	loop
-    	setcallbk cbglistfreefull, cb_g_list_free_full, *on_g_list_free_full
     	g_list_free_full treepaths, varptr( cbglistfreefull )
     	return
     

@@ -4,7 +4,7 @@
 : chrono (<https://github.com/kitachro>)
 
 最終更新日:
-: 2015年4月5日
+: 2015年4月6日
 
 ライセンス（Copyright）:
 : GNU Free Documentation License 1.3 with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts

@@ -315,7 +315,7 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gtk_box_get_homogeneous "" 
 ;#func global gtk_box_get_spacing "" 
 ;#func global gtk_box_get_type "" 
-;#func global gtk_box_new "" 
+#func global gtk_box_new "gtk_box_new" int, int
 ;#func global gtk_box_pack_end "" 
 #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
 ;#func global gtk_box_query_child_packing "" 

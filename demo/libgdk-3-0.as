@@ -521,11 +521,12 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gdk_wm_decoration_get_type "" 
 ;#func global gdk_wm_function_get_type "" 
 
-
+// Events
 #define GDK_BUTTON_PRIMARY    1
 #define GDK_BUTTON_MIDDLE     2
 #define GDK_BUTTON_SECONDARY  3
 
+// Selections
 #const GDK_SELECTION_PRIMARY  1
 #const GDK_SELECTION_SECONDARY  2
 #const GDK_SELECTION_CLIPBOARD  69
@@ -542,5 +543,58 @@ http://opensource.org/licenses/mit-license.php
 #const GDK_SELECTION_TYPE_PIXMAP  20
 #const GDK_SELECTION_TYPE_WINDOW  33
 #const GDK_SELECTION_TYPE_STRING  31
+
+// GdkDragAction
+#const GDK_ACTION_DEFAULT  (1 << 0)
+#const GDK_ACTION_COPY (1 << 1)
+#const GDK_ACTION_MOVE (1 << 2
+#const GDK_ACTION_LINK (1 << 3
+#const GDK_ACTION_PRIVATE (1 << 4)
+#const GDK_ACTION_ASK (1 << 5)
+
+// GdkModifierType
+#const GDK_SHIFT_MASK    ( 1 << 0 )
+#const GDK_LOCK_MASK     ( 1 << 1 )
+#const GDK_CONTROL_MASK  ( 1 << 2 )
+#const GDK_MOD1_MASK     ( 1 << 3 )
+#const GDK_MOD2_MASK     ( 1 << 4 )
+#const GDK_MOD3_MASK     ( 1 << 5 )
+#const GDK_MOD4_MASK     ( 1 << 6 )
+#const GDK_MOD5_MASK     ( 1 << 7 )
+#const GDK_BUTTON1_MASK  ( 1 << 8 )
+#const GDK_BUTTON2_MASK  ( 1 << 9 )
+#const GDK_BUTTON3_MASK  ( 1 << 10 )
+#const GDK_BUTTON4_MASK  ( 1 << 11 )
+#const GDK_BUTTON5_MASK  ( 1 << 12 )
+
+#const GDK_MODIFIER_RESERVED_13_MASK  ( 1 << 13 )
+#const GDK_MODIFIER_RESERVED_14_MASK  ( 1 << 14 )
+#const GDK_MODIFIER_RESERVED_15_MASK  ( 1 << 15 )
+#const GDK_MODIFIER_RESERVED_16_MASK  ( 1 << 16 )
+#const GDK_MODIFIER_RESERVED_17_MASK  ( 1 << 17 )
+#const GDK_MODIFIER_RESERVED_18_MASK  ( 1 << 18 )
+#const GDK_MODIFIER_RESERVED_19_MASK  ( 1 << 19 )
+#const GDK_MODIFIER_RESERVED_20_MASK  ( 1 << 20 )
+#const GDK_MODIFIER_RESERVED_21_MASK  ( 1 << 21 )
+#const GDK_MODIFIER_RESERVED_22_MASK  ( 1 << 22 )
+#const GDK_MODIFIER_RESERVED_23_MASK  ( 1 << 23 )
+#const GDK_MODIFIER_RESERVED_24_MASK  ( 1 << 24 )
+#const GDK_MODIFIER_RESERVED_25_MASK  ( 1 << 25 )
+
+/* The next few modifiers are used by XKB, so we skip to the end.
+ * Bits 15 - 25 are currently unused. Bit 29 is used internally.
+ */
+
+#const GDK_SUPER_MASK    ( 1 << 26 )
+#const GDK_HYPER_MASK    ( 1 << 27 )
+#const GDK_META_MASK     ( 1 << 28 )
+
+#const GDK_MODIFIER_RESERVED_29_MASK  ( 1 << 29 )
+
+#const GDK_RELEASE_MASK  ( 1 << 30 )
+
+/* Combination of GDK_SHIFT_MASK..GDK_BUTTON5_MASK + GDK_SUPER_MASK
+   + GDK_HYPER_MASK + GDK_META_MASK + GDK_RELEASE_MASK */
+#const GDK_MODIFIER_MASK ( 0x5c001fff )
 
 #endif

@@ -27,8 +27,7 @@
 #func global gtk_icon_view_new_with_model "gtk_icon_view_new_with_model" sptr
 #func global gtk_icon_view_set_pixbuf_column "gtk_icon_view_set_pixbuf_column" sptr, int
 #func global gtk_icon_view_set_text_column "gtk_icon_view_set_text_column" sptr, int
-;#func global gtk_icon_view_set_selection_mode "gtk_icon_view_set_selection_mode" sptr, int
-#func global gtk_icon_view_set_reorderable "gtk_icon_view_set_reorderable" sptr, int
+#func global gtk_icon_view_set_selection_mode "gtk_icon_view_set_selection_mode" sptr, int
 #func global gtk_tree_path_to_string "gtk_tree_path_to_string" sptr
 #func global gtk_tree_path_free "gtk_tree_path_free" sptr
 #func global gtk_icon_view_get_selected_items "gtk_icon_view_get_selected_items" sptr
@@ -48,7 +47,6 @@
 
 // よく使う定数
 #const	NULL	0	; ヌルポインタ
-#const	TRUE	1	; 真
 
 	// GTK+初期化
 	gtk_init	NULL, NULL
@@ -89,13 +87,12 @@
 	loop
 
 	// アイコンビュー生成
-;#const GTK_SELECTION_MULTIPLE	3
+#const GTK_SELECTION_MULTIPLE	3 ; GtkSelectionMode
 	gtk_icon_view_new_with_model	model
 	iview	= stat
 	gtk_icon_view_set_pixbuf_column	iview, COL_PIXBUF
 	gtk_icon_view_set_text_column	iview, COL_TEXT
-;	gtk_icon_view_set_selection_mode	iview, GTK_SELECTION_MULTIPLE
-	gtk_icon_view_set_reorderable	iview, TRUE
+	gtk_icon_view_set_selection_mode	iview, GTK_SELECTION_MULTIPLE
 	g_signal_connect	iview, "selection-changed", varptr( cbiconviewselectionchanged ), NULL
 	g_signal_connect	iview, "item-activated", varptr( cbiconviewitemactivated ), NULL
 

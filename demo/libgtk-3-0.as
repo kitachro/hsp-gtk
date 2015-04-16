@@ -799,9 +799,9 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gtk_drag_dest_find_target "" 
 ;#func global gtk_drag_dest_get_target_list "" 
 ;#func global gtk_drag_dest_get_track_motion "" 
-;#func global gtk_drag_dest_set "" 
+#func global gtk_drag_dest_set "gtk_drag_dest_set" sptr, int, sptr, int, int
 ;#func global gtk_drag_dest_set_proxy "" 
-;#func global gtk_drag_dest_set_target_list "" 
+#func global gtk_drag_dest_set_target_list "gtk_drag_dest_set_target_list" sptr, sptr
 ;#func global gtk_drag_dest_set_track_motion "" 
 ;#func global gtk_drag_dest_unset "" 
 ;#func global gtk_drag_finish "" 
@@ -825,7 +825,7 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gtk_drag_source_set_icon_name "" 
 ;#func global gtk_drag_source_set_icon_pixbuf "" 
 ;#func global gtk_drag_source_set_icon_stock "" 
-;#func global gtk_drag_source_set_target_list "" 
+#func global gtk_drag_source_set_target_list "gtk_drag_source_set_target_list" sptr, sptr
 ;#func global gtk_drag_source_unset "" 
 ;#func global gtk_drag_unhighlight "" 
 ;#func global gtk_draw_insertion_cursor "" 
@@ -964,7 +964,7 @@ http://opensource.org/licenses/mit-license.php
 #func global gtk_event_box_new "gtk_event_box_new"
 ;#func global gtk_event_box_set_above_child "" 
 ;#func global gtk_event_box_set_visible_window "" 
-;#func global gtk_events_pending "" 
+#func global gtk_events_pending "gtk_events_pending"
 ;#func global gtk_expander_get_expanded "" 
 ;#func global gtk_expander_get_label "" 
 ;#func global gtk_expander_get_label_fill "" 
@@ -1303,7 +1303,7 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gtk_icon_view_create_drag_icon "" 
 ;#func global gtk_icon_view_drop_position_get_type "" 
 ;#func global gtk_icon_view_enable_model_drag_dest "" 
-;#func global gtk_icon_view_enable_model_drag_source "" 
+#func global gtk_icon_view_enable_model_drag_source "gtk_icon_view_enable_model_drag_source" sptr, int, sptr, int, int
 ;#func global gtk_icon_view_get_cell_rect "" 
 ;#func global gtk_icon_view_get_column_spacing "" 
 ;#func global gtk_icon_view_get_columns "" 
@@ -1341,17 +1341,17 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gtk_icon_view_select_path "" 
 ;#func global gtk_icon_view_selected_foreach "" 
 ;#func global gtk_icon_view_set_column_spacing "" 
-;#func global gtk_icon_view_set_columns "" 
+#func global gtk_icon_view_set_columns "gtk_icon_view_set_columns" sptr, int
 ;#func global gtk_icon_view_set_cursor "" 
 ;#func global gtk_icon_view_set_drag_dest_item "" 
-;#func global gtk_icon_view_set_item_orientation "" 
+#func global gtk_icon_view_set_item_orientation "gtk_icon_view_set_item_orientation" sptr, int
 ;#func global gtk_icon_view_set_item_padding "" 
 ;#func global gtk_icon_view_set_item_width "" 
 ;#func global gtk_icon_view_set_margin "" 
 ;#func global gtk_icon_view_set_markup_column "" 
 #func global gtk_icon_view_set_model "gtk_icon_view_set_model" sptr, sptr
 #func global gtk_icon_view_set_pixbuf_column "gtk_icon_view_set_pixbuf_column" sptr, int
-;#func global gtk_icon_view_set_reorderable "" 
+#func global gtk_icon_view_set_reorderable "gtk_icon_view_set_reorderable" sptr, int
 ;#func global gtk_icon_view_set_row_spacing "" 
 #func global gtk_icon_view_set_selection_mode "gtk_icon_view_set_selection_mode" sptr, int
 ;#func global gtk_icon_view_set_spacing "" 
@@ -1564,7 +1564,7 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gtk_lock_button_set_permission "" 
 #func global gtk_main "gtk_main"
 ;#func global gtk_main_do_event "" 
-;#func global gtk_main_iteration "" 
+#func global gtk_main_iteration "gtk_main_iteration" 
 ;#func global gtk_main_iteration_do "" 
 ;#func global gtk_main_level "" 
 #func global gtk_main_quit "gtk_main_quit"
@@ -2565,14 +2565,14 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gtk_target_entry_new "" 
 ;#func global gtk_target_flags_get_type "" 
 ;#func global gtk_target_list_add "" 
-;#func global gtk_target_list_add_image_targets "" 
+#func global gtk_target_list_add_image_targets "gtk_target_list_add_image_targets" sptr, int, int
 ;#func global gtk_target_list_add_rich_text_targets "" 
 ;#func global gtk_target_list_add_table "" 
-;#func global gtk_target_list_add_text_targets "" 
+#func global gtk_target_list_add_text_targets "gtk_target_list_add_text_targets" sptr, int
 ;#func global gtk_target_list_add_uri_targets "" 
 ;#func global gtk_target_list_find "" 
 ;#func global gtk_target_list_get_type "" 
-;#func global gtk_target_list_new "" 
+#func global gtk_target_list_new "gtk_target_list_new" sptr, int
 ;#func global gtk_target_list_ref "" 
 ;#func global gtk_target_list_remove "" 
 ;#func global gtk_target_list_unref "" 
@@ -4022,5 +4022,15 @@ http://opensource.org/licenses/mit-license.php
 #enum GTK_SELECTION_SINGLE
 #enum GTK_SELECTION_BROWSE
 #enum GTK_SELECTION_MULTIPLE
+
+// GtkOrientation
+#enum GTK_ORIENTATION_HORIZONTAL = 0
+#enum GTK_ORIENTATION_VERTICAL
+
+// GtkDestDefaults
+#const GTK_DEST_DEFAULT_MOTION     ( 1 << 0 ) /* respond to "drag_motion" */
+#const GTK_DEST_DEFAULT_HIGHLIGHT  ( 1 << 1 ) /* auto-highlight */
+#const GTK_DEST_DEFAULT_DROP       ( 1 << 2 ) /* respond to "drag_drop" */
+#const GTK_DEST_DEFAULT_ALL        0x07
 
 #endif

@@ -4080,18 +4080,29 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
 # 17　ツリービューとリストビュー（GtkTreeView）（未作成）
 
 ====================
-# 18　アイコンビュー（GtkIconView）
+# 18　アイコンビュー（GtkIconView）とドラッグ＆ドロップ機能
 
-![サンプル18](18.png)
+![サンプル18-1](18-1.png)
 
-　GtkIconViewウィジェットは、アイコンのリストを整列させて表示するための部品です。ドラッグアンドドロップによる操作や、項目の複数選択・並べ替え機能などに対応しています。
+　GtkIconViewウィジェットは、アイコンのリストを整列させて表示するための部品です。ドラッグ＆ドロップによる操作や、項目の複数選択・並べ替え機能などに対応しています。
 
 　GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによって表示データを管理しますが、GtkCellRenderer系オブジェクトを利用する必要はありません。アイコン用画像として、GtkListStoreのデータ項目に必ずGdkPixbufを含めるようにします。
 
 　アイコンの選択モードは、選択不可・単数選択・複数選択の3つからいずれかを選んで、gtk_icon_view_set_selection_mode関数で設定します。
 
+　この章では、GtkIconViewウィジェットを紹介するとともに、GTK+のウィジェットが持つドラッグ＆ドロップ機能についても説明します。
+
+ただし、この機能は、GTK+のシグナルハンドラの引数を介して多くの情報をやりとりすることで成立しており、2.4.2で説明したように、HSPではシグナルハンドラの引数を利用することが難しいため、紹介できるのは一部の限られた機能になります。
+
+　次のページから、ドラッグ＆ドロップ機能なしのGtkIconViewのサンブル、GtkIconView内でのドラッグ＆ドロップ機能を利用するサンプル、GtkIconViewと他のウィジェット間のドラッグ＆ドロップ機能を利用するサンプル、の3つのプログラムを挙げて、それぞれについて説明します。
+
 ====================
-## 18.1　サンプルプログラムの全体
+## 18.1　ドラッグ＆ドロップ機能を利用しないGtkIconViewウィジェット
+
+![サンプル18-1](18-1.png)
+
+====================
+## 18.1.1　サンプルプログラムの全体
 
 ********************
     // コールバック関数を使うための準備
@@ -4099,7 +4110,7 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
     #uselib ""
     #func cb_window_delete_event ""
     	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    #func cb_iconview_selection_changed "" int, int
+    #func cb_iconview_selection_changed ""
     	setcallbk cbiconviewselectionchanged, cb_iconview_selection_changed, *on_iconview_selection_changed
     #func cb_iconview_item_activated "" int, int, int
     	setcallbk cbiconviewitemactivated, cb_iconview_item_activated, *on_iconview_item_activated
@@ -4133,13 +4144,13 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
     #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
     #func global g_object_unref "g_object_unref" sptr
     
-    #uselib "libgdk_pixbuf-2.0-0.dll"
-    #func global gdk_pixbuf_get_type "gdk_pixbuf_get_type"
-    
     #uselib "libglib-2.0-0.dll"
     #func global g_list_length "g_list_length" sptr
-    #func global g_list_nth_data "g_list_nth_data" sptr, int
+    #func global g_list_nth_data "g_list_nth_data"  sptr, int
     #func global g_list_free_full "g_list_free_full" sptr, sptr
+    
+    #uselib "libgdk_pixbuf-2.0-0.dll"
+    #func global gdk_pixbuf_get_type "gdk_pixbuf_get_type"
     
     // よく使う定数
     #const NULL 0 ; ヌルポインタ
@@ -4183,7 +4194,7 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
     	loop
     
     	// アイコンビュー生成
-    #const GTK_SELECTION_MULTIPLE 3
+    #const GTK_SELECTION_MULTIPLE 3 ; GtkSelectionMode
     	gtk_icon_view_new_with_model model
     	iview = stat
     	gtk_icon_view_set_pixbuf_column iview, COL_PIXBUF
@@ -4234,8 +4245,5 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
 ********************
 
 ====================
-# 19　ドラッグアンドドロップ機能（未作成）
-
-====================
-# 20　GladeインターフェースデザイナとGtkBuilderオブジェクト（未作成）
+# 19　GladeインターフェースデザイナとGtkBuilderオブジェクト（未作成）
 

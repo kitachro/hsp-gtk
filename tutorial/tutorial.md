@@ -4367,5 +4367,179 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
 ********************
 
 ====================
+## 18.3　GtkIconViewと他のウィジェット間のドラッグ＆ドロップ機能を利用する
+
+![サンプル18-3](18-3.png)
+
+====================
+## 18.3.1　サンプルプログラムの全体
+
+********************
+    // コールバック関数を使うための準備
+    #include "hscallbk.as"
+    #uselib ""
+    #func cb_window_delete_event ""
+    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
+    #func cb_label_drag_drop ""
+    	setcallbk cblabeldragdrop, cb_label_drag_drop, *on_label_drag_drop
+    
+    // GTK+の関数を使うための準備
+    #uselib "libgtk-3-0.dll"
+    #func global gtk_init "gtk_init" sptr, sptr
+    
+    #func global gtk_settings_get_default "gtk_settings_get_default"
+    #func global gtk_settings_set_string_property "gtk_settings_set_string_property" sptr, sptr, sptr, sptr
+    
+    #func global gtk_window_new "gtk_window_new" int
+    #func global gtk_widget_show_all "gtk_widget_show_all" sptr
+    #func global gtk_container_add "gtk_container_add" sptr, sptr
+    
+    #func global gtk_main "gtk_main"
+    #func global gtk_main_quit "gtk_main_quit"
+    
+    #func global gtk_box_new "gtk_box_new" int, int
+    #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
+    
+    #func global gtk_list_store_new2 "gtk_list_store_new" int, int, int
+    #func global gtk_list_store_append "gtk_list_store_append" sptr, sptr
+    #func global gtk_list_store_set2 "gtk_list_store_set" sptr, sptr, sptr, sptr, sptr, sptr, int
+    #func global gtk_image_new "gtk_image_new"
+    #func global gtk_widget_render_icon_pixbuf "gtk_widget_render_icon_pixbuf" sptr, sptr, int
+    
+    #func global gtk_icon_view_new_with_model "gtk_icon_view_new_with_model" sptr
+    #func global gtk_icon_view_set_pixbuf_column "gtk_icon_view_set_pixbuf_column" sptr, int
+    #func global gtk_icon_view_set_text_column "gtk_icon_view_set_text_column" sptr, int
+    #func global gtk_icon_view_set_item_orientation "gtk_icon_view_set_item_orientation" sptr, int
+    #func global gtk_icon_view_set_columns "gtk_icon_view_set_columns" sptr, int
+    #func global gtk_icon_view_enable_model_drag_source "gtk_icon_view_enable_model_drag_source" sptr, int, sptr, int, int
+    
+    #func global gtk_drag_dest_set "gtk_drag_dest_set" sptr, int, sptr, int, int
+    #func global gtk_target_list_new "gtk_target_list_new" sptr, int
+    #enum TARGET_ENTRY_TEXT = 0
+    #enum TARGET_ENTRY_PIXBUF
+    #func global gtk_target_list_add_image_targets "gtk_target_list_add_image_targets" sptr, int, int
+    #func global gtk_target_list_add_text_targets "gtk_target_list_add_text_targets" sptr, int
+    #func global gtk_drag_dest_set_target_list "gtk_drag_dest_set_target_list" sptr, sptr
+    #func global gtk_drag_source_set_target_list "gtk_drag_source_set_target_list" sptr, sptr
+    
+    #func global gtk_label_new "gtk_label_new" sptr
+    
+    #uselib "libgobject-2.0-0.dll"
+    #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
+    #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+    #func global g_object_unref "g_object_unref" sptr
+    
+    #uselib "libgdk_pixbuf-2.0-0.dll"
+    #func global gdk_pixbuf_get_type "gdk_pixbuf_get_type"
+    
+    // よく使う関数
+    #include "hspinet.as"
+    #module
+    #defcfunc u str chars_ ; shift-jis文字列をutf-8に変換
+    	chars = chars_
+    	nkfcnv@ chars, chars, "Sw"
+    	return chars
+    #global
+    
+    // よく使う定数
+    #const TRUE 1 ; 真
+    #const NULL 0 ; ヌルポインタ
+    
+    	// GTK+初期化
+    	gtk_init NULL, NULL
+    
+    	// GTK+のデフォルトGUIフォントを変更
+    	gtk_settings_get_default
+    	gtk_settings_set_string_property stat, "gtk-font-name", "ms ui gothic, 10", NULL
+    
+    	// ウィンドウ生成
+    #const GTK_WINDOW_TOPLEVEL 0
+    	gtk_window_new GTK_WINDOW_TOPLEVEL
+    	win = stat
+    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+    
+    	// HBox生成
+    #const GTK_ORIENTATION_HORIZONTAL 0 ; GtkOrientation
+    	gtk_box_new GTK_ORIENTATION_HORIZONTAL, 12
+    	hbox = stat
+    
+    	// IconView用データ生成
+    	; GtkTreeIter格納用変数作成
+    	sdim struct_itr, ( 4 * 4 ) ; 4*4 = GtkTreeIter構造体サイズ
+    	itr = varptr( struct_itr )
+    
+    	; GtkListStore生成
+    #define G_TYPE_MAKE_FUNDAMENTAL(%1) (%1 << 2)
+    #define G_TYPE_STRING G_TYPE_MAKE_FUNDAMENTAL(16)
+    	gdk_pixbuf_get_type
+    	gtk_list_store_new2 2, stat, G_TYPE_STRING
+    	model = stat
+    
+    	; GtkListStoreにデータをセット
+    #define GTK_STOCK_ABOUT "gtk-about"
+    #define GTK_STOCK_CONVERT "gtk-convert"
+    #define GTK_STOCK_COPY "gtk-copy"
+    #const GTK_ICON_SIZE_DND 5
+    #const COL_PIXBUF 0 ; GtkListStoreデータの項目インデックス
+    #const COL_TEXT 1
+    	icons = GTK_STOCK_ABOUT, GTK_STOCK_CONVERT, GTK_STOCK_COPY
+    	repeat length( icons )
+    		gtk_list_store_append model, itr
+    		gtk_image_new
+    		gtk_widget_render_icon_pixbuf stat, icons( cnt ), GTK_ICON_SIZE_DND
+    		pixbuf = stat
+    		gtk_list_store_set2 model, itr, COL_PIXBUF, pixbuf, COL_TEXT, "item " + ( cnt + 1 ), -1
+    		g_object_unref pixbuf
+    	loop
+    
+    	// IconView生成
+    #const GDK_BUTTON1_MASK  ( 1 << 8 ) ; GdkModifierType
+    #const GDK_ACTION_COPY (1 << 1) ; GdkDragAction
+    #const GTK_ORIENTATION_VERTICAL 1 ; GtkOrientation
+    	gtk_icon_view_new_with_model model
+    	iview = stat
+    	gtk_icon_view_set_pixbuf_column iview, COL_PIXBUF
+    	gtk_icon_view_set_text_column iview, COL_TEXT
+    	gtk_icon_view_set_item_orientation iview, GTK_ORIENTATION_VERTICAL
+    	gtk_icon_view_set_columns iview, 1
+    	gtk_icon_view_enable_model_drag_source iview, GDK_BUTTON1_MASK, NULL, 0, GDK_ACTION_COPY
+    
+    	// Label生成
+    	gtk_label_new u( "ここにアイコンをドロップしてください。" )
+    	lbl = stat
+    #const GTK_DEST_DEFAULT_ALL 0x07 ; GtkDestDefaults
+    	gtk_drag_dest_set lbl, GTK_DEST_DEFAULT_ALL, NULL, 0, GDK_ACTION_COPY
+    	g_signal_connect lbl, "drag-drop", varptr( cblabeldragdrop ), NULL
+    
+    	// GtkTargetList初期化
+    #const TARGET_ENTRY_DUMMY 0
+    	gtk_target_list_new NULL, 0
+    	tlist = stat
+    	gtk_target_list_add_image_targets tlist, TARGET_ENTRY_DUMMY, TRUE
+    	gtk_drag_source_set_target_list iview, tlist
+    	gtk_drag_dest_set_target_list lbl, tlist
+    
+    	// ウィンドウの組み立て
+    	gtk_box_pack_start hbox, iview, TRUE, TRUE, 0
+    	gtk_box_pack_start hbox, lbl, TRUE, TRUE, 0
+    	gtk_container_add win, hbox
+    
+    	// ウィンドウの表示とメインループの開始
+    	gtk_widget_show_all win
+    	gtk_main
+    	end
+    
+    /* シグナルハンドラ */
+    *on_window_delete_event
+    	gtk_main_quit
+    	return
+    
+    *on_label_drag_drop
+    	mes "on_label_drag_drop"
+    	// ドロップされたアイコンとキャプションをダイアログで表示する
+    	return
+********************
+
+====================
 # 19　GladeインターフェースデザイナとGtkBuilderオブジェクト（未作成）
 

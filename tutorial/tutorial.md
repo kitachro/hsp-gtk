@@ -4,7 +4,7 @@
 : chrono (<https://github.com/kitachro>)
 
 最終更新日:
-: 2015年4月6日
+: 2015年4月16日
 
 ライセンス（Copyright）:
 : GNU Free Documentation License 1.3 with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts
@@ -4084,15 +4084,15 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
 
 ![サンプル18-1](18-1.png)
 
+　この章では、GtkIconViewウィジェットを紹介するとともに、GTK+のウィジェットが持つドラッグ＆ドロップ機能についても説明します。
+
+ただし、この機能は、GTK+のシグナルハンドラの引数を介して多くの情報をやりとりすることで成立しており、2.4.2で説明したように、HSPではシグナルハンドラの引数を利用することが難しいため、紹介できるのは一部の限られた機能になります。
+
 　GtkIconViewウィジェットは、アイコンのリストを整列させて表示するための部品です。ドラッグ＆ドロップによる操作や、項目の複数選択・並べ替え機能などに対応しています。
 
 　GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによって表示データを管理しますが、GtkCellRenderer系オブジェクトを利用する必要はありません。アイコン用画像として、GtkListStoreのデータ項目に必ずGdkPixbufを含めるようにします。
 
 　アイコンの選択モードは、選択不可・単数選択・複数選択の3つからいずれかを選んで、gtk_icon_view_set_selection_mode関数で設定します。
-
-　この章では、GtkIconViewウィジェットを紹介するとともに、GTK+のウィジェットが持つドラッグ＆ドロップ機能についても説明します。
-
-ただし、この機能は、GTK+のシグナルハンドラの引数を介して多くの情報をやりとりすることで成立しており、2.4.2で説明したように、HSPではシグナルハンドラの引数を利用することが難しいため、紹介できるのは一部の限られた機能になります。
 
 　次のページから、ドラッグ＆ドロップ機能なしのGtkIconViewのサンブル、GtkIconView内でのドラッグ＆ドロップ機能を利用するサンプル、GtkIconViewと他のウィジェット間のドラッグ＆ドロップ機能を利用するサンプル、の3つのプログラムを挙げて、それぞれについて説明します。
 

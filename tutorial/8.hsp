@@ -1,12 +1,11 @@
 // コールバック関数を使うための準備
-#include "hscallbk.as"
-#uselib ""
-#func cb_window_delete_event ""
-#func cb_cbtn1_toggled ""
-#func cb_cbtn2_toggled ""
-#func cb_cbtn3_toggled ""
-#func cb_cbtn4_toggled ""
-#func cb_do_pulse ""
+#include "modclbk.as"
+newclbk3	cbwindowdeleteevent, 3, *on_window_delete_event, CLBKMODE_CDECL@
+newclbk3	cbcbtn1toggled, 2, *on_cbtn1_toggled, CLBKMODE_CDECL@
+newclbk3	cbcbtn2toggled, 2, *on_cbtn2_toggled, CLBKMODE_CDECL@
+newclbk3	cbcbtn3toggled, 2, *on_cbtn3_toggled, CLBKMODE_CDECL@
+newclbk3	cbcbtn4toggled, 2, *on_cbtn4_toggled, CLBKMODE_CDECL@
+newclbk3	cbdopulse, 0, *do_pulse, CLBKMODE_CDECL@
 
 // GTK+の関数を使うための準備
 #uselib "libgtk-3-0.dll"
@@ -66,8 +65,7 @@
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	gtk_widget_set_size_request	win, 200, 100
-	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+	g_signal_connect	win, "delete-event", cbwindowdeleteevent, NULL
 
 	// VBox生成
 	gtk_vbox_new	FALSE, 6
@@ -86,27 +84,22 @@
 	gtk_check_button_new_with_label	"Editable"
 	cbtn1	= stat
 	gtk_toggle_button_set_active	cbtn1, TRUE
-	setcallbk	cbcbtn1toggled, cb_cbtn1_toggled, *on_cbtn1_toggled
-	g_signal_connect	cbtn1, "toggled", varptr( cbcbtn1toggled ), NULL
+	g_signal_connect	cbtn1, "toggled", cbcbtn1toggled, ety
 
 	gtk_check_button_new_with_label	"Visible"
 	cbtn2	= stat
 	gtk_toggle_button_set_active	cbtn2, TRUE
-	setcallbk	cbcbtn2toggled, cb_cbtn2_toggled, *on_cbtn2_toggled
-	g_signal_connect	cbtn2, "toggled", varptr( cbcbtn2toggled ), NULL
+	g_signal_connect	cbtn2, "toggled", cbcbtn2toggled, ety
 
 	gtk_check_button_new_with_label	"Pulse"
 	cbtn3	= stat
 	gtk_toggle_button_set_active	cbtn3, FALSE
-	setcallbk	cbcbtn3toggled, cb_cbtn3_toggled, *on_cbtn3_toggled
-	g_signal_connect	cbtn3, "toggled", varptr( cbcbtn3toggled ), NULL
-	setcallbk	cbdopulse, cb_do_pulse, *do_pulse
+	g_signal_connect	cbtn3, "toggled", cbcbtn3toggled, ety
 
 	gtk_check_button_new_with_label	"Icon"
 	cbtn4	= stat
 	gtk_toggle_button_set_active	cbtn4, FALSE
-	setcallbk	cbcbtn4toggled, cb_cbtn4_toggled, *on_cbtn4_toggled
-	g_signal_connect	cbtn4, "toggled", varptr( cbcbtn4toggled ), NULL
+	g_signal_connect	cbtn4, "toggled", cbcbtn4toggled, ety
 
 	// ウィンドウの組み立て
 	gtk_box_pack_start	hbox, cbtn1, TRUE, TRUE, 0
@@ -128,42 +121,49 @@
 	return
 
 *on_cbtn1_toggled
-	gtk_toggle_button_get_active	cbtn1
-	gtk_editable_set_editable	ety, stat
+	clbkargprotect	args_
+
+	gtk_toggle_button_get_active	args_( 0 )
+	gtk_editable_set_editable	args_( 1 ), stat
 	return
 
 *on_cbtn2_toggled
-	gtk_toggle_button_get_active	cbtn2
-	gtk_entry_set_visibility	ety, stat
+	clbkargprotect	args_
+
+	gtk_toggle_button_get_active	args_( 0 )
+	gtk_entry_set_visibility	args_( 1 ), stat
 	return
 
 *on_cbtn3_toggled
-	gtk_toggle_button_get_active	cbtn3
-	active	= stat
-	if active {
-		gtk_entry_set_progress_pulse_step	ety, 0.2
-		g_timeout_add	100, varptr( cbdopulse ), 0
+	clbkargprotect	args_
+	e	= args_( 1 )
+
+	gtk_toggle_button_get_active	args_( 0 )
+	if stat {
+		gtk_entry_set_progress_pulse_step	e, 0.2
+		g_timeout_add	100, cbdopulse, NULL
 		timeout_id	= stat
 	}
 	else {
 		g_source_remove	timeout_id
 		timeout_id	= 0
-		gtk_entry_set_progress_pulse_step	ety, 0
+		gtk_entry_set_progress_pulse_step	e, 0
 	}
 	return
 
 *do_pulse
-	gtk_entry_progress_pulse	ety
+	gtk_entry_progress_pulse	e
 	return
 
 *on_cbtn4_toggled
-	gtk_toggle_button_get_active	cbtn4
-	active	= stat
-	if active {
+	clbkargprotect	args_
+
+	gtk_toggle_button_get_active	args_( 0 )
+	if stat {
 		stock_id	= GTK_STOCK_FIND
 	}
 	else {
 		stock_id	= ""
 	}
-	gtk_entry_set_icon_from_stock	ety, GTK_ENTRY_ICON_PRIMARY, stock_id
+	gtk_entry_set_icon_from_stock	args_( 1 ), GTK_ENTRY_ICON_PRIMARY, stock_id
 	return

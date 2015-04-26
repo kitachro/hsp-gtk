@@ -139,7 +139,7 @@ CLBKMODE_CDECL
 			code_callptr = lpeek(ctx,168 + 48)//
 	
 			if argmax>0{
-				dialog "argmax>0"
+;				dialog "argmax>0"
 				dim clbk,57
 				clbk(0) = $83ec8b55,$45c730ec,$000000fc,$f845c700
 				clbk(4) = $00000000,$00e045c7,$c7000000,$0000e445

@@ -15,9 +15,9 @@ modclbk.as
 %port
 Win
 %ver
-3b1
+3b2
 %date
-2015/04/18
+2015/04/25
 %url
 http://hsp.tv/play/pforum.php?mode=all&num=62130
 
@@ -66,7 +66,7 @@ CLBKMODE_CDECL
 
 %*/
 
-#ifndef _MODCLBK3B1_AS
+#ifndef _MODCLBK3B2_AS
 	#ifdef _MODCLBK3A1_AS
 		#undef _MODCLBK3A1_AS
 		#undef newclbk3
@@ -75,20 +75,25 @@ CLBKMODE_CDECL
 		#undef _newclbk3
 		#undef modclbk_term
 	#endif
+	#ifdef _MODCLBK3B2_AS
+		#undef clbk_getthisptr
+	#endif
 	#define global _MODCLBK3A1_AS
 	#define global _MODCLBK3B1_AS
+	#define global _MODCLBK3B2_AS
+	#define global _MODCLBK3B3_AS
 
-	#define global newclbk3(%1,%2 = 0,%3,%4 = 0) tmpclbklb@modclbk3a1=%3:%1=_newclbk3(%2,tmpclbklb@modclbk3a1,%4)
+	#define global newclbk3(%1,%2 = 0,%3,%4 = 0) tmpclbklb@modclbk3b3=%3:%1=_newclbk3(%2,tmpclbklb@modclbk3b3,%4)
 		//新しい関数ポインタを取得する
 		// %1...関数ポインタを受け取る変数
 		// %2...引数の数
 		// %3...呼び出されるラベル
 		// %4...作成のモード(CLBKMODE)
-	#define global clbkargprotect(%1) lp@modclbk3a1=lparam:wp@modclbk3a1=wparam:dupptr args@modclbk3a1,lp@modclbk3a1,wp@modclbk3a1*4,4:dim %1,wp@modclbk3a1:memcpy %1,args@modclbk3a1,wp@modclbk3a1*4
+	#define global clbkargprotect(%1) lp@modclbk3b3=lparam:wp@modclbk3b3=wparam:dupptr args@modclbk3b3,lp@modclbk3b3,wp@modclbk3b3*4,4:dim %1,wp@modclbk3b3:memcpy %1,args@modclbk3b3,wp@modclbk3b3*4
 		//引数を取得する
 		// %1...引数を受け取るための変数
 	
-	#module "modclbk3b1"
+	#module "modclbk3b2"
 	
 			#define ctype uintbitshiftright(%1,%2) (((%1&$7fffffff)>>%2)|((1&(%1>>31))<<(31-%2)))
 	
@@ -134,6 +139,7 @@ CLBKMODE_CDECL
 			code_callptr = lpeek(ctx,168 + 48)//
 	
 			if argmax>0{
+				dialog "argmax>0"
 				dim clbk,57
 				clbk(0) = $83ec8b55,$45c730ec,$000000fc,$f845c700
 				clbk(4) = $00000000,$00e045c7,$c7000000,$0000e445
@@ -154,20 +160,21 @@ CLBKMODE_CDECL
 				lpoke clbk,$25,code_callptr:lpoke clbk,$2c,varptr(thisptr)
 				lpoke clbk,$48,varptr(ctx) + 36:lpoke clbk,$4f,varptr(ctx) + 40
 				lpoke clbk,$56,varptr(ctx) + 784:lpoke clbk,$b4,ilb
-				if ((mode & $f) == CLBKMODE_CDECL) == 0:wpoke clbk,$e2,argmax & $ffff
+				if ((mode & $f) == CLBKMODE_CDECL) == 0:wpoke clbk,$e2,(argmax * 4) & $ffff
 				funcsize = 228
 			}
 			if argmax==0{
 				dim clbk,25
 				clbk(0) = $83ec8b55,$45c718ec,$000000fc,$f045c700
-				clbk(4) = $00000000,$00f845c7,$c7000000,$000045c7
+				clbk(4) = $00000000,$00f845c7,$c7000000,$0000e845
 				clbk(8) = $45c70000,$000000f4,$ec45c700,$00000000
 				clbk(12) = $8bec4d89,$00c7f845,$00000000,$c7e84d8b
 				clbk(16) = $00000001,$00006800,$558b0000,$83d2fff0
 				clbk(20) = $458b04c4,$89088bf4,$458bfc4d,$5de58bfc
 				clbk(24) = $000000c3
 				lpoke clbk,$10,code_callptr:lpoke clbk,$17,varptr(ctx) + 36
-				lpoke clbk,$1e,varptr(ctx) + 40:lpoke clbk,$46,ilb
+				lpoke clbk,$1e,varptr(ctx) + 40:lpoke clbk,$25,varptr(ctx) + 784
+				lpoke clbk,$2c,varptr(thisptr):lpoke clbk,$46,ilb
 				funcsize = 100
 			}
 			clbkptr = malloc(funcsize)

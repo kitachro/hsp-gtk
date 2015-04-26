@@ -197,7 +197,7 @@ modclbk3b2を使用した場合、コールバック関数はラベルで始ま�
 　つづいて、シグナルとコールバック関数の関連付けを削除する方法について説明します。ここでも、#uselib命令と#func命令の行は省略しますが、サンプルは3章で見ることができます。
 
 ********************
-    g_signal_connect widget, "signal", varptr( callback ), 0
+    g_signal_connect widget, "signal", callback, 0
     id = stat
     （中略）
     g_signal_handler_disconnect widget, id

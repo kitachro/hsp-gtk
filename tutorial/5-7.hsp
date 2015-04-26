@@ -1,9 +1,8 @@
 // コールバック関数を使うための準備
-#include "hscallbk.as"
-#uselib ""
-#func cb_window_delete_event ""
-#func cb_button1_notifyactive ""
-#func cb_button2_notifyactive ""
+#include "modclbk.as"
+newclbk3	cbwindowdeleteevent, 3, *on_window_delete_event, CLBKMODE_CDECL@
+newclbk3	cbbutton1notifyactive, 3, *on_button1_notifyactive, CLBKMODE_CDECL@
+newclbk3	cbbutton2notifyactive, 3, *on_button2_notifyactive, CLBKMODE_CDECL@
 
 // GTK+の関数を使うための準備
 #uselib "libgtk-3-0.dll"
@@ -39,25 +38,24 @@
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	gtk_container_set_border_width	win, 10
-	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+	g_signal_connect	win, "delete-event", cbwindowdeleteevent, NULL
 
 	// HBox生成
 	gtk_hbox_new	FALSE, 6
 	hbox	= stat
 
 	// ボタン群生成
+	num_btn1	= 1
 	gtk_switch_new
 	btn1	= stat
 	gtk_switch_set_active	btn1, FALSE
-	setcallbk	cbbutton1notifyactive, cb_button1_notifyactive, *on_button1_notifyactive
-	g_signal_connect	btn1, "notify::active", varptr( cbbutton1notifyactive ), NULL
+	g_signal_connect	btn1, "notify::active", cbbutton1notifyactive, varptr( num_btn1 )
 
+	num_btn2	= 2
 	gtk_switch_new
 	btn2	= stat
 	gtk_switch_set_active	btn2, TRUE
-	setcallbk	cbbutton2notifyactive, cb_button2_notifyactive, *on_button2_notifyactive
-	g_signal_connect	btn2, "notify::active", varptr( cbbutton2notifyactive ), NULL
+	g_signal_connect	btn2, "notify::active", cbbutton2notifyactive, varptr( num_btn2 )
 
 	// ウィンドウの組み立て
 	gtk_box_pack_start	hbox, btn1, TRUE, TRUE, 0
@@ -75,18 +73,18 @@
 	return
 
 *on_button1_notifyactive
-	btn	= btn1
-	num_btn	= 1
 	gosub	*show_message
 	return
 
 *on_button2_notifyactive
-	btn	= btn2
-	num_btn	= 2
 	gosub	*show_message
 	return
 
 *show_message
+	clbkargprotect	args_
+	btn	= args_( 0 )
+	dupptr	num_btn, args_( 2 ), 4
+
 	gtk_switch_get_active	btn
 	if stat {
 		text_state	= "ON"

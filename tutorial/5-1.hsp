@@ -1,10 +1,9 @@
 // コールバック関数を使うための準備
-#include "hscallbk.as"
-#uselib ""
-#func cb_window_delete_event ""
-#func cb_button1_clicked ""
-#func cb_button2_clicked ""
-#func cb_button3_clicked ""
+#include "modclbk.as"
+newclbk3	cbwindowdeleteevent, 3, *on_window_delete_event, CLBKMODE_CDECL@
+newclbk3	cbbutton1clicked, 2, *on_button1_clicked, CLBKMODE_CDECL@
+newclbk3	cbbutton2clicked, 2, *on_button2_clicked, CLBKMODE_CDECL@
+newclbk3	cbbutton3clicked, 2, *on_button3_clicked, CLBKMODE_CDECL@
 
 // GTK+の関数を使うための準備
 #uselib "libgtk-3-0.dll"
@@ -58,8 +57,7 @@
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	gtk_container_set_border_width	win, 10
-	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+	g_signal_connect	win, "delete-event", cbwindowdeleteevent, NULL
 
 	// HBox生成
 	gtk_hbox_new	FALSE, 6
@@ -69,8 +67,7 @@
 	; ボタン1
 	gtk_button_new_with_label	u( "クリック！" )
 	btn1	= stat
-	setcallbk	cbbutton1clicked, cb_button1_clicked, *on_button1_clicked
-	g_signal_connect	btn1, "clicked", varptr( cbbutton1clicked ), 0
+	g_signal_connect	btn1, "clicked", cbbutton1clicked, 0
 
 	; ボタン1のラベルのフォントを設定
 	gtk_container_get_children	btn1
@@ -82,14 +79,12 @@
 	; ボタン2
 	gtk_button_new_from_stock	GTK_STOCK_OPEN
 	btn2	= stat
-	setcallbk	cbbutton2clicked, cb_button2_clicked, *on_button2_clicked
-	g_signal_connect	btn2, "clicked", varptr( cbbutton2clicked ), 0
+	g_signal_connect	btn2, "clicked", cbbutton2clicked, 0
 
 	; ボタン3
 	gtk_button_new_with_mnemonic	"_Close"
 	btn3	= stat
-	setcallbk	cbbutton3clicked, cb_button3_clicked, *on_button3_clicked
-	g_signal_connect	btn3, "clicked", varptr( cbbutton3clicked ), 0
+	g_signal_connect	btn3, "clicked", cbbutton3clicked, 0
 
 	// ウィンドウの組み立て
 	gtk_box_pack_start	hbox, btn1, TRUE, TRUE, 0

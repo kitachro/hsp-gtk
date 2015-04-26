@@ -56,6 +56,7 @@ hscallbk.dllは、[ちょくとのページ](http://chokuto.ifdef.jp/index.html)
 
 * Windows 7 Home Premium SP1 (32-bit)
 * Hot Soup Processor 3.4
+* modclbk3b2
 * GTK+ for Windows all-in-one bundle 3.6.4 (32-bit)
 
 ====================

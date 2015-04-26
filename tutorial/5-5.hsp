@@ -1,8 +1,7 @@
 // コールバック関数を使うための準備
-#include "hscallbk.as"
-#uselib ""
-#func cb_window_delete_event ""
-#func cb_link_button_activate_link ""
+#include "modclbk.as"
+newclbk3	cbwindowdeleteevent, 3, *on_window_delete_event, CLBKMODE_CDECL@
+newclbk3	cblinkbuttonactivatelink, 2, *on_link_button_activate_link, CLBKMODE_CDECL@
 
 // GTK+の関数を使うための準備
 #uselib "libgtk-3-0.dll"
@@ -32,14 +31,12 @@
 	// ウィンドウ生成
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
-	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+	g_signal_connect	win, "delete-event", cbwindowdeleteevent , NULL
 
 	// ボタン生成
 	gtk_link_button_new_with_label	"http://www.gtk.org", "GTK+ Homepage"
 	btn	= stat
-	setcallbk	cblinkbuttonactivatelink, cb_link_button_activate_link, *on_link_button_activate_link
-	g_signal_connect	btn, "activate-link", varptr( cblinkbuttonactivatelink ), NULL
+	g_signal_connect	btn, "activate-link", cblinkbuttonactivatelink, NULL
 
 	// ウィンドウの組み立て
 	gtk_container_add	win, btn
@@ -55,8 +52,11 @@
 	return
 
 *on_link_button_activate_link
-	gtk_link_button_get_uri	btn
-	p	= stat
-	dupptr	uri, p, 1024, 2
+	clbkargprotect	args_
+	widget	= args_( 0 )
+
+	gtk_link_button_get_uri	widget
+	ptr	= stat
+	dupptr	uri, ptr, 1024, 2
 	exec	uri, 16
 	return	TRUE

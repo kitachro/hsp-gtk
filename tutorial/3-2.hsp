@@ -1,8 +1,7 @@
 // コールバック関数を使うための準備
-#include "hscallbk.as"
-#uselib ""
-#func cb_window_delete_event ""
-#func cb_button_clicked ""
+#include "modclbk.as"
+newclbk3	cbwindowdeleteevent, 3, *on_window_delete_event, CLBKMODE_CDECL@
+newclbk3	cbbuttonclicked, 2, *on_button_clicked, CLBKMODE_CDECL@
 
 // GTK+の関数を使うための準備
 #uselib "libgtk-3-0.dll"
@@ -29,14 +28,12 @@
 	// ウィンドウ生成
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
-	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+	g_signal_connect	win, "delete-event", cbwindowdeleteevent, NULL
 
 	// ボタン生成
 	gtk_button_new_with_label	"Click Here"
 	btn	= stat
-	setcallbk	cbbuttonclicked, cb_button_clicked, *on_button_clicked
-	g_signal_connect	btn, "clicked", varptr( cbbuttonclicked ), NULL
+	g_signal_connect	btn, "clicked", cbbuttonclicked, NULL
 ;	id = stat
 ;	g_signal_handler_disconnect btn, id
 

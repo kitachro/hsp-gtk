@@ -1,9 +1,8 @@
 // コールバック関数を使うための準備
-#include "hscallbk.as"
-#uselib ""
-#func cb_window_delete_event ""
-#func cb_cbutton1_toggled ""
-#func cb_cbutton2_toggled ""
+#include "modclbk.as"
+newclbk3	cbwindowdeleteevent, 3, *on_window_delete_event, CLBKMODE_CDECL@
+newclbk3	cbcbutton1toggled, 2, *on_cbutton1_toggled, CLBKMODE_CDECL@
+newclbk3	cbcbutton2toggled, 2, *on_cbutton2_toggled, CLBKMODE_CDECL@
 
 // GTK+の関数を使うための準備
 #uselib "libgtk-3-0.dll"
@@ -44,8 +43,7 @@
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	gtk_container_set_border_width	win, 10
-	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+	g_signal_connect	win, "delete-event", cbwindowdeleteevent, NULL
 
 	// HBox生成
 	gtk_hbox_new	FALSE, 6
@@ -54,22 +52,20 @@
 	// ボタン群生成
 	gtk_adjustment_new	0, 0, 1000, 1, 10, 0
 	gtk_spin_button_new	stat, 1, 0
-	spb	= stat
+	sbtn	= stat
 
 	gtk_check_button_new_with_label	"Numeric"
-	chb1	= stat
-	setcallbk	cbcbutton1toggled, cb_cbutton1_toggled, *on_cbutton1_toggled
-	g_signal_connect	chb1, "toggled", varptr( cbcbutton1toggled ), NULL
+	cbtn1	= stat
+	g_signal_connect	cbtn1, "toggled", cbcbutton1toggled, sbtn
 
 	gtk_check_button_new_with_label	"If valid"
-	chb2	= stat
-	setcallbk	cbcbutton2toggled, cb_cbutton2_toggled, *on_cbutton2_toggled
-	g_signal_connect	chb2, "toggled", varptr( cbcbutton2toggled ), NULL
+	cbtn2	= stat
+	g_signal_connect	cbtn2, "toggled", cbcbutton2toggled, sbtn
 
 	// ウィンドウの組み立て
-	gtk_box_pack_start	hbox, spb, TRUE, TRUE, 0
-	gtk_box_pack_start	hbox, chb1, TRUE, TRUE, 0
-	gtk_box_pack_start	hbox, chb2, TRUE, TRUE, 0
+	gtk_box_pack_start	hbox, sbtn, TRUE, TRUE, 0
+	gtk_box_pack_start	hbox, cbtn1, TRUE, TRUE, 0
+	gtk_box_pack_start	hbox, cbtn2, TRUE, TRUE, 0
 	gtk_container_add	win, hbox
 
 	// ウィンドウの表示とメインループの開始
@@ -83,17 +79,21 @@
 	return
 
 *on_cbutton1_toggled
-	gtk_toggle_button_get_active	chb1
-	gtk_spin_button_set_numeric		spb, stat
+	clbkargprotect	args_
+
+	gtk_toggle_button_get_active	args_( 0 )
+	gtk_spin_button_set_numeric		args_( 1 ), stat
 	return
 
 *on_cbutton2_toggled
-	gtk_toggle_button_get_active	chb2
+	clbkargprotect	args_
+
+	gtk_toggle_button_get_active	args_( 0 )
 	if stat {
 		policy	= GTK_UPDATE_IF_VALID
 	}
 	else {
 		policy	= GTK_UPDATE_ALWAYS
 	}
-	gtk_spin_button_set_update_policy	spb, policy
+	gtk_spin_button_set_update_policy	args_( 1 ), policy
 	return

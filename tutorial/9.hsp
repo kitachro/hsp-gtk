@@ -1,16 +1,15 @@
 // コールバック関数を使うための準備
-#include "hscallbk.as"
-#uselib ""
-#func cb_window_delete_event ""
-#func cb_act_new_hoge ""
-#func cb_act_new_fuga ""
-#func cb_act_quit ""
-#func cb_act_copy ""
-#func cb_act_paste ""
-#func cb_act_one ""
-#func cb_act_two ""
-#func cb_act_three ""
-#func cb_ebox_button_release_event "" int, int
+#include "modclbk.as"
+newclbk3	cbwindowdeleteevent, 3, *on_window_delete_event, CLBKMODE_CDECL@
+newclbk3	cbactnewhoge, 2, *on_act_new_hoge, CLBKMODE_CDECL@
+newclbk3	cbactnewfuga, 2, *on_act_new_fuga, CLBKMODE_CDECL@
+newclbk3	cbactquit, 2, *on_act_quit, CLBKMODE_CDECL@
+newclbk3	cbactcopy, 2, *on_act_copy, CLBKMODE_CDECL@
+newclbk3	cbactpaste, 2, *on_act_paste, CLBKMODE_CDECL@
+newclbk3	cbactone, 2, *on_act_one, CLBKMODE_CDECL@
+newclbk3	cbacttwo, 2, *on_act_two, CLBKMODE_CDECL@
+newclbk3	cbactthree, 2, *on_act_three, CLBKMODE_CDECL@
+newclbk3	cbeboxbuttonreleaseevent, 3, *on_ebox_button_release_event, CLBKMODE_CDECL@
 
 // GTK+の関数を使うための準備
 #uselib "libgtk-3-0.dll"
@@ -80,8 +79,7 @@
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	gtk_widget_set_size_request	win, 300, 200
-	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+	g_signal_connect	win, "delete-event", cbwindowdeleteevent, NULL
 
 	// VBox生成
 	gtk_vbox_new	FALSE, 2
@@ -157,21 +155,18 @@
 	; NewHogeコマンドAction生成
 	gtk_action_new	NAME_NEWHOGE, u( "_Hoge作成" ), u( "新しいHogeを作成します。" ), GTK_STOCK_NEW
 	act_new_hoge	= stat
-	setcallbk	cbactnewhoge, cb_act_new_hoge, *on_act_new_hoge
-	g_signal_connect	act_new_hoge, "activate", varptr( cbactnewhoge ), NULL
+	g_signal_connect	act_new_hoge, "activate", cbactnewhoge, NULL
 
 	; NewFugaコマンドAction生成
 	gtk_action_new	NAME_NEWFUGA, u( "_Fuga作成" ), u( "新しいfugaを作成します。" ), GTK_STOCK_NEW
 	act_new_fuga	= stat
-	setcallbk	cbactnewfuga, cb_act_new_fuga, *on_act_new_fuga
-	g_signal_connect	act_new_fuga, "activate", varptr( cbactnewfuga ), NULL
+	g_signal_connect	act_new_fuga, "activate", cbactnewfuga, NULL
 
 	; QuitコマンドAction生成
 #define GTK_STOCK_QUIT	"gtk-quit"
 	gtk_action_new	NAME_QUIT, u( "終了(_Q)" ), NULL, GTK_STOCK_QUIT
 	act_quit	= stat
-	setcallbk	cbactquit, cb_act_quit, *on_act_quit
-	g_signal_connect	act_quit, "activate", varptr( cbactquit ), NULL
+	g_signal_connect	act_quit, "activate", cbactquit, NULL
 
 	; EditメニューAction生成
 	gtk_action_new	NAME_EDITMENU, u( "編集(_E)" ), NULL, NULL
@@ -181,15 +176,13 @@
 #define GTK_STOCK_COPY	"gtk-copy"
 	gtk_action_new	NAME_COPY, u( "コピー(_C)" ), NULL, GTK_STOCK_COPY
 	act_copy	= stat
-	setcallbk	cbactcopy, cb_act_copy, *on_act_copy
-	g_signal_connect	act_copy, "activate", varptr( cbactcopy ), NULL
+	g_signal_connect	act_copy, "activate", cbactcopy, NULL
 
 	; PasteコマンドAction生成
 #define GTK_STOCK_PASTE	"gtk-paste"
 	gtk_action_new	NAME_PASTE, u( "貼り付け(_P)" ), NULL, GTK_STOCK_PASTE
 	act_paste	= stat
-	setcallbk	cbactpaste, cb_act_paste, *on_act_paste
-	g_signal_connect	act_paste, "activate", varptr( cbactpaste ), NULL
+	g_signal_connect	act_paste, "activate", cbactpaste, NULL
 
 	; ChoicesメニューAction生成
 	gtk_action_new	NAME_CHOICESMENU, u( "選択(_C)" ), NULL, NULL
@@ -199,23 +192,20 @@
 #const	VALUE_CHOICE_ONE	1
 	gtk_radio_action_new	NAME_CHOICEONE, u( "選択肢1(_1)" ), NULL, NULL, VALUE_CHOICE_ONE
 	act_choice_one	= stat
-	setcallbk	cbactone, cb_act_one, *on_act_one
-	g_signal_connect	act_choice_one, "changed", varptr( cbactone ), NULL
 	gtk_radio_action_set_current_value	act_choice_one, VALUE_CHOICE_ONE
+	g_signal_connect	act_choice_one, "changed", cbactone, NULL
 
 	; ChoiceTwoコマンドAction生成
 #const	VALUE_CHOICE_TWO	2
 	gtk_radio_action_new	NAME_CHOICETWO, u( "選択肢2(_2)" ), NULL, NULL, VALUE_CHOICE_TWO
 	act_choice_two	= stat
-	setcallbk	cbacttwo, cb_act_two, *on_act_two
-	g_signal_connect	act_choice_two, "changed", varptr( cbacttwo ), NULL
+	g_signal_connect	act_choice_two, "changed", cbacttwo, NULL
 	gtk_radio_action_join_group	act_choice_two, act_choice_one
 
 	; ChoiceThreeコマンドAction生成
 	gtk_toggle_action_new	NAME_CHOICETHREE, u( "オプション(_3)" ), NULL, NULL
 	act_choice_three	= stat
-	setcallbk	cbactthree, cb_act_three, *on_act_three
-	g_signal_connect	act_choice_three, "toggled", varptr( cbactthree ), NULL
+	g_signal_connect	act_choice_three, "toggled", cbactthree, NULL
 
 	; Action群をActionGroupに登録
 	gtk_action_group_add_action	acts, act_file
@@ -257,8 +247,7 @@
 	// GtkEventBox生成
 	gtk_event_box_new
 	ebox	= stat
-	setcallbk	cbeboxbuttonreleaseevent, cb_ebox_button_release_event, *on_ebox_button_release_event
-	g_signal_connect	ebox, "button-release-event", varptr( cbeboxbuttonreleaseevent ), NULL
+	g_signal_connect	ebox, "button-release-event", cbeboxbuttonreleaseevent, NULL
 
 	// ウィンドウ組み立て
 	gtk_container_add	win, vbox
@@ -322,7 +311,9 @@
 
 #define	GDK_BUTTON_SECONDARY	3
 *on_ebox_button_release_event
-	evt	= callbkarg( 1 )
+	clbkargprotect	args_
+	evt	= args_( 1 )
+
 	gdk_event_get_button	evt, varptr( num )
 	if ( num = GDK_BUTTON_SECONDARY ) {
 		mes	"GtkEventBoxが右クリックされました。"

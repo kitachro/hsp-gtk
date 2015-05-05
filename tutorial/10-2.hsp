@@ -1,11 +1,10 @@
 // コールバック関数を使うための準備
-#include "hscallbk.as"
-#uselib ""
-#func cb_win_delete_event ""
-#func cb_btn1_clicked ""
-#func cb_btn2_clicked ""
-#func cb_dlg2_delete_event ""
-#func cb_btn_close_clicked ""
+#include "modclbk.as"
+	newclbk3	cbwindeleteevent, 3, *on_win_delete_event, CLBKMODE_CDECL@
+	newclbk3	cbbtn1clicked, 2, *on_btn1_clicked, CLBKMODE_CDECL@
+	newclbk3	cbbtn2clicked, 2, *on_btn2_clicked, CLBKMODE_CDECL@
+	newclbk3	cbdlg2deleteevent, 3, *on_dlg2_delete_event, CLBKMODE_CDECL@
+	newclbk3	cbbtncloseclicked, 2, *on_btn_close_clicked, CLBKMODE_CDECL@
 
 // GTK+の関数を使うための準備
 #uselib "libgtk-3-0.dll"
@@ -68,8 +67,7 @@
 	// ウィンドウ生成
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
-	setcallbk	cbwindeleteevent, cb_win_delete_event, *on_win_delete_event
-	g_signal_connect	win, "delete-event", varptr( cbwindeleteevent ), NULL
+	g_signal_connect	win, "delete-event", cbwindeleteevent, NULL
 
 	// HBox生成
 	gtk_vbox_new	FALSE, 3
@@ -79,14 +77,12 @@
 	; ボタン1
 	gtk_button_new_with_label	"MessageDialog (modal)"
 	btn1	= stat
-	setcallbk	cbbtn1clicked, cb_btn1_clicked, *on_btn1_clicked
-	g_signal_connect	btn1, "clicked", varptr( cbbtn1clicked ), 0
+	g_signal_connect	btn1, "clicked", cbbtn1clicked, 0
 
 	; ボタン2
 	gtk_button_new_with_label	"MessageDialog (non-modal)"
 	btn2	= stat
-	setcallbk	cbbtn2clicked, cb_btn2_clicked, *on_btn2_clicked
-	g_signal_connect	btn2, "clicked", varptr( cbbtn2clicked ), 0
+	g_signal_connect	btn2, "clicked", cbbtn2clicked, 0
 
 	// ウィンドウの組み立て
 	gtk_box_pack_start	vbox, btn1, TRUE, TRUE, 0
@@ -124,12 +120,10 @@
 		gtk_window_set_title	dlg2, "Non-modal MessageDialog"
 		gtk_message_dialog_format_secondary_text0	dlg2, u( "これはサブテキストです。" )
 
-		setcallbk	cbdlg2deleteevent, cb_dlg2_delete_event, *on_dlg2_delete_event
-		g_signal_connect	dlg2, "delete-event", varptr( cbdlg2deleteevent ), NULL
+		g_signal_connect	dlg2, "delete-event", cbdlg2deleteevent, NULL
 		gtk_dialog_get_widget_for_response	dlg2, GTK_RESPONSE_CLOSE
 		btn_close	= stat
-		setcallbk	cbbtncloseclicked, cb_btn_close_clicked, *on_btn_close_clicked
-		g_signal_connect	btn_close, "clicked", varptr( cbbtncloseclicked ), NULL
+		g_signal_connect	btn_close, "clicked", cbbtncloseclicked, NULL
 	}
 	gtk_widget_show_all	dlg2
 	return

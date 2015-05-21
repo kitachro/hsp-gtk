@@ -1,11 +1,10 @@
 // コールバック関数を使うための準備
-#include "hscallbk.as"
-#uselib ""
-#func cb_win_delete_event ""
-#func cb_btn_copy_text_clicked ""
-#func cb_btn_paste_text_clicked ""
-#func cb_btn_copy_image_clicked ""
-#func cb_btn_paste_image_clicked ""
+#include "modclbk.as"
+	newclbk3	cbwindeleteevent, 3, *on_win_delete_event, CLBKMODE_CDECL@
+	newclbk3	cbbtncopytextclicked, 2, *on_btn_copy_text_clicked, CLBKMODE_CDECL@
+	newclbk3	cbbtnpastetextclicked, 2, *on_btn_paste_text_clicked, CLBKMODE_CDECL@
+	newclbk3	cbbtncopyimageclicked, 2, *on_btn_copy_image_clicked, CLBKMODE_CDECL@
+	newclbk3	cbbtnpasteimageclicked, 2, *on_btn_paste_image_clicked, CLBKMODE_CDECL@
 
 // GTK+の関数を使うための準備
 #uselib "libgtk-3-0.dll"
@@ -56,8 +55,7 @@
 	// ウィンドウ生成
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
-	setcallbk	cbwindeleteevent, cb_win_delete_event, *on_win_delete_event
-	g_signal_connect	win, "delete-event", varptr( cbwindeleteevent ), NULL
+	g_signal_connect	win, "delete-event", cbwindeleteevent, NULL
 
 	// テーブル生成
 	gtk_table_new	2, 3, FALSE
@@ -74,23 +72,19 @@
 	// ボタン群生成
 	gtk_button_new_with_label	"Copy Text"
 	btn_copy_text	= stat
-	setcallbk	cbbtncopytextclicked, cb_btn_copy_text_clicked, *on_btn_copy_text_clicked
-	g_signal_connect	btn_copy_text, "clicked", varptr( cbbtncopytextclicked ), NULL
+	g_signal_connect	btn_copy_text, "clicked", cbbtncopytextclicked, NULL
 
 	gtk_button_new_with_label	"Paste Text"
 	btn_paste_text	= stat
-	setcallbk	cbbtnpastetextclicked, cb_btn_paste_text_clicked, *on_btn_paste_text_clicked
-	g_signal_connect	btn_paste_text, "clicked", varptr( cbbtnpastetextclicked ), NULL
+	g_signal_connect	btn_paste_text, "clicked", cbbtnpastetextclicked, NULL
 
 	gtk_button_new_with_label	"Copy Image"
 	btn_copy_image	= stat
-	setcallbk	cbbtncopyimageclicked, cb_btn_copy_image_clicked, *on_btn_copy_image_clicked
-	g_signal_connect	btn_copy_image, "clicked", varptr( cbbtncopyimageclicked ), NULL
+	g_signal_connect	btn_copy_image, "clicked", cbbtncopyimageclicked, NULL
 
 	gtk_button_new_with_label	"Paste Image"
 	btn_paste_image	= stat
-	setcallbk	cbbtnpasteimageclicked, cb_btn_paste_image_clicked, *on_btn_paste_image_clicked
-	g_signal_connect	btn_paste_image, "clicked", varptr( cbbtnpasteimageclicked ), NULL
+	g_signal_connect	btn_paste_image, "clicked", cbbtnpasteimageclicked, NULL
 
 	// クリップボード生成
 	gtk_clipboard_get	GDK_SELECTION_CLIPBOARD

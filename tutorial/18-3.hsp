@@ -1,10 +1,13 @@
 // コールバック関数を使うための準備
-#include "hscallbk.as"
-#uselib ""
-#func cb_window_delete_event ""
-	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-#func cb_label_drag_drop ""
-	setcallbk	cblabeldragdrop, cb_label_drag_drop, *on_label_drag_drop
+;#include "hscallbk.as"
+;#uselib ""
+;#func cb_window_delete_event ""
+;	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
+;#func cb_label_drag_drop ""
+;	setcallbk	cblabeldragdrop, cb_label_drag_drop, *on_label_drag_drop
+#include "modclbk.as"
+	newclbk3	cbwindeleteevent, 3, *on_win_delete_event, CLBKMODE_CDECL@
+	newclbk3	cblbldragdrop, 6, *on_lbl_drag_drop, CLBKMODE_CDECL@
 
 // GTK+の関数を使うための準備
 #uselib "libgtk-3-0.dll"
@@ -79,7 +82,7 @@
 #const	GTK_WINDOW_TOPLEVEL	0
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
-	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+	g_signal_connect	win, "delete-event", cbwindeleteevent, NULL
 
 	// HBox生成
 #const GTK_ORIENTATION_HORIZONTAL 0 ; GtkOrientation
@@ -132,7 +135,7 @@
 	lbl	= stat
 #const GTK_DEST_DEFAULT_ALL        0x07	; GtkDestDefaults
 	gtk_drag_dest_set	lbl, GTK_DEST_DEFAULT_ALL, NULL, 0, GDK_ACTION_COPY
-	g_signal_connect	lbl, "drag-drop", varptr( cblabeldragdrop ), NULL
+	g_signal_connect	lbl, "drag-drop", cblbldragdrop, NULL
 
 	// GtkTargetList初期化
 #const	TARGET_ENTRY_DUMMY	0
@@ -153,11 +156,11 @@
 	end
 
 /* シグナルハンドラ */
-*on_window_delete_event
+*on_win_delete_event
 	gtk_main_quit
 	return
 
-*on_label_drag_drop
-	mes	"on_label_drag_drop"
+*on_lbl_drag_drop
+	mes	"on_lbl_drag_drop"
 	// ドロップされたアイコンとキャプションをダイアログで表示する
 	return

@@ -1,6 +1,6 @@
 // コールバック関数を使うための準備
 #include "modclbk.as"
-	newclbk3	cbwindowdeleteevent, 3, *on_window_delete_event, CLBKMODE_CDECL@
+	newclbk3	cbwindeleteevent, 3, *on_win_delete_event, CLBKMODE_CDECL@
 	newclbk3	cbiconviewselectionchanged, 2, *on_iconview_selection_changed, CLBKMODE_CDECL@
 	newclbk3	cbiconviewitemactivated, 3, *on_iconview_item_activated, CLBKMODE_CDECL@
 	newclbk3	cbglistfreefull, 1, *on_g_list_free_full, CLBKMODE_CDECL@
@@ -50,7 +50,7 @@
 #const	GTK_WINDOW_TOPLEVEL	0
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
-	g_signal_connect	win, "delete-event", cbwindowdeleteevent, NULL
+	g_signal_connect	win, "delete-event", cbwindeleteevent, NULL
 
 	// アイコンビュー用データ
 	; GtkTreeIter格納用変数作成
@@ -100,7 +100,7 @@
 	end
 
 /* シグナルハンドラ */
-*on_window_delete_event
+*on_win_delete_event
 	gtk_main_quit
 	return
 

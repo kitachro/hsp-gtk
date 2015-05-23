@@ -3,7 +3,7 @@
 	newclbk3	cbwindeleteevent, 3, *on_win_delete_event, CLBKMODE_CDECL@
 	newclbk3	cbiconviewselectionchanged, 2, *on_iconview_selection_changed, CLBKMODE_CDECL@
 	newclbk3	cbiconviewitemactivated, 3, *on_iconview_item_activated, CLBKMODE_CDECL@
-	newclbk3	cbglistfreefull, 1, *on_g_list_free_full, CLBKMODE_CDECL@
+	newclbk3	cbglistfreefull, 1, *cb_g_list_free_full, CLBKMODE_CDECL@
 
 // GTK+の関数を使うための準備
 #uselib "libgtk-3-0.dll"
@@ -127,7 +127,7 @@
 	return
 
 /* GList開放用コールバック関数 */
-*on_g_list_free_full
+*cb_g_list_free_full
 	clbkargprotect	args_
 	gtk_tree_path_free	args_( 0 )
 	return

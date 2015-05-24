@@ -36,6 +36,8 @@
 #func global g_list_length "g_list_length" sptr
 #func global g_list_nth_data "g_list_nth_data"  sptr, int
 #func global g_list_free_full "g_list_free_full" sptr, sptr
+#func global g_free "g_free" sptr
+
 
 #uselib "libgdk_pixbuf-2.0-0.dll"
 #func global gdk_pixbuf_get_type "gdk_pixbuf_get_type"
@@ -112,8 +114,10 @@
 		g_list_nth_data	treepaths, cnt
 		treepath	= stat
 		gtk_tree_path_to_string	treepath
-		dupptr	str_tp, stat, 10, 2
+		ptr	= stat
+		dupptr	str_tp, ptr, 10, 2
 		mes	"selected: " + str_tp
+		g_free	ptr
 	loop
 	g_list_free_full	treepaths, cbglistfreefull
 	return
@@ -121,8 +125,10 @@
 *on_iview_item_activated
 	clbkargprotect	args_
 	gtk_tree_path_to_string	args_( 1 )
-	dupptr	str_tp, stat, 10, 2
+	ptr	= stat
+	dupptr	str_tp, ptr, 10, 2
 	mes	"activated: " + str_tp
+	g_free	ptr
 	gosub	*on_iview_selection_changed
 	return
 

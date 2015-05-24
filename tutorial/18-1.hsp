@@ -72,7 +72,7 @@
 #define GTK_STOCK_PASTE	"gtk-paste"
 #const GTK_ICON_SIZE_DND	5	; GtkIconSize
 #const	COLUMN_PIXBUF	0	; GtkListStoreデータの項目インデックス
-#const	COLUMN_TEXT	1
+#const	COLUMN_TEXT		1
 	icons	= GTK_STOCK_CUT, GTK_STOCK_COPY, GTK_STOCK_PASTE
 	repeat	length( icons )
 		gtk_list_store_append	model, itr

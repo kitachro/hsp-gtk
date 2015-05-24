@@ -54,8 +54,8 @@
 	itr	= varptr( struct_itr )
 
 	; ƒ‚ƒfƒ‹¶¬
-#define G_TYPE_MAKE_FUNDAMENTAL(%1)	(%1 << 2)
-#define ctype	G_TYPE_STRING	G_TYPE_MAKE_FUNDAMENTAL(16)
+#define G_TYPE_STRING	G_TYPE_MAKE_FUNDAMENTAL(16)
+#define ctype	G_TYPE_MAKE_FUNDAMENTAL(%1)	(%1 << 2)
 	gdk_pixbuf_get_type
 	gtk_list_store_new2	2, stat, G_TYPE_STRING
 	model	= stat

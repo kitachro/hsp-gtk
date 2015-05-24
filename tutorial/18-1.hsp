@@ -67,7 +67,7 @@
 	model	= stat
 
 	; GtkListStoreにデータをセット
-#define GTK_STOCK_CUT	"gtk-cut"
+#define GTK_STOCK_CUT	"gtk-cut"	; GtkStockItem
 #define GTK_STOCK_COPY	"gtk-copy"
 #define GTK_STOCK_PASTE	"gtk-paste"
 #const GTK_ICON_SIZE_DND	5	; GtkIconSize

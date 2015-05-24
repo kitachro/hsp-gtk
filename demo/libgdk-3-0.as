@@ -547,8 +547,8 @@ http://opensource.org/licenses/mit-license.php
 // GdkDragAction
 #const GDK_ACTION_DEFAULT  (1 << 0)
 #const GDK_ACTION_COPY (1 << 1)
-#const GDK_ACTION_MOVE (1 << 2
-#const GDK_ACTION_LINK (1 << 3
+#const GDK_ACTION_MOVE (1 << 2)
+#const GDK_ACTION_LINK (1 << 3)
 #const GDK_ACTION_PRIVATE (1 << 4)
 #const GDK_ACTION_ASK (1 << 5)
 

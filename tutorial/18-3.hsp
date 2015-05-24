@@ -1,10 +1,4 @@
 // コールバック関数を使うための準備
-;#include "hscallbk.as"
-;#uselib ""
-;#func cb_window_delete_event ""
-;	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-;#func cb_label_drag_drop ""
-;	setcallbk	cblabeldragdrop, cb_label_drag_drop, *on_label_drag_drop
 #include "modclbk.as"
 	newclbk3	cbwindeleteevent, 3, *on_win_delete_event, CLBKMODE_CDECL@
 	newclbk3	cblbldragdrop, 6, *on_lbl_drag_drop, CLBKMODE_CDECL@

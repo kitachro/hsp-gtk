@@ -123,9 +123,9 @@
 	itr	= varptr( struct_itr )
 
 	; GtkListStore生成
-#enum	COLUMN_NAME	= 0	; GtkListStore（モデル）の構成
+#enum	COLUMN_NAME	= 0	; GtkListStoreデータの項目インデックス
 #enum	COLUMN_ICON
-#enum	NUM_COLUMN
+#enum	NUM_COLUMN		; 項目数
 #define G_TYPE_STRING	G_TYPE_MAKE_FUNDAMENTAL(16)
 #define ctype G_TYPE_MAKE_FUNDAMENTAL(%1)	(%1 << 2)
 	gdk_pixbuf_get_type
@@ -164,7 +164,7 @@
 	// Label生成
 	gtk_label_new	u( "ここにアイコンをドロップしてください。" )
 	lbl	= stat
-#const GTK_DEST_DEFAULT_ALL        0x07	; GtkDestDefaults
+#const	GTK_DEST_DEFAULT_ALL	0x07	; GtkDestDefaults
 	gtk_drag_dest_set	lbl, GTK_DEST_DEFAULT_ALL, NULL, 0, actions
 	g_signal_connect	lbl, "drag-data-received", cblbldragdatareceived, NULL
 

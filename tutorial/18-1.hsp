@@ -70,16 +70,16 @@
 #define GTK_STOCK_CUT	"gtk-cut"
 #define GTK_STOCK_COPY	"gtk-copy"
 #define GTK_STOCK_PASTE	"gtk-paste"
-#const GTK_ICON_SIZE_DND	5
-#const	COL_PIXBUF	0	; GtkListStoreデータの項目インデックス
-#const	COL_TEXT	1
+#const GTK_ICON_SIZE_DND	5	; GtkIconSize
+#const	COLUMN_PIXBUF	0	; GtkListStoreデータの項目インデックス
+#const	COLUMN_TEXT	1
 	icons	= GTK_STOCK_CUT, GTK_STOCK_COPY, GTK_STOCK_PASTE
 	repeat	length( icons )
 		gtk_list_store_append	model, itr
 		gtk_image_new
 		gtk_widget_render_icon_pixbuf	stat, icons( cnt ), GTK_ICON_SIZE_DND
 		pixbuf	= stat
-		gtk_list_store_set2		model, itr, COL_PIXBUF, pixbuf, COL_TEXT, icons( cnt ), -1
+		gtk_list_store_set2		model, itr, COLUMN_PIXBUF, pixbuf, COLUMN_TEXT, icons( cnt ), -1
 		g_object_unref	pixbuf
 	loop
 
@@ -87,8 +87,8 @@
 #const GTK_SELECTION_MULTIPLE	3 ; GtkSelectionMode
 	gtk_icon_view_new_with_model	model
 	iview	= stat
-	gtk_icon_view_set_pixbuf_column	iview, COL_PIXBUF
-	gtk_icon_view_set_text_column	iview, COL_TEXT
+	gtk_icon_view_set_pixbuf_column	iview, COLUMN_PIXBUF
+	gtk_icon_view_set_text_column	iview, COLUMN_TEXT
 	gtk_icon_view_set_selection_mode	iview, GTK_SELECTION_MULTIPLE
 	g_signal_connect	iview, "selection-changed", cbiviewselectionchanged, NULL
 	g_signal_connect	iview, "item-activated", cbiviewitemactivated, NULL

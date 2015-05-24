@@ -794,7 +794,7 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gtk_drag_begin "" 
 ;#func global gtk_drag_check_threshold "" 
 ;#func global gtk_drag_dest_add_image_targets "" 
-;#func global gtk_drag_dest_add_text_targets "" 
+#func global gtk_drag_dest_add_text_targets "gtk_drag_dest_add_text_targets" sptr
 ;#func global gtk_drag_dest_add_uri_targets "" 
 ;#func global gtk_drag_dest_find_target "" 
 ;#func global gtk_drag_dest_get_target_list "" 
@@ -817,7 +817,7 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gtk_drag_set_icon_surface "" 
 ;#func global gtk_drag_set_icon_widget "" 
 ;#func global gtk_drag_source_add_image_targets "" 
-;#func global gtk_drag_source_add_text_targets "" 
+#func global gtk_drag_source_add_text_targets "gtk_drag_source_add_text_targets" sptr
 ;#func global gtk_drag_source_add_uri_targets "" 
 ;#func global gtk_drag_source_get_target_list "" 
 ;#func global gtk_drag_source_set "" 
@@ -1318,7 +1318,7 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gtk_icon_view_get_item_width "" 
 ;#func global gtk_icon_view_get_margin "" 
 ;#func global gtk_icon_view_get_markup_column "" 
-;#func global gtk_icon_view_get_model "" 
+#func global gtk_icon_view_get_model "gtk_icon_view_get_model" sptr
 ;#func global gtk_icon_view_get_path_at_pos "" 
 ;#func global gtk_icon_view_get_pixbuf_column "" 
 ;#func global gtk_icon_view_get_reorderable "" 
@@ -1414,7 +1414,7 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gtk_image_new_from_gicon "" 
 ;#func global gtk_image_new_from_icon_name "" 
 ;#func global gtk_image_new_from_icon_set "" 
-;#func global gtk_image_new_from_pixbuf "" 
+#func global gtk_image_new_from_pixbuf "gtk_image_new_from_pixbuf" sptr
 ;#func global gtk_image_new_from_resource "" 
 #func global gtk_image_new_from_stock "gtk_image_new_from_stock" str, int
 ;#func global gtk_image_set_from_animation "" 
@@ -2290,16 +2290,16 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gtk_selection_data_get_display "" 
 ;#func global gtk_selection_data_get_format "" 
 ;#func global gtk_selection_data_get_length "" 
-;#func global gtk_selection_data_get_pixbuf "" 
+#func global gtk_selection_data_get_pixbuf "gtk_selection_data_get_pixbuf" sptr
 ;#func global gtk_selection_data_get_selection "" 
 ;#func global gtk_selection_data_get_target "" 
 ;#func global gtk_selection_data_get_targets "" 
-;#func global gtk_selection_data_get_text "" 
+#func global gtk_selection_data_get_text "gtk_selection_data_get_text" sptr
 ;#func global gtk_selection_data_get_type "" 
 ;#func global gtk_selection_data_get_uris "" 
 ;#func global gtk_selection_data_set "" 
-;#func global gtk_selection_data_set_pixbuf "" 
-;#func global gtk_selection_data_set_text "" 
+#func global gtk_selection_data_set_pixbuf "gtk_selection_data_set_pixbuf" sptr, sptr
+#func global gtk_selection_data_set_text "gtk_selection_data_set_text" sptr, sptr, int
 ;#func global gtk_selection_data_set_uris "" 
 ;#func global gtk_selection_data_targets_include_image "" 
 ;#func global gtk_selection_data_targets_include_rich_text "" 
@@ -3122,7 +3122,7 @@ http://opensource.org/licenses/mit-license.php
 #func global gtk_tree_model_get1 "gtk_tree_model_get" sptr, sptr, int, sptr, int
 ;#func global gtk_tree_model_get_column_type "" 
 ;#func global gtk_tree_model_get_flags "" 
-;#func global gtk_tree_model_get_iter "" 
+#func global gtk_tree_model_get_iter "gtk_tree_model_get_iter" sptr, sptr, sptr
 ;#func global gtk_tree_model_get_iter_first "" 
 ;#func global gtk_tree_model_get_iter_from_string "" 
 ;#func global gtk_tree_model_get_n_columns "" 
@@ -3130,7 +3130,7 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gtk_tree_model_get_string_from_iter "" 
 ;#func global gtk_tree_model_get_type "" 
 ;#func global gtk_tree_model_get_valist "" 
-;#func global gtk_tree_model_get_value "" 
+#func global gtk_tree_model_get_value "gtk_tree_model_get_value" sptr, sptr, int, sptr
 ;#func global gtk_tree_model_iter_children "" 
 ;#func global gtk_tree_model_iter_has_child "" 
 ;#func global gtk_tree_model_iter_n_children "" 

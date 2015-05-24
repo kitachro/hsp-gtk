@@ -804,7 +804,7 @@ http://opensource.org/licenses/mit-license.php
 #func global gtk_drag_dest_set_target_list "gtk_drag_dest_set_target_list" sptr, sptr
 ;#func global gtk_drag_dest_set_track_motion "" 
 ;#func global gtk_drag_dest_unset "" 
-;#func global gtk_drag_finish "" 
+#func global gtk_drag_finish "gtk_drag_finish" sptr, int, int, int
 ;#func global gtk_drag_get_data "" 
 ;#func global gtk_drag_get_source_widget "" 
 ;#func global gtk_drag_highlight "" 

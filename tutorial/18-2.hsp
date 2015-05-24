@@ -16,6 +16,7 @@
 #func global gtk_list_store_new2 "gtk_list_store_new" int, int, int
 #func global gtk_list_store_append "gtk_list_store_append" sptr, sptr
 #func global gtk_list_store_set2 "gtk_list_store_set" sptr, sptr, sptr, sptr, sptr, sptr, int
+#func global gtk_tree_path_to_string "gtk_tree_path_to_string" sptr
 #func global gtk_image_new "gtk_image_new"
 #func global gtk_widget_render_icon_pixbuf "gtk_widget_render_icon_pixbuf" sptr, sptr, int
 #func global gtk_icon_view_new_with_model "gtk_icon_view_new_with_model" sptr
@@ -30,6 +31,9 @@
 
 #uselib "libgdk_pixbuf-2.0-0.dll"
 #func global gdk_pixbuf_get_type "gdk_pixbuf_get_type"
+
+#uselib "libglib-2.0-0.dll"
+#func global g_free "g_free" sptr
 
 // よく使う定数
 #const	NULL	0	; ヌルポインタ
@@ -100,16 +104,22 @@
 *on_model_row_deleted
 	mes	"on_model_row_deleted"
 	clbkargprotect	args_
-	repeat	3
-		mes	args_( cnt )
-	loop
+	tp	= args_( 1 )
+	gosub	*mes_tree_path
 	return
 
 *on_model_row_inserted
 	mes	"on_model_row_inserted"
 	clbkargprotect	args_
-	repeat	4
-		mes	args_( cnt )
-	loop
+	tp	= args_( 1 )
+	gosub	*mes_tree_path
 	return
 
+/* サブルーチン */
+*mes_tree_path
+	gtk_tree_path_to_string	tp
+	ptr	= stat
+	dupptr	str_tp, ptr, 10, 2
+	mes	"TreePath: " + str_tp
+	g_free	ptr
+	return

@@ -1,7 +1,7 @@
 // コールバック関数を使うための準備
 #include "modclbk.as"
-	newclbk3	cbwindeleteevent, 3, *on_win_delete_event, CLBKMODE_CDECL@
-	newclbk3	cbbtntoggled, 2, *on_btn_toggled, CLBKMODE_CDECL@
+	newclbk3	cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+	newclbk3	cb_btn_toggled, 2, *on_btn_toggled, CLBKMODE_CDECL@
 
 // GTK+の関数を使うための準備
 #uselib "libgtk-3-0.dll"
@@ -41,7 +41,7 @@
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	gtk_container_set_border_width	win, 5
-	g_signal_connect	win, "delete-event", cbwindeleteevent, NULL
+	g_signal_connect	win, "delete-event", cb_win_delete_event, NULL
 
 	// VBox生成
 	gtk_vbox_new	FALSE, 6
@@ -51,7 +51,7 @@
 	gtk_toggle_button_new_with_label	"Start Spinning"
 	btn	= stat
 	gtk_toggle_button_set_active	btn, FALSE
-	g_signal_connect	btn, "toggled", cbbtntoggled, NULL
+	g_signal_connect	btn, "toggled", cb_btn_toggled, NULL
 
 	// スピナー生成
 	gtk_spinner_new

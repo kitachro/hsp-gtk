@@ -305,14 +305,15 @@ modclbk3b2を使用した場合、コールバック関数はラベルで始ま�
 ### 3.1.2　コールバック関数を使うための準備
 
 ********************
-    #include "hscallbk.as"
-    #uselib ""
-    #func cb_window_delete_event ""
+    #include "modclbk.as"
+    	newclbk3 cbwindowdeleteevent, 3, *on_window_delete_event, CLBKMODE_CDECL@
 ********************
 
-　冒頭は、hscallbk.dllを利用してコールバック関数を使えるようにするためのスクリプトです。書き方については、hscallbk.dllのreadmeを参照してください。今回のプログラムでは、ウィンドウでdelete-eventシグナルが発生した時に実行する処理をコールバック関数として書く必要があるので、cb_window_delete_eventという名前を使っています。
+　冒頭は、modclbk.as（modclbk3b2）を利用してコールバック関数を使えるようにするためのスクリプトです。書き方については、modclbk.as内のワンキーヘルプなどを参考にしてください。
 
-また、2.4.2で説明したように、HSPでは、シグナルに関連付けしたコールバック関数の引数は、できるだけ利用しない方がいいので、ここで登録する関数にも引数は設定していません。
+今回のプログラムでは、ウィンドウでdelete-eventシグナルが発生した時に実行する処理をコールバック関数として書く必要があるので、それに沿って変数やラベルの名前を決めています。
+
+また、コールバック関数の引数の数は、ライブラリ添付マニュアルのウィジェットごとのリファレンスのページで、関連付けするシグナルの項目で確認することができます。例えば、delete-eventシグナルは、今回使っているGtkWindowウィジェットの親クラスであるGtkWidgetウィジェットに属しているので、"\share\gtk-doc\html\gtk3\GtkWidget.html"のページに載っています。
 
 ====================
 ### 3.1.3　GTK+3の関数を使うための準備
@@ -381,13 +382,12 @@ GTK_WINDOW_POPUPは、ポップアップメニューやポップアップのツ�
 ### 3.1.7　ウィンドウのシグナルとコールバック関数の関連付け
 
 ********************
-    setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+    g_signal_connect win, "delete-event", cbwindowdeleteevent, NULL
 ********************
 
-　hscallbk.dllのsetcallbk命令で、*on_window_delete_eventラベルで始まるサブルーチンをコールバック関数として呼び出せるようにした上で、g_signal_connect関数を実行して、生成済みのGtkWindowウィジェットのdelete-eventシグナルにconnectしています。
+　3.1.2に挙げたように、modclbk.asの`newclbk3`命令で、*on_window_delete_eventラベルで始まるサブルーチンをコールバック関数として呼び出せるようにした上で、g_signal_connect関数を実行すると、生成済みのウィジェットのシグナルにサブルーチンをconnectすることができます。
 
-g_signal_connect関数の4つ目の引数に0を指定する理由は、2.4.2で説明した通りです。
+今回、シグナルハンドラに渡したいデータは特にないので、g_signal_connect関数の4つ目の引数にはNULL(0)を指定しています。
 
 ====================
 ### 3.1.8　ウィンドウの表示

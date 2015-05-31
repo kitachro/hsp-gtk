@@ -257,7 +257,7 @@ http://opensource.org/licenses/mit-license.php
 ;#func global g_signal_remove_emission_hook "" 
 ;#func global g_signal_set_va_marshaller "" 
 ;#func global g_signal_stop_emission "" 
-;#func global g_signal_stop_emission_by_name "" 
+#func global g_signal_stop_emission_by_name "g_signal_stop_emission_by_name" sptr, str
 ;#func global g_signal_type_cclosure_new "" 
 ;#func global g_slist_remove_all "" 
 ;#func global g_source_get_type "" 

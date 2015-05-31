@@ -1,9 +1,9 @@
 // コールバック関数を使うための準備
 #include "modclbk.as"
-	newclbk3	cbwindeleteevent, 3, *on_win_delete_event, CLBKMODE_CDECL@
-	newclbk3	cbbtn1clicked, 2, *on_btn1_clicked, CLBKMODE_CDECL@
-	newclbk3	cbbtn2clicked, 2, *on_btn2_clicked, CLBKMODE_CDECL@
-	newclbk3	cbbtn3clicked, 2, *on_btn3_clicked, CLBKMODE_CDECL@
+	newclbk3	cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+	newclbk3	cb_btn1_clicked, 2, *on_btn1_clicked, CLBKMODE_CDECL@
+	newclbk3	cb_btn2_clicked, 2, *on_btn2_clicked, CLBKMODE_CDECL@
+	newclbk3	cb_btn3_clicked, 2, *on_btn3_clicked, CLBKMODE_CDECL@
 
 // GTK+の関数を使うための準備
 #uselib "libgtk-3-0.dll"
@@ -73,7 +73,7 @@
 	// ウィンドウ生成
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
-	g_signal_connect	win, "delete-event", cbwindeleteevent, NULL
+	g_signal_connect	win, "delete-event", cb_win_delete_event, NULL
 
 	// HBox生成
 	gtk_hbox_new	FALSE, 10
@@ -82,15 +82,15 @@
 	// ボタン群生成
 	gtk_button_new_with_label	"Select File"
 	btn1	= stat
-	g_signal_connect	btn1, "clicked", cbbtn1clicked, 0
+	g_signal_connect	btn1, "clicked", cb_btn1_clicked, 0
 
 	gtk_button_new_with_label	"Select Folder"
 	btn2	= stat
-	g_signal_connect	btn2, "clicked", cbbtn2clicked, 0
+	g_signal_connect	btn2, "clicked", cb_btn2_clicked, 0
 
 	gtk_button_new_with_label	"Save File As"
 	btn3	= stat
-	g_signal_connect	btn3, "clicked", cbbtn3clicked, 0
+	g_signal_connect	btn3, "clicked", cb_btn3_clicked, 0
 
 	// ウィンドウの組み立て
 	gtk_box_pack_start	hbox, btn1, FALSE, FALSE, 0

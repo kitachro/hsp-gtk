@@ -1,11 +1,11 @@
 // コールバック関数を使うための準備
 #include "modclbk.as"
-	newclbk3	cbwindowdeleteevent, 3, *on_window_delete_event, CLBKMODE_CDECL@
-	newclbk3	cbcbtn1toggled, 2, *on_cbtn1_toggled, CLBKMODE_CDECL@
-	newclbk3	cbcbtn2toggled, 2, *on_cbtn2_toggled, CLBKMODE_CDECL@
-	newclbk3	cbcbtn3toggled, 2, *on_cbtn3_toggled, CLBKMODE_CDECL@
-	newclbk3	cbcbtn4toggled, 2, *on_cbtn4_toggled, CLBKMODE_CDECL@
-	newclbk3	cbdopulse, 0, *do_pulse, CLBKMODE_CDECL@
+	newclbk3	cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+	newclbk3	cb_cbtn1_toggled, 2, *on_cbtn1_toggled, CLBKMODE_CDECL@
+	newclbk3	cb_cbtn2_toggled, 2, *on_cbtn2_toggled, CLBKMODE_CDECL@
+	newclbk3	cb_cbtn3_toggled, 2, *on_cbtn3_toggled, CLBKMODE_CDECL@
+	newclbk3	cb_cbtn4_toggled, 2, *on_cbtn4_toggled, CLBKMODE_CDECL@
+	newclbk3	cb_do_pulse, 0, *do_pulse, CLBKMODE_CDECL@
 
 // GTK+の関数を使うための準備
 #uselib "libgtk-3-0.dll"
@@ -65,7 +65,7 @@
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	gtk_widget_set_size_request	win, 200, 100
-	g_signal_connect	win, "delete-event", cbwindowdeleteevent, NULL
+	g_signal_connect	win, "delete-event", cb_win_delete_event, NULL
 
 	// VBox生成
 	gtk_vbox_new	FALSE, 6
@@ -84,22 +84,22 @@
 	gtk_check_button_new_with_label	"Editable"
 	cbtn1	= stat
 	gtk_toggle_button_set_active	cbtn1, TRUE
-	g_signal_connect	cbtn1, "toggled", cbcbtn1toggled, ety
+	g_signal_connect	cbtn1, "toggled", cb_cbtn1_toggled, ety
 
 	gtk_check_button_new_with_label	"Visible"
 	cbtn2	= stat
 	gtk_toggle_button_set_active	cbtn2, TRUE
-	g_signal_connect	cbtn2, "toggled", cbcbtn2toggled, ety
+	g_signal_connect	cbtn2, "toggled", cb_cbtn2_toggled, ety
 
 	gtk_check_button_new_with_label	"Pulse"
 	cbtn3	= stat
 	gtk_toggle_button_set_active	cbtn3, FALSE
-	g_signal_connect	cbtn3, "toggled", cbcbtn3toggled, ety
+	g_signal_connect	cbtn3, "toggled", cb_cbtn3_toggled, ety
 
 	gtk_check_button_new_with_label	"Icon"
 	cbtn4	= stat
 	gtk_toggle_button_set_active	cbtn4, FALSE
-	g_signal_connect	cbtn4, "toggled", cbcbtn4toggled, ety
+	g_signal_connect	cbtn4, "toggled", cb_cbtn4_toggled, ety
 
 	// ウィンドウの組み立て
 	gtk_box_pack_start	hbox, cbtn1, TRUE, TRUE, 0
@@ -116,7 +116,7 @@
 	end
 
 /* シグナルハンドラ */
-*on_window_delete_event
+*on_win_delete_event
 	gtk_main_quit
 	return
 
@@ -141,7 +141,7 @@
 	gtk_toggle_button_get_active	args_( 0 )
 	if stat {
 		gtk_entry_set_progress_pulse_step	e, 0.2
-		g_timeout_add	100, cbdopulse, NULL
+		g_timeout_add	100, cb_do_pulse, NULL
 		timeout_id	= stat
 	}
 	else {

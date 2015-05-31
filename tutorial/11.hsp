@@ -1,10 +1,10 @@
 // コールバック関数を使うための準備
 #include "modclbk.as"
-	newclbk3	cbwindeleteevent, 3, *on_win_delete_event, CLBKMODE_CDECL@
-	newclbk3	cbbtncopytextclicked, 2, *on_btn_copy_text_clicked, CLBKMODE_CDECL@
-	newclbk3	cbbtnpastetextclicked, 2, *on_btn_paste_text_clicked, CLBKMODE_CDECL@
-	newclbk3	cbbtncopyimageclicked, 2, *on_btn_copy_image_clicked, CLBKMODE_CDECL@
-	newclbk3	cbbtnpasteimageclicked, 2, *on_btn_paste_image_clicked, CLBKMODE_CDECL@
+	newclbk3	cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+	newclbk3	cb_btn_copy_text_clicked, 2, *on_btn_copy_text_clicked, CLBKMODE_CDECL@
+	newclbk3	cb_btn_paste_text_clicked, 2, *on_btn_paste_text_clicked, CLBKMODE_CDECL@
+	newclbk3	cb_btn_copy_image_clicked, 2, *on_btn_copy_image_clicked, CLBKMODE_CDECL@
+	newclbk3	cb_btn_paste_image_clicked, 2, *on_btn_paste_image_clicked, CLBKMODE_CDECL@
 
 // GTK+の関数を使うための準備
 #uselib "libgtk-3-0.dll"
@@ -55,7 +55,7 @@
 	// ウィンドウ生成
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
-	g_signal_connect	win, "delete-event", cbwindeleteevent, NULL
+	g_signal_connect	win, "delete-event", cb_win_delete_event, NULL
 
 	// テーブル生成
 	gtk_table_new	2, 3, FALSE
@@ -72,19 +72,19 @@
 	// ボタン群生成
 	gtk_button_new_with_label	"Copy Text"
 	btn_copy_text	= stat
-	g_signal_connect	btn_copy_text, "clicked", cbbtncopytextclicked, NULL
+	g_signal_connect	btn_copy_text, "clicked", cb_btn_copy_text_clicked, NULL
 
 	gtk_button_new_with_label	"Paste Text"
 	btn_paste_text	= stat
-	g_signal_connect	btn_paste_text, "clicked", cbbtnpastetextclicked, NULL
+	g_signal_connect	btn_paste_text, "clicked", cb_btn_paste_text_clicked, NULL
 
 	gtk_button_new_with_label	"Copy Image"
 	btn_copy_image	= stat
-	g_signal_connect	btn_copy_image, "clicked", cbbtncopyimageclicked, NULL
+	g_signal_connect	btn_copy_image, "clicked", cb_btn_copy_image_clicked, NULL
 
 	gtk_button_new_with_label	"Paste Image"
 	btn_paste_image	= stat
-	g_signal_connect	btn_paste_image, "clicked", cbbtnpasteimageclicked, NULL
+	g_signal_connect	btn_paste_image, "clicked", cb_btn_paste_image_clicked, NULL
 
 	// クリップボード生成
 	gtk_clipboard_get	GDK_SELECTION_CLIPBOARD

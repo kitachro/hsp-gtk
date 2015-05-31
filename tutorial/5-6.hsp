@@ -1,8 +1,8 @@
 // コールバック関数を使うための準備
 #include "modclbk.as"
-	newclbk3	cbwindowdeleteevent, 3, *on_window_delete_event, CLBKMODE_CDECL@
-	newclbk3	cbcbutton1toggled, 2, *on_cbutton1_toggled, CLBKMODE_CDECL@
-	newclbk3	cbcbutton2toggled, 2, *on_cbutton2_toggled, CLBKMODE_CDECL@
+	newclbk3	cb_window_delete_event, 3, *on_window_delete_event, CLBKMODE_CDECL@
+	newclbk3	cb_cbtn1_toggled, 2, *on_cbtn1_toggled, CLBKMODE_CDECL@
+	newclbk3	cb_cbtn2_toggled, 2, *on_cbtn2_toggled, CLBKMODE_CDECL@
 
 // GTK+の関数を使うための準備
 #uselib "libgtk-3-0.dll"
@@ -43,7 +43,7 @@
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	gtk_container_set_border_width	win, 10
-	g_signal_connect	win, "delete-event", cbwindowdeleteevent, NULL
+	g_signal_connect	win, "delete-event", cb_window_delete_event, NULL
 
 	// HBox生成
 	gtk_hbox_new	FALSE, 6
@@ -56,11 +56,11 @@
 
 	gtk_check_button_new_with_label	"Numeric"
 	cbtn1	= stat
-	g_signal_connect	cbtn1, "toggled", cbcbutton1toggled, sbtn
+	g_signal_connect	cbtn1, "toggled", cb_cbtn1_toggled, sbtn
 
 	gtk_check_button_new_with_label	"If valid"
 	cbtn2	= stat
-	g_signal_connect	cbtn2, "toggled", cbcbutton2toggled, sbtn
+	g_signal_connect	cbtn2, "toggled", cb_cbtn2_toggled, sbtn
 
 	// ウィンドウの組み立て
 	gtk_box_pack_start	hbox, sbtn, TRUE, TRUE, 0
@@ -78,14 +78,14 @@
 	gtk_main_quit
 	return
 
-*on_cbutton1_toggled
+*on_cbtn1_toggled
 	clbkargprotect	args_
 
 	gtk_toggle_button_get_active	args_( 0 )
 	gtk_spin_button_set_numeric		args_( 1 ), stat
 	return
 
-*on_cbutton2_toggled
+*on_cbtn2_toggled
 	clbkargprotect	args_
 
 	gtk_toggle_button_get_active	args_( 0 )

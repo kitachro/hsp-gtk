@@ -1,9 +1,9 @@
 // コールバック関数を使うための準備
 #include "modclbk.as"
-	newclbk3	cbwindowdeleteevent, 3, *on_window_delete_event, CLBKMODE_CDECL@
-	newclbk3	cbbutton1toggled, 2, *on_button1_toggled, CLBKMODE_CDECL@
-	newclbk3	cbbutton2toggled, 2, *on_button2_toggled, CLBKMODE_CDECL@
-	newclbk3	cbbutton3toggled, 2, *on_button3_toggled, CLBKMODE_CDECL@
+	newclbk3	cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+	newclbk3	cb_btn1_toggled, 2, *on_btn1_toggled, CLBKMODE_CDECL@
+	newclbk3	cb_btn2_toggled, 2, *on_btn2_toggled, CLBKMODE_CDECL@
+	newclbk3	cb_btn3_toggled, 2, *on_btn3_toggled, CLBKMODE_CDECL@
 
 // GTK+の関数を使うための準備
 #uselib "libgtk-3-0.dll"
@@ -39,7 +39,7 @@
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	gtk_container_set_border_width	win, 10
-	g_signal_connect	win, "delete-event", cbwindowdeleteevent, NULL
+	g_signal_connect	win, "delete-event", cb_win_delete_event, NULL
 
 	// HBox生成
 	gtk_hbox_new	FALSE, 6
@@ -49,17 +49,17 @@
 	num_btn1	= 1
 	gtk_radio_button_new_with_label_from_widget	0, "Button " + num_btn1
 	btn1	= stat
-	g_signal_connect	btn1, "toggled", cbbutton1toggled , varptr( num_btn1 )
+	g_signal_connect	btn1, "toggled", cb_btn1_toggled , varptr( num_btn1 )
 
 	num_btn2	= 2
 	gtk_radio_button_new_with_label_from_widget	btn1, "Button _" + num_btn2
 	btn2	= stat
-	g_signal_connect	btn2, "toggled", cbbutton2toggled, varptr( num_btn2 )
+	g_signal_connect	btn2, "toggled", cb_btn2_toggled, varptr( num_btn2 )
 
 	num_btn3	= 3
 	gtk_radio_button_new_with_mnemonic_from_widget	btn1, "Button _" + num_btn3
 	btn3	= stat
-	g_signal_connect	btn3, "toggled", cbbutton3toggled, varptr( num_btn3 )
+	g_signal_connect	btn3, "toggled", cb_btn3_toggled, varptr( num_btn3 )
 
 	// ウィンドウの組み立て
 	gtk_box_pack_start	hbox, btn1, TRUE, TRUE, 0
@@ -73,19 +73,19 @@
 	end
 
 /* シグナルハンドラ */
-*on_window_delete_event
+*on_win_delete_event
 	gtk_main_quit
 	return
 
-*on_button1_toggled
+*on_btn1_toggled
 	gosub	*show_message
 	return
 
-*on_button2_toggled
+*on_btn2_toggled
 	gosub	*show_message
 	return
 
-*on_button3_toggled
+*on_btn3_toggled
 	gosub	*show_message
 	return
 

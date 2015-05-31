@@ -1,7 +1,7 @@
 // コールバック関数を使うための準備
 #include "modclbk.as"
-	newclbk3	cbwindowdeleteevent, 3, *on_window_delete_event, CLBKMODE_CDECL@
-	newclbk3	cblinkbuttonactivatelink, 2, *on_link_button_activate_link, CLBKMODE_CDECL@
+	newclbk3	cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+	newclbk3	cb_btn_activate_link, 2, *on_btn_activate_link, CLBKMODE_CDECL@
 
 // GTK+の関数を使うための準備
 #uselib "libgtk-3-0.dll"
@@ -31,12 +31,12 @@
 	// ウィンドウ生成
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
-	g_signal_connect	win, "delete-event", cbwindowdeleteevent , NULL
+	g_signal_connect	win, "delete-event", cb_win_delete_event , NULL
 
 	// ボタン生成
 	gtk_link_button_new_with_label	"http://www.gtk.org", "GTK+ Homepage"
 	btn	= stat
-	g_signal_connect	btn, "activate-link", cblinkbuttonactivatelink, NULL
+	g_signal_connect	btn, "activate-link", cb_btn_activate_link, NULL
 
 	// ウィンドウの組み立て
 	gtk_container_add	win, btn
@@ -47,11 +47,11 @@
 	end
 
 /* シグナルハンドラ */
-*on_window_delete_event
+*on_win_delete_event
 	gtk_main_quit
 	return
 
-*on_link_button_activate_link
+*on_btn_activate_link
 	clbkargprotect	args_
 	widget	= args_( 0 )
 

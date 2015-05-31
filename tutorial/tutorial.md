@@ -15,7 +15,7 @@
 
 　オリジナルのPython版の著者は、Sebastian Polsterl氏、dharmatech氏、Tshepang Lekhonkhobe氏、Jim Zhang氏、vaporup氏、その他の方々です。正確な著者情報については、随時変化しているため、<https://github.com/sebp/PyGObject-Tutorial>のサイトにて確認して下さい。
 
-　この文書の透過的複製物は<https://github.com/kitachro/hsp-gtk/tree/master/tutorial>にて公開しています。また、このチュートリアルで挙げている、サンプルプログラムのスクリプトファイルも、同じ場所で公開しています。
+　この文書の透過的複製物は<https://github.com/kitachro/hsp-gtk>にて公開しています。また、このチュートリアルで挙げている、サンプルプログラムのスクリプトファイルも、同じ場所で公開しています。
 
 ====================
 # 1　開発環境の準備
@@ -58,7 +58,9 @@
 
 　HSPからGTK+を利用するには、HSPでコールバック関数という機能を使えるようにする必要があるのですが、これを実現してくれるのが、tds12さんによって公開されているコールバック関数設定モジュールです。このチュートリアルでは、以後modclbk3b2と呼びます。以下の方法で入手してインストールしてください。
 
-入手するには、このチュートリアルのサンプルプログラムのスクリプトファイルが公開されているのと同じ<https://github.com/kitachro/hsp-gtk/tree/master/tutorial>からダウンロードするか、もしくは、オリジナルの公開場所である<http://hsp.tv/play/pforum.php?mode=all&num=62130>で下の方にある最新版を新規作成ファイルにコピペしてください。
+入手するには、このチュートリアルのサンプルプログラムのスクリプトファイルが公開されているのと同じ<https://github.com/kitachro/hsp-gtk>からプロジェクトのzipファイルをダウンロードして、modclbk.asを取り出すか、もしくは、オリジナルの公開場所である<http://hsp.tv/play/pforum.php?mode=all&num=62130>で下の方にある最新版を新規作成ファイルにコピペしてください。
+
+今後このモジュールのファイル名は、"modclbk.as"と記述します。
 
 ====================
 ## 1.2　コールバック関数実装プラグインの入手

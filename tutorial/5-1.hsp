@@ -1,9 +1,9 @@
 // コールバック関数を使うための準備
 #include "modclbk.as"
-newclbk3	cbwindowdeleteevent, 3, *on_window_delete_event, CLBKMODE_CDECL@
-newclbk3	cbbutton1clicked, 2, *on_button1_clicked, CLBKMODE_CDECL@
-newclbk3	cbbutton2clicked, 2, *on_button2_clicked, CLBKMODE_CDECL@
-newclbk3	cbbutton3clicked, 2, *on_button3_clicked, CLBKMODE_CDECL@
+	newclbk3	cbwindowdeleteevent, 3, *on_window_delete_event, CLBKMODE_CDECL@
+	newclbk3	cbbutton1clicked, 2, *on_button1_clicked, CLBKMODE_CDECL@
+	newclbk3	cbbutton2clicked, 2, *on_button2_clicked, CLBKMODE_CDECL@
+	newclbk3	cbbutton3clicked, 2, *on_button3_clicked, CLBKMODE_CDECL@
 
 // GTK+の関数を使うための準備
 #uselib "libgtk-3-0.dll"

@@ -388,7 +388,7 @@ GTK_WINDOW_POPUPは、ポップアップメニューやポップアップのツ�
 ### 3.1.7　ウィンドウのシグナルとコールバック関数の関連付け
 
 ********************
-    g_signal_connect win, "delete-event", cbwindowdeleteevent, NULL
+    g_signal_connect win, "delete-event", cb_win_delete_event, NULL
 ********************
 
 　3.1.2に挙げたように、modclbk.asの`newclbk3`命令で、*on_window_delete_eventラベルで始まるサブルーチンをコールバック関数として呼び出せるようにした上で、g_signal_connect関数を実行すると、生成済みのウィジェットのシグナルにサブルーチンをconnectすることができます。

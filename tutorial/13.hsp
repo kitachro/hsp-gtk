@@ -1,8 +1,4 @@
 // コールバック関数を使うための準備
-;#include "hscallbk.as"
-;#uselib ""
-;#func cb_window_delete_event ""
-;#func cb_btn_toggled ""
 #include "modclbk.as"
 	newclbk3	cbwindeleteevent, 3, *on_win_delete_event, CLBKMODE_CDECL@
 	newclbk3	cbbtntoggled, 2, *on_btn_toggled, CLBKMODE_CDECL@
@@ -45,7 +41,6 @@
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	gtk_container_set_border_width	win, 5
-;	setcallbk	cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
 	g_signal_connect	win, "delete-event", cbwindeleteevent, NULL
 
 	// VBox生成
@@ -56,7 +51,6 @@
 	gtk_toggle_button_new_with_label	"Start Spinning"
 	btn	= stat
 	gtk_toggle_button_set_active	btn, FALSE
-;	setcallbk	cbbtntoggled, cb_btn_toggled, *on_btn_toggled
 	g_signal_connect	btn, "toggled", cbbtntoggled, NULL
 
 	// スピナー生成

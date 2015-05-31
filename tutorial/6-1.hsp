@@ -1,8 +1,8 @@
 // コールバック関数を使うための準備
 #include "modclbk.as"
-newclbk3	cbwindowdeleteevent, 3, *on_window_delete_event, CLBKMODE_CDECL@
-newclbk3	cbbutton1clicked, 2, *on_button1_clicked, CLBKMODE_CDECL@
-newclbk3	cbbutton2clicked, 2, *on_button2_clicked, CLBKMODE_CDECL@
+newclbk3	cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+newclbk3	cb_btn1_clicked, 2, *on_btn1_clicked, CLBKMODE_CDECL@
+newclbk3	cb_btn2_clicked, 2, *on_btn2_clicked, CLBKMODE_CDECL@
 
 // GTK+の関数を使うための準備
 #uselib "libgtk-3-0.dll"
@@ -34,7 +34,7 @@ newclbk3	cbbutton2clicked, 2, *on_button2_clicked, CLBKMODE_CDECL@
 	// ウィンドウ生成
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
-	g_signal_connect	win, "delete-event", cbwindowdeleteevent, NULL
+	g_signal_connect	win, "delete-event", cb_win_delete_event, NULL
 
 	// HBox生成
 	gtk_hbox_new	FALSE, 5
@@ -43,11 +43,11 @@ newclbk3	cbbutton2clicked, 2, *on_button2_clicked, CLBKMODE_CDECL@
 	// ボタン群生成
 	gtk_button_new_with_label	"Hello"
 	btn1	= stat
-	g_signal_connect	btn1, "clicked", cbbutton1clicked, NULL
+	g_signal_connect	btn1, "clicked", cb_btn1_clicked, NULL
 
 	gtk_button_new_with_label	"Goodbye"
 	btn2	= stat
-	g_signal_connect	btn2, "clicked", cbbutton2clicked, NULL
+	g_signal_connect	btn2, "clicked", cb_btn2_clicked, NULL
 
 	// ウィンドウの組み立て
 	gtk_container_add	win, hbox
@@ -60,14 +60,14 @@ newclbk3	cbbutton2clicked, 2, *on_button2_clicked, CLBKMODE_CDECL@
 	end
 
 /* シグナルハンドラ */
-*on_window_delete_event
+*on_win_delete_event
 	gtk_main_quit
 	return
 
-*on_button1_clicked
+*on_btn1_clicked
 	mes	"Hello"
 	return
 
-*on_button2_clicked
+*on_btn2_clicked
 	mes	"Goodbye"
 	return

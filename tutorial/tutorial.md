@@ -261,9 +261,8 @@ modclbk3b2を使用した場合、コールバック関数はラベルで始ま�
 
 ********************
     // コールバック関数を使うための準備
-    #include "hscallbk.as"
-    #uselib ""
-    #func cb_window_delete_event ""
+    #include "modclbk.as"
+    	newclbk3 cbwindowdeleteevent, 3, *on_window_delete_event, CLBKMODE_CDECL@
     
     // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
@@ -287,8 +286,7 @@ modclbk3b2を使用した場合、コールバック関数はラベルで始ま�
     	// ウィンドウ生成
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
-    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+    	g_signal_connect win, "delete-event", cbwindowdeleteevent, NULL
     
     	// ウィンドウの表示とメインループの開始
     	gtk_widget_show_all win

@@ -1,8 +1,8 @@
 // コールバック関数を使うための準備
 #include "modclbk.as"
-	newclbk3	cbwindeleteevent, 3, *on_win_delete_event, CLBKMODE_CDECL@
-	newclbk3	cbmodelrowdeleted, 3, *on_model_row_deleted, CLBKMODE_CDECL@
-	newclbk3	cbmodelrowinserted, 4, *on_model_row_inserted, CLBKMODE_CDECL@
+	newclbk3	cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+	newclbk3	cb_model_row_deleted, 3, *on_model_row_deleted, CLBKMODE_CDECL@
+	newclbk3	cb_model_row_inserted, 4, *on_model_row_inserted, CLBKMODE_CDECL@
 
 // GTK+の関数を使うための準備
 #uselib "libgtk-3-0.dll"
@@ -46,7 +46,7 @@
 #const	GTK_WINDOW_TOPLEVEL	0
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
-	g_signal_connect	win, "delete-event", cbwindeleteevent, NULL
+	g_signal_connect	win, "delete-event", cb_win_delete_event, NULL
 
 	// アイコンビュー用データ
 	; GtkTreeIter格納用変数作成
@@ -78,8 +78,8 @@
 	loop
 
 	; GtkListStoreにシグナルハンドラを設定
-	g_signal_connect	model, "row-deleted", cbmodelrowdeleted, NULL
-	g_signal_connect	model, "row-inserted", cbmodelrowinserted, NULL
+	g_signal_connect	model, "row-deleted", cb_model_row_deleted, NULL
+	g_signal_connect	model, "row-inserted", cb_model_row_inserted, NULL
 
 	// アイコンビュー生成
 	gtk_icon_view_new_with_model	model

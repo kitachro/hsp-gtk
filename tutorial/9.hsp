@@ -1,15 +1,15 @@
 // コールバック関数を使うための準備
 #include "modclbk.as"
-newclbk3	cbwindowdeleteevent, 3, *on_window_delete_event, CLBKMODE_CDECL@
-newclbk3	cbactnewhoge, 2, *on_act_new_hoge, CLBKMODE_CDECL@
-newclbk3	cbactnewfuga, 2, *on_act_new_fuga, CLBKMODE_CDECL@
-newclbk3	cbactquit, 2, *on_act_quit, CLBKMODE_CDECL@
-newclbk3	cbactcopy, 2, *on_act_copy, CLBKMODE_CDECL@
-newclbk3	cbactpaste, 2, *on_act_paste, CLBKMODE_CDECL@
-newclbk3	cbactone, 2, *on_act_one, CLBKMODE_CDECL@
-newclbk3	cbacttwo, 2, *on_act_two, CLBKMODE_CDECL@
-newclbk3	cbactthree, 2, *on_act_three, CLBKMODE_CDECL@
-newclbk3	cbeboxbuttonreleaseevent, 3, *on_ebox_button_release_event, CLBKMODE_CDECL@
+	newclbk3	cbwindowdeleteevent, 3, *on_window_delete_event, CLBKMODE_CDECL@
+	newclbk3	cbactnewhoge, 2, *on_act_new_hoge, CLBKMODE_CDECL@
+	newclbk3	cbactnewfuga, 2, *on_act_new_fuga, CLBKMODE_CDECL@
+	newclbk3	cbactquit, 2, *on_act_quit, CLBKMODE_CDECL@
+	newclbk3	cbactcopy, 2, *on_act_copy, CLBKMODE_CDECL@
+	newclbk3	cbactpaste, 2, *on_act_paste, CLBKMODE_CDECL@
+	newclbk3	cbactone, 2, *on_act_one, CLBKMODE_CDECL@
+	newclbk3	cbacttwo, 2, *on_act_two, CLBKMODE_CDECL@
+	newclbk3	cbactthree, 2, *on_act_three, CLBKMODE_CDECL@
+	newclbk3	cbeboxbuttonreleaseevent, 3, *on_ebox_button_release_event, CLBKMODE_CDECL@
 
 // GTK+の関数を使うための準備
 #uselib "libgtk-3-0.dll"

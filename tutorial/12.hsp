@@ -1,10 +1,10 @@
 // コールバック関数を使うための準備
 #include "modclbk.as"
-	newclbk3	cbwindeleteevent, 3, *on_win_delete_event, CLBKMODE_CDECL@
-	newclbk3	cbbtntexttoggled, 2, *on_btn_text_toggled, CLBKMODE_CDECL@
-	newclbk3	cbbtnmodetoggled, 2, *on_btn_mode_toggled, CLBKMODE_CDECL@
-	newclbk3	cbbtndirectiontoggled, 2, *on_btn_direction_toggled, CLBKMODE_CDECL@
-	newclbk3	cbtimeout, 1, *on_timeout, CLBKMODE_CDECL@
+	newclbk3	cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+	newclbk3	cb_btn_text_toggled, 2, *on_btn_text_toggled, CLBKMODE_CDECL@
+	newclbk3	cb_btn_mode_toggled, 2, *on_btn_mode_toggled, CLBKMODE_CDECL@
+	newclbk3	cb_btn_direction_toggled, 2, *on_btn_direction_toggled, CLBKMODE_CDECL@
+	newclbk3	cb_timeout, 1, *on_timeout, CLBKMODE_CDECL@
 
 // GTK+の関数を使うための準備
 #uselib "libgtk-3-0.dll"
@@ -51,7 +51,7 @@
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	gtk_container_set_border_width	win, 10
-	g_signal_connect	win, "delete-event", cbwindeleteevent, NULL
+	g_signal_connect	win, "delete-event", cb_win_delete_event, NULL
 
 	// VBox生成
 	gtk_vbox_new	FALSE, 6
@@ -68,15 +68,15 @@
 	gtk_check_button_new_with_label	"Show text"
 	btn_text	= stat
 	gtk_toggle_button_set_active	btn_text, TRUE
-	g_signal_connect	btn_text, "toggled", cbbtntexttoggled, NULL
+	g_signal_connect	btn_text, "toggled", cb_btn_text_toggled, NULL
 
 	gtk_check_button_new_with_label	"Activity mode"
 	btn_mode	= stat
-	g_signal_connect	btn_mode, "toggled", cbbtnmodetoggled, NULL
+	g_signal_connect	btn_mode, "toggled", cb_btn_mode_toggled, NULL
 
 	gtk_check_button_new_with_label	"Right to Left"
 	btn_direction	= stat
-	g_signal_connect	btn_direction, "toggled", cbbtndirectiontoggled, NULL
+	g_signal_connect	btn_direction, "toggled", cb_btn_direction_toggled, NULL
 
 	// ウィンドウの組み立て
 	gtk_box_pack_start	vbox, pbar, TRUE, TRUE, 0
@@ -86,7 +86,7 @@
 	gtk_container_add	win, vbox
 
 	// プログレスバー更新関数の登録
-	g_timeout_add	200, cbtimeout, NULL
+	g_timeout_add	200, cb_timeout, NULL
 
 	// ウィンドウの表示とメインループの開始
 	gtk_widget_show_all	win

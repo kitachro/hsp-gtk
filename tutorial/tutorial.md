@@ -441,10 +441,9 @@ GTK_WINDOW_POPUPは、ポップアップメニューやポップアップのツ�
 
 ********************
     // コールバック関数を使うための準備
-    #include "hscallbk.as"
-    #uselib ""
-    #func cb_window_delete_event ""
-    #func cb_button_clicked ""
+    #include "modclbk.as"
+    	newclbk3 cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+    	newclbk3 cb_btn_clicked, 2, *on_btn_clicked, CLBKMODE_CDECL@
     
     // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
@@ -456,6 +455,7 @@ GTK_WINDOW_POPUPは、ポップアップメニューやポップアップのツ�
     #func global gtk_main_quit "gtk_main_quit"
     #func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
     #func global gtk_container_add "gtk_container_add" sptr, sptr
+    
     #uselib "libgobject-2.0-0.dll"
     #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
     #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
@@ -470,14 +470,12 @@ GTK_WINDOW_POPUPは、ポップアップメニューやポップアップのツ�
     	// ウィンドウ生成
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
-    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+    	g_signal_connect win, "delete-event", cb_win_delete_event, NULL
     
     	// ボタン生成
     	gtk_button_new_with_label "Click Here"
     	btn = stat
-    	setcallbk cbbuttonclicked, cb_button_clicked, *on_button_clicked
-    	g_signal_connect btn, "clicked", varptr( cbbuttonclicked ), NULL
+    	g_signal_connect btn, "clicked", cb_btn_clicked, NULL
     ;	id = stat
     ;	g_signal_handler_disconnect btn, id
     
@@ -490,11 +488,11 @@ GTK_WINDOW_POPUPは、ポップアップメニューやポップアップのツ�
     	end
     
     /* シグナルハンドラ */
-    *on_window_delete_event
+    *on_win_delete_event
     	gtk_main_quit
     	return
     
-    *on_button_clicked
+    *on_btn_clicked
     	mes "Hello World"
     	return
 ********************

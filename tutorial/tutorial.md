@@ -517,8 +517,7 @@ GTK_WINDOW_POPUPは、ポップアップメニューやポップアップのツ�
 ********************
     gtk_button_new_with_label "Click Here"
     btn = stat
-    setcallbk cbbuttonclicked, cb_button_clicked, *on_button_clicked
-    g_signal_connect btn, "clicked", varptr( cbbuttonclicked ), NULL
+    g_signal_connect btn, "clicked", cb_btn_clicked, NULL
 ********************
 
 　ここでは、ウィンドウに載せるためのGtkButtonウィジェットを生成しています。

@@ -212,7 +212,7 @@
 	gtk_main
 	end
 
-/* シグナルハンドラ */
+*_シグナルハンドラ
 *on_win_delete_event
 	gtk_main_quit
 	return
@@ -324,7 +324,7 @@
 *@
 	return
 
-/* GList開放用コールバック関数 */
+*_GList開放用コールバック関数
 *on_g_list_free_full
 	clbkargprotect	args_
 	gtk_tree_path_free	args_( 0 )

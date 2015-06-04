@@ -2289,7 +2289,7 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gtk_selection_data_get_data_with_length "" 
 ;#func global gtk_selection_data_get_display "" 
 ;#func global gtk_selection_data_get_format "" 
-;#func global gtk_selection_data_get_length "" 
+#func global gtk_selection_data_get_length "gtk_selection_data_get_length" sptr
 #func global gtk_selection_data_get_pixbuf "gtk_selection_data_get_pixbuf" sptr
 ;#func global gtk_selection_data_get_selection "" 
 ;#func global gtk_selection_data_get_target "" 

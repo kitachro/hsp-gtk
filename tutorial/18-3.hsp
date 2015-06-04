@@ -1,13 +1,13 @@
-// コールバック関数を使うための準備
+*_コールバック関数を使うための準備
 #include "modclbk.as"
 	newclbk3	cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
 	newclbk3	cb_rbtn1_toggled, 2, *on_rbtn1_toggled, CLBKMODE_CDECL@
 	newclbk3	cb_rbtn2_toggled, 2, *on_rbtn2_toggled, CLBKMODE_CDECL@
 	newclbk3	cb_iview_drag_data_get, 6, *on_iview_dragdataget, CLBKMODE_CDECL@
 	newclbk3	cb_lbl_drag_data_received, 8, *on_lbl_dragdatareceived, CLBKMODE_CDECL@
-	newclbk3	cb_g_list_free_full, 1, *cb_g_list_free_full, CLBKMODE_CDECL@
+	newclbk3	cb_g_list_free_full, 1, *on_g_list_free_full, CLBKMODE_CDECL@
 
-// GTK+の関数を使うための準備
+*_GTKの関数を使うための準備
 #uselib "libgtk-3-0.dll"
 #func global gtk_init "gtk_init" sptr, sptr
 
@@ -81,7 +81,7 @@
 #func global g_list_free_full "g_list_free_full" sptr, sptr
 #func global g_free "g_free" sptr
 
-// よく使う関数
+*_よく使う関数
 #include "hspinet.as"
 #module
 #defcfunc u str chars_ ; shift-jis文字列をutf-8に変換
@@ -90,34 +90,34 @@
 	return	chars
 #global
 
-// よく使う定数
+*_よく使う定数
 #const	TRUE	1 ; 真
 #const	NULL	0 ; ヌルポインタ
 
-	// GTK+初期化
+*_GTK初期化
 	gtk_init	NULL, NULL
 
-	// GTK+のデフォルトGUIフォントを変更
+*_GTKのデフォルトGUIフォントを変更
 	gtk_settings_get_default
 	gtk_settings_set_string_property	stat, "gtk-font-name", "ms ui gothic, 10", NULL
 
-	// ウィンドウ生成
+*_ウィンドウ生成
 #const	GTK_WINDOW_TOPLEVEL	0
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	g_signal_connect	win, "delete-event", cb_win_delete_event, NULL
 
-	// VBox生成
+*_VBox生成
 #const GTK_ORIENTATION_VERTICAL 1 ; GtkOrientation
 	gtk_box_new	GTK_ORIENTATION_VERTICAL, 12
 	vbox	= stat
 
-	// HBox1生成
+*_HBox1生成
 #const GTK_ORIENTATION_HORIZONTAL 0 ; GtkOrientation
 	gtk_box_new	GTK_ORIENTATION_HORIZONTAL, 12
 	hbox1	= stat
 
-	// IconView用データ生成
+*_IconView用データ生成
 	; GtkTreeIter格納用変数作成
 	sdim	struct_itr, ( 4 * 4 )	; 4*4 = GtkTreeIter構造体サイズ
 	itr	= varptr( struct_itr )
@@ -147,7 +147,7 @@
 		g_object_unref	pixbuf
 	loop
 
-	// IconView生成
+*_IconView生成
 #const GDK_BUTTON1_MASK  ( 1 << 8 )	; GdkModifierType
 #const GDK_ACTION_COPY (1 << 1)	; GdkDragAction
 #const GDK_ACTION_MOVE (1 << 2)
@@ -161,14 +161,14 @@
 	gtk_icon_view_enable_model_drag_source	iview, GDK_BUTTON1_MASK, NULL, 0, actions
 	g_signal_connect	iview, "drag-data-get", cb_iview_drag_data_get, NULL
 
-	// Label生成
+*_Label生成
 	gtk_label_new	u( "ここにアイコンをドロップしてください。" )
 	lbl	= stat
 #const	GTK_DEST_DEFAULT_ALL	0x07	; GtkDestDefaults
 	gtk_drag_dest_set	lbl, GTK_DEST_DEFAULT_ALL, NULL, 0, actions
 	g_signal_connect	lbl, "drag-data-received", cb_lbl_drag_data_received, NULL
 
-	// GtkTargetList初期化
+*_GtkTargetList初期化
 #enum	TARGET_TEXT = 0	; ドラッグ＆ドロップでやりとりするデータの型のID
 #enum	TARGET_PIXBUF
 	gtk_target_list_new	NULL, 0
@@ -180,11 +180,11 @@
 	gtk_drag_source_set_target_list	iview, tlist_pixbuf
 	gtk_drag_dest_set_target_list	lbl, tlist_pixbuf
 
-	// HBox2生成
+*_HBox2生成
 	gtk_box_new	GTK_ORIENTATION_HORIZONTAL, 12
 	hbox2	= stat
 
-	// ターゲット切り替え用トグルボタン生成
+*_ターゲット切り替え用トグルボタン生成
 	gtk_radio_button_new_with_label_from_widget 	NULL, "Image"
 	rbtn1	= stat
 	g_signal_connect	rbtn1, "toggled", cb_rbtn1_toggled, NULL
@@ -192,7 +192,7 @@
 	rbtn2	= stat
 	g_signal_connect	rbtn2, "toggled", cb_rbtn2_toggled, NULL
 
-	// ウィンドウの組み立て
+*_ウィンドウの組み立て
 	gtk_box_pack_start	hbox1, iview, TRUE, TRUE, 0
 	gtk_box_pack_start	hbox1, lbl, TRUE, TRUE, 0
 	gtk_box_pack_start	hbox2, rbtn1, TRUE, FALSE, 0
@@ -201,7 +201,7 @@
 	gtk_box_pack_start	vbox, hbox2, FALSE, FALSE, 0
 	gtk_container_add	win, vbox
 
-	// ウィンドウの表示とメインループの開始
+*_ウィンドウの表示とメインループの開始
 	gtk_widget_show_all	win
 	gtk_main
 	end
@@ -303,7 +303,7 @@
 	return
 
 /* GList開放用コールバック関数 */
-*cb_g_list_free_full
+*on_g_list_free_full
 	clbkargprotect	args_
 	gtk_tree_path_free	args_( 0 )
 	return

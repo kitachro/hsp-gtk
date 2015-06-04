@@ -163,6 +163,11 @@
 	gtk_icon_view_set_item_orientation	iview, GTK_ORIENTATION_VERTICAL
 	gtk_icon_view_set_columns	iview, 1
 	gtk_icon_view_set_selection_mode	iview, GTK_SELECTION_MULTIPLE
+/* 複数項目のドラッグ＆ドロップは一応可能だが、操作が少し面倒。
+   (1) アイコン選択時の最後のクリックで押したマウスボタンを放さずに
+       そのままドラッグ操作を始めなければならない。
+   (2) Shiftキーで選択したアイコンをドロップする時には、
+       Shiftキーを放さないとドロップできない。 */
 	actions	= GDK_ACTION_COPY
 	gtk_icon_view_enable_model_drag_source	iview, GDK_MODIFIER_MASK, NULL, 0, actions
 	g_signal_connect	iview, "drag-data-get", cb_iview_drag_data_get, NULL

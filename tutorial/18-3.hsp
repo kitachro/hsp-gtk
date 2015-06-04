@@ -3,8 +3,8 @@
 	newclbk3	cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
 	newclbk3	cb_rbtn1_toggled, 2, *on_rbtn1_toggled, CLBKMODE_CDECL@
 	newclbk3	cb_rbtn2_toggled, 2, *on_rbtn2_toggled, CLBKMODE_CDECL@
-	newclbk3	cb_iview_drag_data_get, 6, *on_iview_dragdataget, CLBKMODE_CDECL@
-	newclbk3	cb_lbl_drag_data_received, 8, *on_lbl_dragdatareceived, CLBKMODE_CDECL@
+	newclbk3	cb_iview_drag_data_get, 6, *on_iview_drag_data_get, CLBKMODE_CDECL@
+	newclbk3	cb_lbl_drag_data_received, 8, *on_lbl_drag_data_received, CLBKMODE_CDECL@
 	newclbk3	cb_g_list_free_full, 1, *on_g_list_free_full, CLBKMODE_CDECL@
 
 *_GTKÇÃä÷êîÇégÇ§ÇΩÇﬂÇÃèÄîı
@@ -235,7 +235,7 @@
 	}
 	return
 
-*on_iview_dragdataget
+*on_iview_drag_data_get
 	clbkargprotect	args_
 	widget	= args_( 0 )
 	data	= args_( 2 )
@@ -274,7 +274,7 @@
 	g_list_free_full	treepaths, cb_g_list_free_full
 	return
 
-*on_lbl_dragdatareceived
+*on_lbl_drag_data_received
 	clbkargprotect	args_
 	data	= args_( 4 )
 	info	= args_( 5 )

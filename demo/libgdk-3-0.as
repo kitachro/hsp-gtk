@@ -140,7 +140,7 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gdk_drag_context_get_dest_window "" 
 ;#func global gdk_drag_context_get_device "" 
 ;#func global gdk_drag_context_get_protocol "" 
-;#func global gdk_drag_context_get_selected_action "" 
+#func global gdk_drag_context_get_selected_action "gdk_drag_context_get_selected_action" sptr
 ;#func global gdk_drag_context_get_source_window "" 
 ;#func global gdk_drag_context_get_suggested_action "" 
 ;#func global gdk_drag_context_get_type "" 

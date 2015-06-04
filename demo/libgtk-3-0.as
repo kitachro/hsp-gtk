@@ -3169,7 +3169,7 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gtk_tree_path_new "" 
 ;#func global gtk_tree_path_new_first "" 
 ;#func global gtk_tree_path_new_from_indices "" 
-;#func global gtk_tree_path_new_from_string "" 
+#func global gtk_tree_path_new_from_string "gtk_tree_path_new_from_string" sptr
 ;#func global gtk_tree_path_next "" 
 ;#func global gtk_tree_path_prepend_index "" 
 ;#func global gtk_tree_path_prev "" 

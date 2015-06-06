@@ -59,7 +59,7 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gdk_device_get_display "" 
 ;#func global gdk_device_get_has_cursor "" 
 ;#func global gdk_device_get_history "" 
-;#func global gdk_device_get_key "" 
+#func global gdk_device_get_key "gdk_device_get_key" sptr, int, int, sptr
 ;#func global gdk_device_get_mode "" 
 ;#func global gdk_device_get_n_axes "" 
 ;#func global gdk_device_get_n_keys "" 
@@ -138,7 +138,7 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gdk_drag_begin_for_device "" 
 ;#func global gdk_drag_context_get_actions "" 
 ;#func global gdk_drag_context_get_dest_window "" 
-;#func global gdk_drag_context_get_device "" 
+#func global gdk_drag_context_get_device "gdk_drag_context_get_device" sptr
 ;#func global gdk_drag_context_get_protocol "" 
 #func global gdk_drag_context_get_selected_action "gdk_drag_context_get_selected_action" sptr
 ;#func global gdk_drag_context_get_source_window "" 
@@ -210,13 +210,13 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gdk_keyboard_ungrab "" 
 ;#func global gdk_keymap_add_virtual_modifiers "" 
 ;#func global gdk_keymap_get_caps_lock_state "" 
-;#func global gdk_keymap_get_default "" 
+#func global gdk_keymap_get_default "gdk_keymap_get_default"
 ;#func global gdk_keymap_get_direction "" 
 ;#func global gdk_keymap_get_entries_for_keycode "" 
 ;#func global gdk_keymap_get_entries_for_keyval "" 
 ;#func global gdk_keymap_get_for_display "" 
 ;#func global gdk_keymap_get_modifier_mask "" 
-;#func global gdk_keymap_get_modifier_state "" 
+#func global gdk_keymap_get_modifier_state "gdk_keymap_get_modifier_state" sptr
 ;#func global gdk_keymap_get_num_lock_state "" 
 ;#func global gdk_keymap_get_type "" 
 ;#func global gdk_keymap_have_bidi_layouts "" 

@@ -6,7 +6,6 @@
 #uselib "libgtk-3-0.dll"
 #func global gtk_init "gtk_init" sptr, sptr
 #func global gtk_window_new "gtk_window_new" int
-#const	GTK_WINDOW_TOPLEVEL	0
 #func global gtk_table_new "gtk_table_new" int, int, int
 #func global gtk_table_set_col_spacings "gtk_table_set_col_spacings" sptr, int
 #func global gtk_table_set_row_spacings "gtk_table_set_row_spacings" sptr, int
@@ -31,6 +30,7 @@
 	gtk_init	NULL, NULL
 
 	// ウィンドウ生成
+#const	GTK_WINDOW_TOPLEVEL	0	; GtkWindowType
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	g_signal_connect	win, "delete-event", cb_win_delete_event, NULL

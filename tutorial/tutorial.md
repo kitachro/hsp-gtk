@@ -1031,12 +1031,11 @@ pango_font_description_from_string関数の引数には、フォント名・フ�
 
 ********************
     // コールバック関数を使うための準備
-    #include "hscallbk.as"
-    #uselib ""
-    #func cb_window_delete_event ""
-    #func cb_button1_toggled ""
-    #func cb_button2_toggled ""
-    #func cb_button3_toggled ""
+    #include "modclbk.as"
+    	newclbk3 cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+    	newclbk3 cb_btn1_toggled, 2, *on_btn1_toggled, CLBKMODE_CDECL@
+    	newclbk3 cb_btn2_toggled, 2, *on_btn2_toggled, CLBKMODE_CDECL@
+    	newclbk3 cb_btn3_toggled, 2, *on_btn3_toggled, CLBKMODE_CDECL@
     
     // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
@@ -1072,28 +1071,27 @@ pango_font_description_from_string関数の引数には、フォント名・フ�
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
     	gtk_container_set_border_width win, 10
-    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+    	g_signal_connect win, "delete-event", cb_win_delete_event, NULL
     
     	// HBox生成
     	gtk_hbox_new FALSE, 6
     	hbox = stat
     
     	// ボタン群生成
-    	gtk_radio_button_new_with_label_from_widget 0, "Button 1"
+    	num_btn1 = 1
+    	gtk_radio_button_new_with_label_from_widget 0, "Button " + num_btn1
     	btn1 = stat
-    	setcallbk cbbutton1toggled, cb_button1_toggled, *on_button1_toggled
-    	g_signal_connect btn1, "toggled", varptr( cbbutton1toggled ), NULL
+    	g_signal_connect btn1, "toggled", cb_btn1_toggled , varptr( num_btn1 )
     
-    	gtk_radio_button_new_with_label_from_widget btn1, "Button _2"
+    	num_btn2 = 2
+    	gtk_radio_button_new_with_label_from_widget btn1, "Button _" + num_btn2
     	btn2 = stat
-    	setcallbk cbbutton2toggled, cb_button2_toggled, *on_button2_toggled
-    	g_signal_connect btn2, "toggled", varptr( cbbutton2toggled ), NULL
+    	g_signal_connect btn2, "toggled", cb_btn2_toggled, varptr( num_btn2 )
     
-    	gtk_radio_button_new_with_mnemonic_from_widget btn1, "Button _3"
+    	num_btn3 = 3
+    	gtk_radio_button_new_with_mnemonic_from_widget btn1, "Button _" + num_btn3
     	btn3 = stat
-    	setcallbk cbbutton3toggled, cb_button3_toggled, *on_button3_toggled
-    	g_signal_connect btn3, "toggled", varptr( cbbutton3toggled ), NULL
+    	g_signal_connect btn3, "toggled", cb_btn3_toggled, varptr( num_btn3 )
     
     	// ウィンドウの組み立て
     	gtk_box_pack_start hbox, btn1, TRUE, TRUE, 0
@@ -1107,29 +1105,27 @@ pango_font_description_from_string関数の引数には、フォント名・フ�
     	end
     
     /* シグナルハンドラ */
-    *on_window_delete_event
+    *on_win_delete_event
     	gtk_main_quit
     	return
     
-    *on_button1_toggled
-    	btn = btn1
-    	num_btn = 1
+    *on_btn1_toggled
     	gosub *show_message
     	return
     
-    *on_button2_toggled
-    	btn = btn2
-    	num_btn = 2
+    *on_btn2_toggled
     	gosub *show_message
     	return
     
-    *on_button3_toggled
-    	btn = btn3
-    	num_btn = 3
+    *on_btn3_toggled
     	gosub *show_message
     	return
     
     *show_message
+    	clbkargprotect args_
+    	btn = args_( 0 )
+    	dupptr num_btn, args_( 1 ), 4
+    
     	gtk_toggle_button_get_active btn
     	if stat {
     		text_state = "ON"

@@ -1161,10 +1161,9 @@ pango_font_description_from_string関数の引数には、フォント名・フ�
 
 ********************
     // コールバック関数を使うための準備
-    #include "hscallbk.as"
-    #uselib ""
-    #func cb_window_delete_event ""
-    #func cb_link_button_activate_link ""
+    #include "modclbk.as"
+    	newclbk3 cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+    	newclbk3 cb_btn_activate_link, 2, *on_btn_activate_link, CLBKMODE_CDECL@
     
     // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
@@ -1177,6 +1176,7 @@ pango_font_description_from_string関数の引数には、フォント名・フ�
     #func global gtk_link_button_new_with_label "gtk_link_button_new_with_label" str, str
     #func global gtk_link_button_get_uri "gtk_link_button_get_uri" sptr
     #func global gtk_container_add "gtk_container_add" sptr, sptr
+    
     #uselib "libgobject-2.0-0.dll"
     #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
     #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
@@ -1193,14 +1193,12 @@ pango_font_description_from_string関数の引数には、フォント名・フ�
     	// ウィンドウ生成
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
-    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+    	g_signal_connect win, "delete-event", cb_win_delete_event , NULL
     
     	// ボタン生成
     	gtk_link_button_new_with_label "http://www.gtk.org", "GTK+ Homepage"
     	btn = stat
-    	setcallbk cblinkbuttonactivatelink, cb_link_button_activate_link, *on_link_button_activate_link
-    	g_signal_connect btn, "activate-link", varptr( cblinkbuttonactivatelink ), NULL
+    	g_signal_connect btn, "activate-link", cb_btn_activate_link, NULL
     
     	// ウィンドウの組み立て
     	gtk_container_add win, btn
@@ -1211,14 +1209,17 @@ pango_font_description_from_string関数の引数には、フォント名・フ�
     	end
     
     /* シグナルハンドラ */
-    *on_window_delete_event
+    *on_win_delete_event
     	gtk_main_quit
     	return
     
-    *on_link_button_activate_link
-    	gtk_link_button_get_uri btn
-    	p = stat
-    	dupptr uri, p, 1024, 2
+    *on_btn_activate_link
+    	clbkargprotect args_
+    	widget = args_( 0 )
+    
+    	gtk_link_button_get_uri widget
+    	ptr = stat
+    	dupptr uri, ptr, 1024, 2
     	exec uri, 16
     	return TRUE
 ********************

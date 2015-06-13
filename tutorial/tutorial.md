@@ -632,22 +632,12 @@ GTK+には、組み込みのストックアイテムが多数用意されてお�
 ### 5.1.1　サンプルプログラムの全体
 
 ********************
-    // よく使う関数
-    #include "hspinet.as"
-    #module
-    #defcfunc u str chars_ ; shift-jis文字列をutf-8に変換
-    	chars = chars_
-    	nkfcnv@ chars, chars, "Sw"
-    	return chars
-    #global
-    
     // コールバック関数を使うための準備
-    #include "hscallbk.as"
-    #uselib ""
-    #func cb_window_delete_event ""
-    #func cb_button1_clicked ""
-    #func cb_button2_clicked ""
-    #func cb_button3_clicked ""
+    #include "modclbk.as"
+    	newclbk3 cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+    	newclbk3 cb_btn1_clicked, 2, *on_btn1_clicked, CLBKMODE_CDECL@
+    	newclbk3 cb_btn2_clicked, 2, *on_btn2_clicked, CLBKMODE_CDECL@
+    	newclbk3 cb_btn3_clicked, 2, *on_btn3_clicked, CLBKMODE_CDECL@
     
     // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
@@ -660,13 +650,13 @@ GTK+には、組み込みのストックアイテムが多数用意されてお�
     #func global gtk_main "gtk_main"
     #func global gtk_main_quit "gtk_main_quit"
     #func global gtk_hbox_new "gtk_hbox_new" int, int
+    #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
     #func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
     #func global gtk_button_new_from_stock "gtk_button_new_from_stock" sptr
     #func global gtk_button_new_with_mnemonic "gtk_button_new_with_mnemonic" sptr 
     #define GTK_STOCK_OPEN "gtk-open"
     #func global gtk_container_get_children "gtk_container_get_children" sptr
     #func gtk_widget_override_font "gtk_widget_override_font" sptr, sptr
-    #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
     
     #uselib "libgobject-2.0-0.dll"
     #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
@@ -677,6 +667,15 @@ GTK+には、組み込みのストックアイテムが多数用意されてお�
     
     #uselib "libglib-2.0-0.dll"
     #func global g_list_nth_data "g_list_nth_data" sptr, int
+    
+    // よく使う関数
+    #include "hspinet.as"
+    #module
+    #defcfunc u str chars_ ; shift-jis文字列をutf-8に変換
+    	chars = chars_
+    	nkfcnv@ chars, chars, "Sw"
+    	return chars
+    #global
     
     // よく使う定数
     ; ヌルポインタ
@@ -692,8 +691,7 @@ GTK+には、組み込みのストックアイテムが多数用意されてお�
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
     	gtk_container_set_border_width win, 10
-    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+    	g_signal_connect win, "delete-event", cb_win_delete_event, NULL
     
     	// HBox生成
     	gtk_hbox_new FALSE, 6
@@ -703,27 +701,24 @@ GTK+には、組み込みのストックアイテムが多数用意されてお�
     	; ボタン1
     	gtk_button_new_with_label u( "クリック！" )
     	btn1 = stat
-    	setcallbk cbbutton1clicked, cb_button1_clicked, *on_button1_clicked
-    	g_signal_connect btn1, "clicked", varptr( cbbutton1clicked ), 0
+    	g_signal_connect btn1, "clicked", cb_btn1_clicked, 0
     
     	; ボタン1のラベルのフォントを設定
     	gtk_container_get_children btn1
     	g_list_nth_data stat, 0
     	lbl = stat
-    	pango_font_description_from_string "ms ui gothic, 12"
+    	pango_font_description_from_string "ms ui gothic, italic 12"
     	gtk_widget_override_font lbl, stat
     
     	; ボタン2
     	gtk_button_new_from_stock GTK_STOCK_OPEN
     	btn2 = stat
-    	setcallbk cbbutton2clicked, cb_button2_clicked, *on_button2_clicked
-    	g_signal_connect btn2, "clicked", varptr( cbbutton2clicked ), 0
+    	g_signal_connect btn2, "clicked", cb_btn2_clicked, 0
     
     	; ボタン3
     	gtk_button_new_with_mnemonic "_Close"
     	btn3 = stat
-    	setcallbk cbbutton3clicked, cb_button3_clicked, *on_button3_clicked
-    	g_signal_connect btn3, "clicked", varptr( cbbutton3clicked ), 0
+    	g_signal_connect btn3, "clicked", cb_btn3_clicked, 0
     
     	// ウィンドウの組み立て
     	gtk_box_pack_start hbox, btn1, TRUE, TRUE, 0
@@ -737,19 +732,19 @@ GTK+には、組み込みのストックアイテムが多数用意されてお�
     	end
     
     /* シグナルハンドラ */
-    *on_window_delete_event
+    *on_win_delete_event
     	gtk_main_quit
     	return
     
-    *on_button1_clicked
+    *on_btn1_clicked
     	mes "\"クリック！\" ボタンがクリックされました。"
     	return
     
-    *on_button2_clicked
+    *on_btn2_clicked
     	mes "\"Open\" ボタンがクリックされました。"
     	return
     
-    *on_button3_clicked
+    *on_btn3_clicked
     	dialog "\"Close\" ボタンがクリックされました。"
     	gtk_main_quit
     	return

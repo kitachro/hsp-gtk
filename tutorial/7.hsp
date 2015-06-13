@@ -6,7 +6,6 @@
 #uselib "libgtk-3-0.dll"
 #func global gtk_init "gtk_init" sptr, sptr
 #func global gtk_window_new "gtk_window_new" int
-#const	GTK_WINDOW_TOPLEVEL	0
 #func global gtk_container_add "gtk_container_add" sptr, sptr
 #func global gtk_widget_show_all "gtk_widget_show_all" sptr
 #func global gtk_main "gtk_main"
@@ -20,10 +19,6 @@
 #func global gtk_label_set_justify "gtk_label_set_justify" sptr, int
 #func global gtk_label_set_selectable "gtk_label_set_selectable" sptr, int
 #func global gtk_label_set_markup "gtk_label_set_markup" sptr, sptr
-#const	GTK_JUSTIFY_LEFT	0
-#const	GTK_JUSTIFY_RIGHT	1
-#const	GTK_JUSTIFY_CENTER	2
-#const	GTK_JUSTIFY_FILL	3
 #func global gtk_label_set_line_wrap "gtk_label_set_line_wrap" sptr, int
 #func global gtk_label_set_mnemonic_widget "gtk_label_set_mnemonic_widget" sptr, sptr
 #func global gtk_container_get_children "gtk_container_get_children" sptr
@@ -59,6 +54,7 @@
 	gtk_init	NULL, NULL
 
 	// ウィンドウ生成
+#const	GTK_WINDOW_TOPLEVEL	0	; GtkWindowType
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	g_signal_connect	win, "delete-event", cb_win_delete_event, NULL
@@ -80,16 +76,19 @@
 	lbl1	= stat
 	gtk_widget_override_font	lbl1, fnt
 
+#const	GTK_JUSTIFY_LEFT	0	; GtkJustification
 	gtk_label_new	u( "テキストを左寄せしたラベルです。\n次の行です。\nデフォルトは左寄せです。" )
 	lbl2	= stat
 	gtk_label_set_justify	lbl2, GTK_JUSTIFY_LEFT
 	gtk_widget_override_font	lbl2, fnt
 
+#const	GTK_JUSTIFY_CENTER	2	; GtkJustification
 	gtk_label_new	u( "テキストを中央寄せしたラベルです。\n次の行です。" )
 	lbl3	= stat
 	gtk_label_set_justify	lbl3, GTK_JUSTIFY_CENTER
 	gtk_widget_override_font	lbl3, fnt
 
+#const	GTK_JUSTIFY_RIGHT	1	; GtkJustification
 	gtk_label_new	u( "テキストを右寄せしたラベルです。\n次の行です。" )
 	lbl4	= stat
 	gtk_label_set_justify	lbl4, GTK_JUSTIFY_RIGHT
@@ -125,6 +124,7 @@
 	gtk_label_set_line_wrap	lbl7, TRUE
 	gtk_widget_override_font	lbl7, fnt
 
+#const	GTK_JUSTIFY_FILL	3	; GtkJustification
 	text	= "This is an example of a line-wrapped, filled label. "
 	text	+= "It should be taking "
 	text	+= "up the entire width allocated to it.\n\n"

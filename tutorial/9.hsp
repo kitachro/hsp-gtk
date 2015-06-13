@@ -17,7 +17,6 @@
 #func global gtk_settings_get_default "gtk_settings_get_default"
 #func global gtk_settings_set_string_property "gtk_settings_set_string_property" sptr, sptr, sptr, sptr
 #func global gtk_window_new "gtk_window_new" int
-#const	GTK_WINDOW_TOPLEVEL	0
 #func global gtk_window_add_accel_group "gtk_window_add_accel_group" sptr, sptr
 #func global gtk_container_add "gtk_container_add" sptr, sptr
 #func global gtk_widget_set_size_request "gtk_widget_set_size_request" sptr, int, int
@@ -76,6 +75,7 @@
 	gtk_settings_set_string_property	stat, "gtk-font-name", "meiryo, bold 11", NULL
 
 	// Window生成
+#const	GTK_WINDOW_TOPLEVEL	0	; GtkWindowType
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	gtk_widget_set_size_request	win, 300, 200
@@ -151,7 +151,7 @@
 	gtk_action_new	NAME_NEWMENU, u( "新規作成(_N)" ), NULL, NULL
 	act_new	= stat
 
-#define GTK_STOCK_NEW	"gtk-new"
+#define GTK_STOCK_NEW	"gtk-new"	; GtkStockItem
 	; NewHogeコマンドAction生成
 	gtk_action_new	NAME_NEWHOGE, u( "_Hoge作成" ), u( "新しいHogeを作成します。" ), GTK_STOCK_NEW
 	act_new_hoge	= stat
@@ -163,7 +163,7 @@
 	g_signal_connect	act_new_fuga, "activate", cb_act_new_fuga, NULL
 
 	; QuitコマンドAction生成
-#define GTK_STOCK_QUIT	"gtk-quit"
+#define GTK_STOCK_QUIT	"gtk-quit"	; GtkStockItem
 	gtk_action_new	NAME_QUIT, u( "終了(_Q)" ), NULL, GTK_STOCK_QUIT
 	act_quit	= stat
 	g_signal_connect	act_quit, "activate", cb_act_quit, NULL
@@ -173,13 +173,13 @@
 	act_edit	= stat
 
 	; CopyコマンドAction生成
-#define GTK_STOCK_COPY	"gtk-copy"
+#define GTK_STOCK_COPY	"gtk-copy"	; GtkStockItem
 	gtk_action_new	NAME_COPY, u( "コピー(_C)" ), NULL, GTK_STOCK_COPY
 	act_copy	= stat
 	g_signal_connect	act_copy, "activate", cb_act_copy, NULL
 
 	; PasteコマンドAction生成
-#define GTK_STOCK_PASTE	"gtk-paste"
+#define GTK_STOCK_PASTE	"gtk-paste"	; GtkStockItem
 	gtk_action_new	NAME_PASTE, u( "貼り付け(_P)" ), NULL, GTK_STOCK_PASTE
 	act_paste	= stat
 	g_signal_connect	act_paste, "activate", cb_act_paste, NULL
@@ -309,11 +309,11 @@
 	}
 	return
 
-#define	GDK_BUTTON_SECONDARY	3
 *on_ebox_button_release_event
 	clbkargprotect	args_
 	evt	= args_( 1 )
 
+#define	GDK_BUTTON_SECONDARY	3	; GDK - Events
 	gdk_event_get_button	evt, varptr( num )
 	if ( num = GDK_BUTTON_SECONDARY ) {
 		mes	"GtkEventBoxが右クリックされました。"

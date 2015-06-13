@@ -1368,11 +1368,10 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
 
 ********************
     // コールバック関数を使うための準備
-    #include "hscallbk.as"
-    #uselib ""
-    #func cb_window_delete_event ""
-    #func cb_button1_notifyactive ""
-    #func cb_button2_notifyactive ""
+    #include "modclbk.as"
+    	newclbk3 cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+    	newclbk3 cb_btn1_notify_active, 3, *on_btn1_notifyactive, CLBKMODE_CDECL@
+    	newclbk3 cb_btn2_notify_active, 3, *on_btn2_notifyactive, CLBKMODE_CDECL@
     
     // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
@@ -1408,25 +1407,24 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
     	gtk_container_set_border_width win, 10
-    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+    	g_signal_connect win, "delete-event", cb_win_delete_event, NULL
     
     	// HBox生成
     	gtk_hbox_new FALSE, 6
     	hbox = stat
     
     	// ボタン群生成
+    	num_btn1 = 1
     	gtk_switch_new
     	btn1 = stat
     	gtk_switch_set_active btn1, FALSE
-    	setcallbk cbbutton1notifyactive, cb_button1_notifyactive, *on_button1_notifyactive
-    	g_signal_connect btn1, "notify::active", varptr( cbbutton1notifyactive ), NULL
+    	g_signal_connect btn1, "notify::active", cb_btn1_notify_active, varptr( num_btn1 )
     
+    	num_btn2 = 2
     	gtk_switch_new
     	btn2 = stat
     	gtk_switch_set_active btn2, TRUE
-    	setcallbk cbbutton2notifyactive, cb_button2_notifyactive, *on_button2_notifyactive
-    	g_signal_connect btn2, "notify::active", varptr( cbbutton2notifyactive ), NULL
+    	g_signal_connect btn2, "notify::active", cb_btn2_notify_active, varptr( num_btn2 )
     
     	// ウィンドウの組み立て
     	gtk_box_pack_start hbox, btn1, TRUE, TRUE, 0
@@ -1439,23 +1437,23 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
     	end
     
     /* シグナルハンドラ */
-    *on_window_delete_event
+    *on_win_delete_event
     	gtk_main_quit
     	return
     
-    *on_button1_notifyactive
-    	btn = btn1
-    	num_btn = 1
+    *on_btn1_notifyactive
     	gosub *show_message
     	return
     
-    *on_button2_notifyactive
-    	btn = btn2
-    	num_btn = 2
+    *on_btn2_notifyactive
     	gosub *show_message
     	return
     
     *show_message
+    	clbkargprotect args_
+    	btn = args_( 0 )
+    	dupptr num_btn, args_( 2 ), 4
+    
     	gtk_switch_get_active btn
     	if stat {
     		text_state = "ON"

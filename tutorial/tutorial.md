@@ -4089,16 +4089,11 @@ GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによ
 
 ********************
     // コールバック関数を使うための準備
-    #include "hscallbk.as"
-    #uselib ""
-    #func cb_window_delete_event ""
-    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    #func cb_iconview_selection_changed ""
-    	setcallbk cbiconviewselectionchanged, cb_iconview_selection_changed, *on_iconview_selection_changed
-    #func cb_iconview_item_activated "" int, int, int
-    	setcallbk cbiconviewitemactivated, cb_iconview_item_activated, *on_iconview_item_activated
-    #func cb_g_list_free_full "" int
-    	setcallbk cbglistfreefull, cb_g_list_free_full, *on_g_list_free_full
+    #include "modclbk.as"
+    	newclbk3 cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+    	newclbk3 cb_iview_selection_changed, 2, *on_iview_selection_changed, CLBKMODE_CDECL@
+    	newclbk3 cb_iview_item_activated, 3, *on_iview_item_activated, CLBKMODE_CDECL@
+    	newclbk3 cb_g_list_free_full, 1, *cb_g_list_free_full, CLBKMODE_CDECL@
     
     // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
@@ -4131,6 +4126,8 @@ GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによ
     #func global g_list_length "g_list_length" sptr
     #func global g_list_nth_data "g_list_nth_data"  sptr, int
     #func global g_list_free_full "g_list_free_full" sptr, sptr
+    #func global g_free "g_free" sptr
+    
     
     #uselib "libgdk_pixbuf-2.0-0.dll"
     #func global gdk_pixbuf_get_type "gdk_pixbuf_get_type"
@@ -4142,10 +4139,10 @@ GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによ
     	gtk_init NULL, NULL
     
     	// ウィンドウ生成
-    #const GTK_WINDOW_TOPLEVEL 0
+    #const GTK_WINDOW_TOPLEVEL 0 ; GtkWindowType
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+    	g_signal_connect win, "delete-event", cb_win_delete_event, NULL
     
     	// アイコンビュー用データ
     	; GtkTreeIter格納用変数作成
@@ -4153,26 +4150,26 @@ GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによ
     	itr = varptr( struct_itr )
     
     	; GtkListStore生成
-    #define G_TYPE_MAKE_FUNDAMENTAL(%1) (%1 << 2)
-    #define G_TYPE_STRING G_TYPE_MAKE_FUNDAMENTAL(16)
+    #define G_TYPE_STRING G_TYPE_MAKE_FUNDAMENTAL(16) ; GObject - Type Information
+    #define ctype G_TYPE_MAKE_FUNDAMENTAL(%1) (%1 << 2)
     	gdk_pixbuf_get_type
     	gtk_list_store_new2 2, stat, G_TYPE_STRING
     	model = stat
     
     	; GtkListStoreにデータをセット
-    #define GTK_STOCK_CUT "gtk-cut"
+    #define GTK_STOCK_CUT "gtk-cut" ; GtkStockItem
     #define GTK_STOCK_COPY "gtk-copy"
     #define GTK_STOCK_PASTE "gtk-paste"
-    #const GTK_ICON_SIZE_DND 5
-    #const COL_PIXBUF 0 ; GtkListStoreデータの項目インデックス
-    #const COL_TEXT 1
-    	icons = GTK_STOCK_CUT, GTK_STOCK_COPY, GTK_STOCK_PASTE
-    	repeat length( icons )
+    #const GTK_ICON_SIZE_DND 5 ; GtkIconSize
+    #const COLUMN_ICON 0 ; GtkListStoreデータの項目インデックス
+    #const COLUMN_NAME 1
+    	iconnames = GTK_STOCK_CUT, GTK_STOCK_COPY, GTK_STOCK_PASTE
+    	repeat length( iconnames )
     		gtk_list_store_append model, itr
     		gtk_image_new
-    		gtk_widget_render_icon_pixbuf stat, icons( cnt ), GTK_ICON_SIZE_DND
+    		gtk_widget_render_icon_pixbuf stat, iconnames( cnt ), GTK_ICON_SIZE_DND
     		pixbuf = stat
-    		gtk_list_store_set2 model, itr, COL_PIXBUF, pixbuf, COL_TEXT, icons( cnt ), -1
+    		gtk_list_store_set2 model, itr, COLUMN_ICON, pixbuf, COLUMN_NAME, iconnames( cnt ), -1
     		g_object_unref pixbuf
     	loop
     
@@ -4180,11 +4177,11 @@ GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによ
     #const GTK_SELECTION_MULTIPLE 3 ; GtkSelectionMode
     	gtk_icon_view_new_with_model model
     	iview = stat
-    	gtk_icon_view_set_pixbuf_column iview, COL_PIXBUF
-    	gtk_icon_view_set_text_column iview, COL_TEXT
+    	gtk_icon_view_set_pixbuf_column iview, COLUMN_ICON
+    	gtk_icon_view_set_text_column iview, COLUMN_NAME
     	gtk_icon_view_set_selection_mode iview, GTK_SELECTION_MULTIPLE
-    	g_signal_connect iview, "selection-changed", varptr( cbiconviewselectionchanged ), NULL
-    	g_signal_connect iview, "item-activated", varptr( cbiconviewitemactivated ), NULL
+    	g_signal_connect iview, "selection-changed", cb_iview_selection_changed, NULL
+    	g_signal_connect iview, "item-activated", cb_iview_item_activated, NULL
     
     	// ウィンドウの組み立て
     	gtk_container_add win, iview
@@ -4195,11 +4192,11 @@ GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによ
     	end
     
     /* シグナルハンドラ */
-    *on_window_delete_event
+    *on_win_delete_event
     	gtk_main_quit
     	return
     
-    *on_iconview_selection_changed
+    *on_iview_selection_changed
     	gtk_icon_view_get_selected_items iview
     	treepaths = stat
     	g_list_length treepaths
@@ -4207,23 +4204,28 @@ GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによ
     		g_list_nth_data treepaths, cnt
     		treepath = stat
     		gtk_tree_path_to_string treepath
-    		dupptr str_tp, stat, 10, 2
+    		ptr = stat
+    		dupptr str_tp, ptr, 10, 2
     		mes "selected: " + str_tp
+    		g_free ptr
     	loop
-    	g_list_free_full treepaths, varptr( cbglistfreefull )
+    	g_list_free_full treepaths, cb_g_list_free_full
     	return
     
-    *on_iconview_item_activated
-    	treepath = callbkarg( 1 )
-    	gtk_tree_path_to_string treepath
-    	dupptr str_tp, stat, 10, 2
+    *on_iview_item_activated
+    	clbkargprotect args_
+    	gtk_tree_path_to_string args_( 1 )
+    	ptr = stat
+    	dupptr str_tp, ptr, 10, 2
     	mes "activated: " + str_tp
-    	gosub *on_iconview_selection_changed
+    	g_free ptr
+    	gosub *on_iview_selection_changed
     	return
     
     /* GList開放用コールバック関数 */
-    *on_g_list_free_full
-    	gtk_tree_path_free callbkarg( 0 )
+    *cb_g_list_free_full
+    	clbkargprotect args_
+    	gtk_tree_path_free args_( 0 )
     	return
 ********************
 

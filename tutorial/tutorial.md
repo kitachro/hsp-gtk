@@ -3123,12 +3123,11 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
 
 ********************
     // コールバック関数を使うための準備
-    #include "hscallbk.as"
-    #uselib ""
-    #func cb_win_delete_event ""
-    #func cb_btn1_clicked ""
-    #func cb_btn2_clicked ""
-    #func cb_btn3_clicked ""
+    #include "modclbk.as"
+    	newclbk3 cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+    	newclbk3 cb_btn1_clicked, 2, *on_btn1_clicked, CLBKMODE_CDECL@
+    	newclbk3 cb_btn2_clicked, 2, *on_btn2_clicked, CLBKMODE_CDECL@
+    	newclbk3 cb_btn3_clicked, 2, *on_btn3_clicked, CLBKMODE_CDECL@
     
     // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
@@ -3136,7 +3135,6 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     #func global gtk_settings_get_default "gtk_settings_get_default"
     #func global gtk_settings_set_string_property "gtk_settings_set_string_property" sptr, sptr, sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
-    #const GTK_WINDOW_TOPLEVEL 0
     #func global gtk_container_add "gtk_container_add" sptr, sptr
     #func global gtk_widget_show_all "gtk_widget_show_all" sptr
     #func global gtk_main "gtk_main"
@@ -3148,18 +3146,6 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     #func global gtk_window_set_modal "gtk_window_set_modal" sptr, int
     #func global gtk_file_chooser_set_current_name "gtk_file_chooser_set_current_name" sptr, sptr
     #func global gtk_file_chooser_set_do_overwrite_confirmation "gtk_file_chooser_set_do_overwrite_confirmation" sptr, int
-    ; GtkFileChooserAction
-    #enum GTK_FILE_CHOOSER_ACTION_OPEN = 0
-    #enum GTK_FILE_CHOOSER_ACTION_SAVE
-    #enum GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER
-    ; GtkStockItem
-    #define GTK_STOCK_CANCEL "gtk-cancel"
-    #define GTK_STOCK_OPEN "gtk-open"
-    #define GTK_STOCK_SAVE_AS "gtk-save-as"
-    ; GtkResponseType
-    ;#const GTK_RESPONSE_DELETE_EVENT -4
-    ;#const GTK_RESPONSE_CANCEL -6
-    #const GTK_RESPONSE_APPLY -10
     #func global gtk_dialog_run "gtk_dialog_run" sptr
     #func global gtk_widget_hide "gtk_widget_hide" sptr
     #func global gtk_file_chooser_get_filename "gtk_file_chooser_get_filename" sptr
@@ -3196,10 +3182,10 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	gtk_settings_set_string_property stat, "gtk-font-name", "ms ui gothic, 10 bold", NULL
     
     	// ウィンドウ生成
+    #const GTK_WINDOW_TOPLEVEL 0 ; GtkWindowType
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
-    	setcallbk cbwindeleteevent, cb_win_delete_event, *on_win_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindeleteevent ), NULL
+    	g_signal_connect win, "delete-event", cb_win_delete_event, NULL
     
     	// HBox生成
     	gtk_hbox_new FALSE, 10
@@ -3208,18 +3194,15 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	// ボタン群生成
     	gtk_button_new_with_label "Select File"
     	btn1 = stat
-    	setcallbk cbbtn1clicked, cb_btn1_clicked, *on_btn1_clicked
-    	g_signal_connect btn1, "clicked", varptr( cbbtn1clicked ), 0
+    	g_signal_connect btn1, "clicked", cb_btn1_clicked, 0
     
     	gtk_button_new_with_label "Select Folder"
     	btn2 = stat
-    	setcallbk cbbtn2clicked, cb_btn2_clicked, *on_btn2_clicked
-    	g_signal_connect btn2, "clicked", varptr( cbbtn2clicked ), 0
+    	g_signal_connect btn2, "clicked", cb_btn2_clicked, 0
     
     	gtk_button_new_with_label "Save File As"
     	btn3 = stat
-    	setcallbk cbbtn3clicked, cb_btn3_clicked, *on_btn3_clicked
-    	g_signal_connect btn3, "clicked", varptr( cbbtn3clicked ), 0
+    	g_signal_connect btn3, "clicked", cb_btn3_clicked, 0
     
     	// ウィンドウの組み立て
     	gtk_box_pack_start hbox, btn1, FALSE, FALSE, 0
@@ -3237,6 +3220,8 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	gtk_main_quit
     	return
     
+    #const GTK_FILE_CHOOSER_ACTION_OPEN 0 ; GtkFileChooserAction
+    #define GTK_STOCK_OPEN "gtk-open" ; GtkStockItem
     *on_btn1_clicked
     	// ファイルオープンダイアログ
     	dlg = dlg1
@@ -3249,6 +3234,7 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	gosub *run_dialog
     	return
     
+    #const GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER 2 ; GtkFileChooserAction
     *on_btn2_clicked
     	// フォルダオープンダイアログ
     	dlg = dlg2
@@ -3261,6 +3247,8 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	gosub *run_dialog
     	return
     
+    #const GTK_FILE_CHOOSER_ACTION_SAVE 1 ; GtkFileChooserAction
+    #define GTK_STOCK_SAVE_AS "gtk-save-as" ; GtkStockItem
     *on_btn3_clicked
     	// ファイルセーブダイアログ
     	dlg = dlg3
@@ -3274,13 +3262,16 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	return
     
     /* サブルーチン */
+    #define GTK_STOCK_CANCEL "gtk-cancel" ; GtkStockItem
+    #const GTK_RESPONSE_CANCEL -6 ; GtkResponseType
+    #const GTK_RESPONSE_APPLY -10 ; GtkResponseType
     *create_dialog
     	if dlg = NULL {
     		gtk_file_chooser_dialog_new2 caption, win, action, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, btn_apply, GTK_RESPONSE_APPLY, NULL
     		dlg = stat
     		gtk_window_set_modal dlg, TRUE
     		gtk_file_chooser_set_current_name dlg, "untitled"
-    		gtk_file_chooser_set_do_overwrite_confirmation dlg3, TRUE
+    		gtk_file_chooser_set_do_overwrite_confirmation dlg, TRUE
     	}
     	return
     

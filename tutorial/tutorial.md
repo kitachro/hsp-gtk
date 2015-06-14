@@ -2757,13 +2757,12 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
 
 ********************
     // コールバック関数を使うための準備
-    #include "hscallbk.as"
-    #uselib ""
-    #func cb_win_delete_event ""
-    #func cb_btn1_clicked ""
-    #func cb_btn2_clicked ""
-    #func cb_dlg2_delete_event ""
-    #func cb_btn_close_clicked ""
+    #include "modclbk.as"
+    	newclbk3 cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+    	newclbk3 cb_btn1_clicked, 2, *on_btn1_clicked, CLBKMODE_CDECL@
+    	newclbk3 cb_btn2_clicked, 2, *on_btn2_clicked, CLBKMODE_CDECL@
+    	newclbk3 cb_dlg2_delete_event, 3, *on_dlg2_delete_event, CLBKMODE_CDECL@
+    	newclbk3 cb_btn_close_clicked, 2, *on_btn_close_clicked, CLBKMODE_CDECL@
     
     // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
@@ -2771,7 +2770,6 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     #func global gtk_settings_get_default "gtk_settings_get_default"
     #func global gtk_settings_set_string_property "gtk_settings_set_string_property" sptr, sptr, sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
-    #const GTK_WINDOW_TOPLEVEL 0
     #func global gtk_container_add "gtk_container_add" sptr, sptr
     #func global gtk_widget_show_all "gtk_widget_show_all" sptr
     #func global gtk_main "gtk_main"
@@ -2785,16 +2783,6 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     #func global gtk_message_dialog_new0 "gtk_message_dialog_new" sptr, int, int, int, str
     #func global gtk_message_dialog_format_secondary_text0 "gtk_message_dialog_format_secondary_text" sptr, str
     #func global gtk_dialog_get_widget_for_response "gtk_dialog_get_widget_for_response" sptr, int
-    ; GtkMessageType
-    #const GTK_MESSAGE_INFO 0
-    #const GTK_MESSAGE_WARNING 1
-    ; GtkButtonsType
-    #const GTK_BUTTONS_OK 1
-    #const GTK_BUTTONS_CLOSE 2
-    ; GtkResponseType
-    ;#const GTK_RESPONSE_DELETE_EVENT -4
-    ;#const GTK_RESPONSE_OK -5
-    #const GTK_RESPONSE_CLOSE -7
     
     #uselib "libgobject-2.0-0.dll"
     #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
@@ -2824,10 +2812,10 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	gtk_settings_set_string_property stat, "gtk-font-name", "ms ui gothic, 10", NULL
     
     	// ウィンドウ生成
+    #const GTK_WINDOW_TOPLEVEL 0 ; GtkWindowType
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
-    	setcallbk cbwindeleteevent, cb_win_delete_event, *on_win_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindeleteevent ), NULL
+    	g_signal_connect win, "delete-event", cb_win_delete_event, NULL
     
     	// HBox生成
     	gtk_vbox_new FALSE, 3
@@ -2837,14 +2825,12 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	; ボタン1
     	gtk_button_new_with_label "MessageDialog (modal)"
     	btn1 = stat
-    	setcallbk cbbtn1clicked, cb_btn1_clicked, *on_btn1_clicked
-    	g_signal_connect btn1, "clicked", varptr( cbbtn1clicked ), 0
+    	g_signal_connect btn1, "clicked", cb_btn1_clicked, 0
     
     	; ボタン2
     	gtk_button_new_with_label "MessageDialog (non-modal)"
     	btn2 = stat
-    	setcallbk cbbtn2clicked, cb_btn2_clicked, *on_btn2_clicked
-    	g_signal_connect btn2, "clicked", varptr( cbbtn2clicked ), 0
+    	g_signal_connect btn2, "clicked", cb_btn2_clicked, 0
     
     	// ウィンドウの組み立て
     	gtk_box_pack_start vbox, btn1, TRUE, TRUE, 0
@@ -2861,6 +2847,8 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	gtk_main_quit
     	return
     
+    #const GTK_MESSAGE_INFO 0 ; GtkMessageType
+    #const GTK_BUTTONS_OK 1 ; GtkButtonsType
     *on_btn1_clicked
     	if dlg1 = NULL {
     		msg = u( "これは、モーダルなINFO MessageDialogのメインテキストです。" )
@@ -2869,12 +2857,15 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     		gtk_window_set_title dlg1, "Modal MessageDialog"
     		gtk_message_dialog_format_secondary_text0 dlg1, u( "これはサブテキストです。" )
     	}
-    
     	gtk_dialog_run dlg1
-    	response = stat : mes "response id: " + response
+    	response = stat
+    	mes "response id: " + response
     	gtk_widget_hide dlg1
     	return
     
+    #const GTK_MESSAGE_WARNING 1 ; GtkMessageType
+    #const GTK_BUTTONS_CLOSE 2 ; GtkButtonsType
+    #const GTK_RESPONSE_CLOSE -7 ; GtkResponseType
     *on_btn2_clicked
     	if dlg2 = NULL {
     		msg = u( "これは、ノンモーダルなWARNING MessageDialogのメインテキストです。" )
@@ -2883,12 +2874,10 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     		gtk_window_set_title dlg2, "Non-modal MessageDialog"
     		gtk_message_dialog_format_secondary_text0 dlg2, u( "これはサブテキストです。" )
     
-    		setcallbk cbdlg2deleteevent, cb_dlg2_delete_event, *on_dlg2_delete_event
-    		g_signal_connect dlg2, "delete-event", varptr( cbdlg2deleteevent ), NULL
+    		g_signal_connect dlg2, "delete-event", cb_dlg2_delete_event, NULL
     		gtk_dialog_get_widget_for_response dlg2, GTK_RESPONSE_CLOSE
     		btn_close = stat
-    		setcallbk cbbtncloseclicked, cb_btn_close_clicked, *on_btn_close_clicked
-    		g_signal_connect btn_close, "clicked", varptr( cbbtncloseclicked ), NULL
+    		g_signal_connect btn_close, "clicked", cb_btn_close_clicked, NULL
     	}
     	gtk_widget_show_all dlg2
     	return

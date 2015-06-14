@@ -107,7 +107,7 @@
 	gtk_settings_set_string_property	stat, "gtk-font-name", "ms ui gothic, 10", NULL
 
 *_ウィンドウ生成
-#const	GTK_WINDOW_TOPLEVEL	0
+#const	GTK_WINDOW_TOPLEVEL	0	; GtkWindowType
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	g_signal_connect	win, "delete-event", cb_win_delete_event, NULL
@@ -131,17 +131,17 @@
 #enum	COLUMN_NAME	= 0	; GtkListStoreデータの項目インデックス
 #enum	COLUMN_ICON
 #enum	NUM_COLUMN		; 項目数
-#define G_TYPE_STRING	G_TYPE_MAKE_FUNDAMENTAL(16)
+#define G_TYPE_STRING	G_TYPE_MAKE_FUNDAMENTAL(16)	; GObject - Type Information
 #define ctype G_TYPE_MAKE_FUNDAMENTAL(%1)	(%1 << 2)
 	gdk_pixbuf_get_type
 	gtk_list_store_new2	NUM_COLUMN, G_TYPE_STRING, stat
 	mdl	= stat
 
 	; GtkListStoreにデータをセット
-#define GTK_STOCK_ABOUT	"gtk-about"
+#define GTK_STOCK_ABOUT	"gtk-about"	; GtkStockItem
 #define GTK_STOCK_CONVERT	"gtk-convert"
 #define GTK_STOCK_COPY	"gtk-copy"
-#const GTK_ICON_SIZE_DND	5
+#const GTK_ICON_SIZE_DND	5	; GtkIconSize
 	icons	= GTK_STOCK_ABOUT, GTK_STOCK_CONVERT, GTK_STOCK_COPY
 	repeat	length( icons )
 		gtk_list_store_append	mdl, itr

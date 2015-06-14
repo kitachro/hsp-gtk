@@ -3635,16 +3635,14 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
 
 ********************
     // コールバック関数を使うための準備
-    #include "hscallbk.as"
-    #uselib ""
-    #func cb_window_delete_event ""
-    #func cb_btn_toggled ""
+    #include "modclbk.as"
+    	newclbk3 cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+    	newclbk3 cb_btn_toggled, 2, *on_btn_toggled, CLBKMODE_CDECL@
     
     // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
-    #const GTK_WINDOW_TOPLEVEL 0
     #func global gtk_widget_show_all "gtk_widget_show_all" sptr
     #func global gtk_main "gtk_main"
     #func global gtk_main_quit "gtk_main_quit"
@@ -3675,11 +3673,11 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	gtk_init NULL, NULL
     
     	// ウィンドウ生成
+    #const GTK_WINDOW_TOPLEVEL 0 ; GtkWindowType
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
     	gtk_container_set_border_width win, 5
-    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+    	g_signal_connect win, "delete-event", cb_win_delete_event, NULL
     
     	// VBox生成
     	gtk_vbox_new FALSE, 6
@@ -3689,8 +3687,7 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	gtk_toggle_button_new_with_label "Start Spinning"
     	btn = stat
     	gtk_toggle_button_set_active btn, FALSE
-    	setcallbk cbbtntoggled, cb_btn_toggled, *on_btn_toggled
-    	g_signal_connect btn, "toggled", varptr( cbbtntoggled ), NULL
+    	g_signal_connect btn, "toggled", cb_btn_toggled, NULL
     
     	// スピナー生成
     	gtk_spinner_new
@@ -3707,7 +3704,7 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	end
     
     /* シグナルハンドラ */
-    *on_window_delete_event
+    *on_win_delete_event
     	gtk_main_quit
     	return
     

@@ -1820,25 +1820,14 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
 ## 7.1　サンプルプログラムの全体
 
 ********************
-    // よく使う関数
-    #include "hspinet.as"
-    #module
-    #defcfunc u str chars_ ; shift-jis文字列をutf-8に変換
-    	chars = chars_
-    	nkfcnv@ chars, chars, "Sw"
-    	return chars
-    #global
-    
     // コールバック関数を使うための準備
-    #include "hscallbk.as"
-    #uselib ""
-    #func cb_window_delete_event ""
+    #include "modclbk.as"
+    	newclbk3 cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
     
     // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
-    #const GTK_WINDOW_TOPLEVEL 0
     #func global gtk_container_add "gtk_container_add" sptr, sptr
     #func global gtk_widget_show_all "gtk_widget_show_all" sptr
     #func global gtk_main "gtk_main"
@@ -1852,16 +1841,29 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
     #func global gtk_label_set_justify "gtk_label_set_justify" sptr, int
     #func global gtk_label_set_selectable "gtk_label_set_selectable" sptr, int
     #func global gtk_label_set_markup "gtk_label_set_markup" sptr, sptr
-    #const GTK_JUSTIFY_LEFT 0
-    #const GTK_JUSTIFY_RIGHT 1
-    #const GTK_JUSTIFY_CENTER 2
-    #const GTK_JUSTIFY_FILL 3
     #func global gtk_label_set_line_wrap "gtk_label_set_line_wrap" sptr, int
     #func global gtk_label_set_mnemonic_widget "gtk_label_set_mnemonic_widget" sptr, sptr
+    #func global gtk_container_get_children "gtk_container_get_children" sptr
+    #func gtk_widget_override_font "gtk_widget_override_font" sptr, sptr
     
     #uselib "libgobject-2.0-0.dll"
     #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
     #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
+    
+    #uselib "libpango-1.0-0.dll"
+    #func pango_font_description_from_string "pango_font_description_from_string" str
+    
+    #uselib "libglib-2.0-0.dll"
+    #func global g_list_nth_data "g_list_nth_data" sptr, int
+    
+    // よく使う関数
+    #include "hspinet.as"
+    #module
+    #defcfunc u str chars_ ; shift-jis文字列をutf-8に変換
+    	chars = chars_
+    	nkfcnv@ chars, chars, "Sw"
+    	return chars
+    #global
     
     // よく使う定数
     ; ヌルポインタ
@@ -1874,10 +1876,10 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
     	gtk_init NULL, NULL
     
     	// ウィンドウ生成
+    #const GTK_WINDOW_TOPLEVEL 0 ; GtkWindowType
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
-    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+    	g_signal_connect win, "delete-event", cb_win_delete_event, NULL
     
     	// ボックス群生成
     	gtk_hbox_new FALSE, 10
@@ -1889,24 +1891,30 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
     	vbox_right = stat
     
     	// ラベル群生成
+    	pango_font_description_from_string "ms ui gothic 10" ; フォント設定生成
+    	fnt = stat
+    
     	gtk_label_new u( "デフォルト状態のラベルです。\n次の行です。" )
     	lbl1 = stat
+    	gtk_widget_override_font lbl1, fnt
     
-    	text = "文字列を左寄せしたラベルです。\n"
-    	text += "次の行です。\nデフォルトは左寄せです。"
-    	gtk_label_new u( text )
+    #const GTK_JUSTIFY_LEFT 0 ; GtkJustification
+    	gtk_label_new u( "テキストを左寄せしたラベルです。\n次の行です。\nデフォルトは左寄せです。" )
     	lbl2 = stat
     	gtk_label_set_justify lbl2, GTK_JUSTIFY_LEFT
+    	gtk_widget_override_font lbl2, fnt
     
-    	text = "文字列を中央寄せしたラベルです。\n"
-    	text += "次の行です。"
-    	gtk_label_new u( text )
+    #const GTK_JUSTIFY_CENTER 2 ; GtkJustification
+    	gtk_label_new u( "テキストを中央寄せしたラベルです。\n次の行です。" )
     	lbl3 = stat
     	gtk_label_set_justify lbl3, GTK_JUSTIFY_CENTER
+    	gtk_widget_override_font lbl3, fnt
     
-    	gtk_label_new u( "文字列を右寄せしたラベルです。\n次の行です。" )
+    #const GTK_JUSTIFY_RIGHT 1 ; GtkJustification
+    	gtk_label_new u( "テキストを右寄せしたラベルです。\n次の行です。" )
     	lbl4 = stat
     	gtk_label_set_justify lbl4, GTK_JUSTIFY_RIGHT
+    	gtk_widget_override_font lbl4, fnt
     
     	text = "文字を<small>小さくしたり</small>、<big>大きくしたり</big>、"
     	text += "<b>太くしたり</b>、<i>イタリックにしたり</i>できます。"
@@ -1915,12 +1923,14 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
     	lbl5 = stat
     	gtk_label_set_markup lbl5, u( text )
     	gtk_label_set_line_wrap lbl5, TRUE
+    	gtk_widget_override_font lbl5, fnt
     
     	text = "[Alt+_P]キーを押すと、右側のボタンが動作します。\n"
-    	text += "このラベルの文字列は選択できます。"
+    	text += "このラベルのテキストは選択できます。"
     	gtk_label_new_with_mnemonic u( text )
     	lbl6 = stat
     	gtk_label_set_selectable lbl6, TRUE
+    	gtk_widget_override_font lbl6, fnt
     
     	text = "This is an example of a line-wrapped label.  It "
     	text += "should not be taking up the entire "
@@ -1928,27 +1938,36 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
     	text += "wraps the words to fit.\n\n"
     	text += "このラベルも行の折り返しがオンになっています。\n"
     	text += "1行に入り切らない単語（文字）は次の行に送られます。\n"
-    	text += "文字列は左寄せなので、折り返しによってできた"
+    	text += "テキストは左寄せなので、折り返しによってできた"
     	text += "右側の余白はそのままです。\n"
-    	text += "文字列中の  空白も  そのまま  表示  されます。"
+    	text += "テキスト中の  空白も  そのまま  表示  されます。"
     	gtk_label_new u( text )
     	lbl7 = stat
     	gtk_label_set_line_wrap lbl7, TRUE
+    	gtk_widget_override_font lbl7, fnt
     
+    #const GTK_JUSTIFY_FILL 3 ; GtkJustification
     	text = "This is an example of a line-wrapped, filled label. "
     	text += "It should be taking "
     	text += "up the entire width allocated to it.\n\n"
-    	text += "このラベルは、行の折り返しがオンで、なおかつ文字列が"
+    	text += "このラベルは、行の折り返しがオンで、なおかつテキストが"
     	text += "両側寄せになっています。\n"
-    	text += "折り返しによって左右に余白ができないようになっています。\n"
+    	text += "折り返しによって段落の左右が凸凹にならないようになっています。\n"
     	gtk_label_new u( text )
     	lbl8 = stat
     	gtk_label_set_justify lbl8, GTK_JUSTIFY_FILL
     	gtk_label_set_line_wrap lbl8, TRUE
+    	gtk_widget_override_font lbl8, fnt
     
     	gtk_button_new_with_label u( "押さないでください" )
     	btn = stat
     	gtk_label_set_mnemonic_widget lbl6, btn
+    
+    	; ボタンのラベルのフォントを設定
+    	gtk_container_get_children btn
+    	g_list_nth_data stat, 0
+    	blbl = stat
+    	gtk_widget_override_font blbl, fnt
     
     	// ウィンドウの組み立て
     	gtk_box_pack_start vbox_left, lbl1, TRUE, TRUE, 0
@@ -1973,7 +1992,7 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
     	end
     
     /* シグナルハンドラ */
-    *on_window_delete_event
+    *on_win_delete_event
     	gtk_main_quit
     	return
 ********************

@@ -9,7 +9,6 @@
 #func global gtk_settings_get_default "gtk_settings_get_default"
 #func global gtk_settings_set_string_property "gtk_settings_set_string_property" sptr, sptr, sptr, sptr
 #func global gtk_window_new "gtk_window_new" int
-#const	GTK_WINDOW_TOPLEVEL	0
 #func global gtk_container_add "gtk_container_add" sptr, sptr
 #func global gtk_widget_show_all "gtk_widget_show_all" sptr
 #func global gtk_main "gtk_main"
@@ -19,10 +18,6 @@
 #func global gtk_color_chooser_get_rgba "gtk_color_chooser_get_rgba" sptr, sptr
 #func global gtk_dialog_run "gtk_dialog_run" sptr
 #func global gtk_widget_hide "gtk_widget_hide" sptr
-; GtkResponseType
-;#const GTK_RESPONSE_DELETE_EVENT -4
-#const GTK_RESPONSE_OK           -5
-;#const GTK_RESPONSE_CANCEL       -6
 
 #uselib "libgdk-3-0.dll"
 #func global gdk_rgba_to_string "gdk_rgba_to_string" sptr
@@ -46,6 +41,7 @@
 	gtk_settings_set_string_property	stat, "gtk-font-name", "ms ui gothic, 10", NULL
 
 	// ウィンドウ生成
+#const	GTK_WINDOW_TOPLEVEL	0	; GtkWindowType
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	g_signal_connect	win, "delete-event", cb_win_delete_event, NULL
@@ -68,6 +64,7 @@
 	gtk_main_quit
 	return
 
+#const GTK_RESPONSE_OK	-5	; GtkResponseType
 *on_btn_clicked
 	if dlg = NULL {
 		gtk_color_chooser_dialog_new	"ColorChooserDialog", win

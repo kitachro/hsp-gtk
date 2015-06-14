@@ -4239,14 +4239,10 @@ GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによ
 
 ********************
     // コールバック関数を使うための準備
-    #include "hscallbk.as"
-    #uselib ""
-    #func cb_window_delete_event ""
-    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    #func cb_list_store_row_deleted ""
-    	setcallbk cbliststorerowdeleted, cb_list_store_row_deleted, *on_list_store_row_deleted
-    #func cb_list_store_row_inserted ""
-    	setcallbk cbliststorerowinserted, cb_list_store_row_inserted, *on_list_store_row_inserted
+    #include "modclbk.as"
+    	newclbk3 cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+    	newclbk3 cb_model_row_deleted, 3, *on_model_row_deleted, CLBKMODE_CDECL@
+    	newclbk3 cb_model_row_inserted, 4, *on_model_row_inserted, CLBKMODE_CDECL@
     
     // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
@@ -4260,6 +4256,7 @@ GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによ
     #func global gtk_list_store_new2 "gtk_list_store_new" int, int, int
     #func global gtk_list_store_append "gtk_list_store_append" sptr, sptr
     #func global gtk_list_store_set2 "gtk_list_store_set" sptr, sptr, sptr, sptr, sptr, sptr, int
+    #func global gtk_tree_path_to_string "gtk_tree_path_to_string" sptr
     #func global gtk_image_new "gtk_image_new"
     #func global gtk_widget_render_icon_pixbuf "gtk_widget_render_icon_pixbuf" sptr, sptr, int
     #func global gtk_icon_view_new_with_model "gtk_icon_view_new_with_model" sptr
@@ -4275,6 +4272,9 @@ GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによ
     #uselib "libgdk_pixbuf-2.0-0.dll"
     #func global gdk_pixbuf_get_type "gdk_pixbuf_get_type"
     
+    #uselib "libglib-2.0-0.dll"
+    #func global g_free "g_free" sptr
+    
     // よく使う定数
     #const NULL 0 ; ヌルポインタ
     #const TRUE 1 ; 真
@@ -4283,10 +4283,10 @@ GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによ
     	gtk_init NULL, NULL
     
     	// ウィンドウ生成
-    #const GTK_WINDOW_TOPLEVEL 0
+    #const GTK_WINDOW_TOPLEVEL 0 ; GtkWindowType
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+    	g_signal_connect win, "delete-event", cb_win_delete_event, NULL
     
     	// アイコンビュー用データ
     	; GtkTreeIter格納用変数作成
@@ -4294,38 +4294,38 @@ GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによ
     	itr = varptr( struct_itr )
     
     	; モデル生成
-    #define G_TYPE_MAKE_FUNDAMENTAL(%1) (%1 << 2)
-    #define G_TYPE_STRING G_TYPE_MAKE_FUNDAMENTAL(16)
+    #define G_TYPE_STRING G_TYPE_MAKE_FUNDAMENTAL(16) ; GObject - Type Information
+    #define ctype G_TYPE_MAKE_FUNDAMENTAL(%1) (%1 << 2)
     	gdk_pixbuf_get_type
     	gtk_list_store_new2 2, stat, G_TYPE_STRING
     	model = stat
     
     	; GtkListStoreにデータをセット
-    #define GTK_STOCK_CUT "gtk-cut"
+    #define GTK_STOCK_CUT "gtk-cut" ; GtkStockItem
     #define GTK_STOCK_COPY "gtk-copy"
     #define GTK_STOCK_PASTE "gtk-paste"
-    #const GTK_ICON_SIZE_DND 5
-    #const COL_PIXBUF 0 ; GtkListStoreデータの項目インデックス
-    #const COL_TEXT 1
+    #const GTK_ICON_SIZE_DND 5 ; GtkIconSize
+    #const COLUMN_ICON 0 ; GtkListStoreデータの項目インデックス
+    #const COLUMN_NAME 1
     	icons = GTK_STOCK_CUT, GTK_STOCK_COPY, GTK_STOCK_PASTE
     	repeat length( icons )
     		gtk_list_store_append model, itr
     		gtk_image_new
     		gtk_widget_render_icon_pixbuf stat, icons( cnt ), GTK_ICON_SIZE_DND
     		pixbuf = stat
-    		gtk_list_store_set2 model, itr, COL_PIXBUF, pixbuf, COL_TEXT, icons( cnt ), -1
+    		gtk_list_store_set2 model, itr, COLUMN_ICON, pixbuf, COLUMN_NAME, icons( cnt ), -1
     		g_object_unref pixbuf
     	loop
     
     	; GtkListStoreにシグナルハンドラを設定
-    	g_signal_connect model, "row-deleted", varptr( cbliststorerowdeleted ), NULL
-    	g_signal_connect model, "row-inserted", varptr( cbliststorerowinserted ), NULL
+    	g_signal_connect model, "row-deleted", cb_model_row_deleted, NULL
+    	g_signal_connect model, "row-inserted", cb_model_row_inserted, NULL
     
     	// アイコンビュー生成
     	gtk_icon_view_new_with_model model
     	iview = stat
-    	gtk_icon_view_set_pixbuf_column iview, COL_PIXBUF
-    	gtk_icon_view_set_text_column iview, COL_TEXT
+    	gtk_icon_view_set_pixbuf_column iview, COLUMN_ICON
+    	gtk_icon_view_set_text_column iview, COLUMN_NAME
     	gtk_icon_view_set_reorderable iview, TRUE
     
     	// ウィンドウの組み立て
@@ -4337,18 +4337,32 @@ GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによ
     	end
     
     /* シグナルハンドラ */
-    *on_window_delete_event
+    *on_win_delete_event
     	gtk_main_quit
     	return
     
-    *on_list_store_row_deleted
-    	mes "on_list_store_row_deleted"
+    *on_model_row_deleted
+    	mes "on_model_row_deleted"
+    	clbkargprotect args_
+    	tp = args_( 1 )
+    	gosub *mes_tree_path
     	return
     
-    *on_list_store_row_inserted
-    	mes "on_list_store_row_inserted"
+    *on_model_row_inserted
+    	mes "on_model_row_inserted"
+    	clbkargprotect args_
+    	tp = args_( 1 )
+    	gosub *mes_tree_path
     	return
     
+    /* サブルーチン */
+    *mes_tree_path
+    	gtk_tree_path_to_string tp
+    	ptr = stat
+    	dupptr str_tp, ptr, 10, 2
+    	mes "TreePath: " + str_tp
+    	g_free ptr
+    	return
 ********************
 
 ====================

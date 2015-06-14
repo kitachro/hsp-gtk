@@ -49,7 +49,7 @@
 	gtk_init	NULL, NULL
 
 	// ウィンドウ生成
-#const	GTK_WINDOW_TOPLEVEL	0
+#const	GTK_WINDOW_TOPLEVEL	0	; GtkWindowType
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	g_signal_connect	win, "delete-event", cb_win_delete_event, NULL
@@ -60,7 +60,7 @@
 	itr	= varptr( struct_itr )
 
 	; GtkListStore生成
-#define G_TYPE_STRING	G_TYPE_MAKE_FUNDAMENTAL(16)
+#define G_TYPE_STRING	G_TYPE_MAKE_FUNDAMENTAL(16)	; GObject - Type Information
 #define ctype	G_TYPE_MAKE_FUNDAMENTAL(%1)	(%1 << 2)
 	gdk_pixbuf_get_type
 	gtk_list_store_new2	2, stat, G_TYPE_STRING

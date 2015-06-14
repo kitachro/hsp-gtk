@@ -1496,24 +1496,25 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
 
 ********************
     // コールバック関数を使うための準備
-    #include "hscallbk.as"
-    #uselib ""
-    #func cb_window_delete_event ""
-    #func cb_button1_clicked ""
-    #func cb_button2_clicked ""
+    #include "modclbk.as"
+    	newclbk3 cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+    	newclbk3 cb_btn1_clicked, 2, *on_btn1_clicked, CLBKMODE_CDECL@
+    	newclbk3 cb_btn2_clicked, 2, *on_btn2_clicked, CLBKMODE_CDECL@
+    	newclbk3 cb_btn3_clicked, 2, *on_btn3_clicked, CLBKMODE_CDECL@
     
     // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
-    #const GTK_WINDOW_TOPLEVEL 0
     #func global gtk_widget_show_all "gtk_widget_show_all" sptr
     #func global gtk_main "gtk_main"
     #func global gtk_main_quit "gtk_main_quit"
     #func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
-    #func global gtk_container_add "gtk_container_add" sptr, sptr
-    #func global gtk_hbox_new "gtk_hbox_new" int, int
+    #func global gtk_button_new_from_stock "gtk_button_new_from_stock" sptr
+    #func global gtk_box_new "gtk_box_new" int, int
     #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
+    #func global gtk_container_add "gtk_container_add" sptr, sptr
+    
     #uselib "libgobject-2.0-0.dll"
     #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
     #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
@@ -1529,30 +1530,41 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
     	gtk_init NULL, NULL
     
     	// ウィンドウ生成
+    #const GTK_WINDOW_TOPLEVEL 0 ; GtkWindowType
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
-    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+    	g_signal_connect win, "delete-event", cb_win_delete_event, NULL
     
+    #enum GTK_ORIENTATION_HORIZONTAL = 0 ; GtkOrientation
+    #enum GTK_ORIENTATION_VERTICAL
     	// HBox生成
-    	gtk_hbox_new FALSE, 5
+    	gtk_box_new GTK_ORIENTATION_HORIZONTAL, 5
     	hbox = stat
     
-    	// ボタン群生成
-    	gtk_button_new_with_label "Hello"
-    	btn1 = stat
-    	setcallbk cbbutton1clicked, cb_button1_clicked, *on_button1_clicked
-    	g_signal_connect btn1, "clicked", varptr( cbbutton1clicked ), NULL
+    	// VBox生成
+    	gtk_box_new GTK_ORIENTATION_VERTICAL, 5
+    	vbox = stat
     
-    	gtk_button_new_with_label "Goodbye"
+    	// ボタン群生成
+    	gtk_button_new_with_label "HBox1"
+    	btn1 = stat
+    	g_signal_connect btn1, "clicked", cb_btn1_clicked, NULL
+    
+    	gtk_button_new_with_label "VBox1"
     	btn2 = stat
-    	setcallbk cbbutton2clicked, cb_button2_clicked, *on_button2_clicked
-    	g_signal_connect btn2, "clicked", varptr( cbbutton2clicked ), NULL
+    	g_signal_connect btn2, "clicked", cb_btn2_clicked, NULL
+    
+    #define GTK_STOCK_CLOSE "gtk-close" ; GtkStockItem
+    	gtk_button_new_from_stock GTK_STOCK_CLOSE
+    	btn3 = stat
+    	g_signal_connect btn3, "clicked", cb_btn3_clicked, NULL
     
     	// ウィンドウの組み立て
-    	gtk_container_add win, hbox
+    	gtk_box_pack_start vbox, btn2, TRUE, TRUE, 0
+    	gtk_box_pack_start vbox, btn3, TRUE, TRUE, 0
     	gtk_box_pack_start hbox, btn1, TRUE, TRUE, 0
-    	gtk_box_pack_start hbox, btn2, TRUE, TRUE, 0
+    	gtk_box_pack_start hbox, vbox, TRUE, TRUE, 0
+    	gtk_container_add win, hbox
     
     	// ウィンドウの表示とメインループの開始
     	gtk_widget_show_all win
@@ -1560,16 +1572,20 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
     	end
     
     /* シグナルハンドラ */
-    *on_window_delete_event
+    *on_win_delete_event
     	gtk_main_quit
     	return
     
-    *on_button1_clicked
-    	mes "Hello"
+    *on_btn1_clicked
+    	mes "HBoxの1マス目のボタンがクリックされました。"
     	return
     
-    *on_button2_clicked
-    	mes "Goodbye"
+    *on_btn2_clicked
+    	mes "VBoxの1マス目のボタンがクリックされました。"
+    	return
+    
+    *on_btn3_clicked
+    	gtk_main_quit
     	return
 ********************
 

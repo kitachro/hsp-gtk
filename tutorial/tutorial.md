@@ -1263,7 +1263,6 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
-    #const GTK_WINDOW_TOPLEVEL 0
     #func global gtk_container_set_border_width "gtk_container_set_border_width" sptr, int
     #func global gtk_container_add "gtk_container_add" sptr, sptr
     #func global gtk_widget_show_all "gtk_widget_show_all" sptr
@@ -1275,8 +1274,6 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
     #func global gtk_spin_button_new "gtk_spin_button_new" sptr, double, int
     #func global gtk_spin_button_set_numeric "gtk_spin_button_set_numeric" sptr, int
     #func global gtk_spin_button_set_update_policy "gtk_spin_button_set_update_policy" sptr, int
-    #enum GTK_UPDATE_ALWAYS = 0
-    #enum GTK_UPDATE_IF_VALID
     #func global gtk_check_button_new_with_label "gtk_check_button_new_with_label" sptr
     #func global gtk_toggle_button_get_active "gtk_toggle_button_get_active" sptr
     
@@ -1295,6 +1292,7 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
     	gtk_init NULL, NULL
     
     	// ウィンドウ生成
+    #const GTK_WINDOW_TOPLEVEL 0 ; GtkWindowType
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
     	gtk_container_set_border_width win, 10
@@ -1340,6 +1338,8 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
     	gtk_spin_button_set_numeric args_( 1 ), stat
     	return
     
+    #enum GTK_UPDATE_ALWAYS = 0 ; GtkSpinButtonUpdatePolicy
+    #enum GTK_UPDATE_IF_VALID
     *on_cbtn2_toggled
     	clbkargprotect args_
     

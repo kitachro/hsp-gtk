@@ -2026,30 +2026,19 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
 ## 8.1　サンプルプログラムの全体
 
 ********************
-    // よく使う関数
-    #include "hspinet.as"
-    #module
-    #defcfunc u str chars_ ; shift-jis文字列をutf-8に変換
-    	chars = chars_
-    	nkfcnv@ chars, chars, "Sw"
-    	return chars
-    #global
-    
     // コールバック関数を使うための準備
-    #include "hscallbk.as"
-    #uselib ""
-    #func cb_window_delete_event ""
-    #func cb_cbtn1_toggled ""
-    #func cb_cbtn2_toggled ""
-    #func cb_cbtn3_toggled ""
-    #func cb_cbtn4_toggled ""
-    #func cb_do_pulse ""
+    #include "modclbk.as"
+    	newclbk3 cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+    	newclbk3 cb_cbtn1_toggled, 2, *on_cbtn1_toggled, CLBKMODE_CDECL@
+    	newclbk3 cb_cbtn2_toggled, 2, *on_cbtn2_toggled, CLBKMODE_CDECL@
+    	newclbk3 cb_cbtn3_toggled, 2, *on_cbtn3_toggled, CLBKMODE_CDECL@
+    	newclbk3 cb_cbtn4_toggled, 2, *on_cbtn4_toggled, CLBKMODE_CDECL@
+    	newclbk3 cb_do_pulse, 0, *do_pulse, CLBKMODE_CDECL@
     
     // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
-    #const GTK_WINDOW_TOPLEVEL 0
     #func global gtk_container_add "gtk_container_add" sptr, sptr
     #func global gtk_widget_set_size_request "gtk_widget_set_size_request" sptr, int, int
     #func global gtk_widget_show_all "gtk_widget_show_all" sptr
@@ -2065,9 +2054,6 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
     #func global gtk_entry_set_progress_pulse_step "gtk_entry_set_progress_pulse_step" sptr, double
     #func global gtk_entry_progress_pulse "gtk_entry_progress_pulse" sptr
     #func global gtk_editable_set_editable "gtk_editable_set_editable" sptr, int
-    #define GTK_STOCK_FIND "gtk-find"
-    #enum GTK_ENTRY_ICON_PRIMARY = 0
-    #enum GTK_ENTRY_ICON_SECONDARY
     #func global gtk_check_button_new_with_label "gtk_check_button_new_with_label" sptr
     #func global gtk_toggle_button_set_active "gtk_toggle_button_set_active" sptr, int
     #func global gtk_toggle_button_get_active "gtk_toggle_button_get_active" sptr
@@ -2080,6 +2066,15 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
     #func global g_timeout_add "g_timeout_add" int, sptr, sptr
     #func global g_source_remove "g_source_remove" int
     
+    // よく使う関数
+    #include "hspinet.as"
+    #module
+    #defcfunc u str chars_ ; shift-jis文字列をutf-8に変換
+    	chars = chars_
+    	nkfcnv@ chars, chars, "Sw"
+    	return chars
+    #global
+    
     // よく使う定数
     ; ヌルポインタ
     #const NULL 0
@@ -2091,11 +2086,11 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
     	gtk_init NULL, NULL
     
     	// ウィンドウ生成
+    #const GTK_WINDOW_TOPLEVEL 0 ; GtkWindowType
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
     	gtk_widget_set_size_request win, 200, 100
-    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+    	g_signal_connect win, "delete-event", cb_win_delete_event, NULL
     
     	// VBox生成
     	gtk_vbox_new FALSE, 6
@@ -2114,27 +2109,22 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
     	gtk_check_button_new_with_label "Editable"
     	cbtn1 = stat
     	gtk_toggle_button_set_active cbtn1, TRUE
-    	setcallbk cbcbtn1toggled, cb_cbtn1_toggled, *on_cbtn1_toggled
-    	g_signal_connect cbtn1, "toggled", varptr( cbcbtn1toggled ), NULL
+    	g_signal_connect cbtn1, "toggled", cb_cbtn1_toggled, ety
     
     	gtk_check_button_new_with_label "Visible"
     	cbtn2 = stat
     	gtk_toggle_button_set_active cbtn2, TRUE
-    	setcallbk cbcbtn2toggled, cb_cbtn2_toggled, *on_cbtn2_toggled
-    	g_signal_connect cbtn2, "toggled", varptr( cbcbtn2toggled ), NULL
+    	g_signal_connect cbtn2, "toggled", cb_cbtn2_toggled, ety
     
     	gtk_check_button_new_with_label "Pulse"
     	cbtn3 = stat
     	gtk_toggle_button_set_active cbtn3, FALSE
-    	setcallbk cbcbtn3toggled, cb_cbtn3_toggled, *on_cbtn3_toggled
-    	g_signal_connect cbtn3, "toggled", varptr( cbcbtn3toggled ), NULL
-    	setcallbk cbdopulse, cb_do_pulse, *do_pulse
+    	g_signal_connect cbtn3, "toggled", cb_cbtn3_toggled, ety
     
     	gtk_check_button_new_with_label "Icon"
     	cbtn4 = stat
     	gtk_toggle_button_set_active cbtn4, FALSE
-    	setcallbk cbcbtn4toggled, cb_cbtn4_toggled, *on_cbtn4_toggled
-    	g_signal_connect cbtn4, "toggled", varptr( cbcbtn4toggled ), NULL
+    	g_signal_connect cbtn4, "toggled", cb_cbtn4_toggled, ety
     
     	// ウィンドウの組み立て
     	gtk_box_pack_start hbox, cbtn1, TRUE, TRUE, 0
@@ -2151,49 +2141,58 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
     	end
     
     /* シグナルハンドラ */
-    *on_window_delete_event
+    *on_win_delete_event
     	gtk_main_quit
     	return
     
     *on_cbtn1_toggled
-    	gtk_toggle_button_get_active cbtn1
-    	gtk_editable_set_editable ety, stat
+    	clbkargprotect args_
+    
+    	gtk_toggle_button_get_active args_( 0 )
+    	gtk_editable_set_editable args_( 1 ), stat
     	return
     
     *on_cbtn2_toggled
-    	gtk_toggle_button_get_active cbtn2
-    	gtk_entry_set_visibility ety, stat
+    	clbkargprotect args_
+    
+    	gtk_toggle_button_get_active args_( 0 )
+    	gtk_entry_set_visibility args_( 1 ), stat
     	return
     
     *on_cbtn3_toggled
-    	gtk_toggle_button_get_active cbtn3
-    	active = stat
-    	if active {
-    		gtk_entry_set_progress_pulse_step ety, 0.2
-    		g_timeout_add 100, varptr( cbdopulse ), 0
+    	clbkargprotect args_
+    	e = args_( 1 )
+    
+    	gtk_toggle_button_get_active args_( 0 )
+    	if stat {
+    		gtk_entry_set_progress_pulse_step e, 0.2
+    		g_timeout_add 100, cb_do_pulse, NULL
     		timeout_id = stat
     	}
     	else {
     		g_source_remove timeout_id
     		timeout_id = 0
-    		gtk_entry_set_progress_pulse_step ety, 0
+    		gtk_entry_set_progress_pulse_step e, 0
     	}
     	return
     
     *do_pulse
-    	gtk_entry_progress_pulse ety
+    	gtk_entry_progress_pulse e
     	return
     
     *on_cbtn4_toggled
-    	gtk_toggle_button_get_active cbtn4
-    	active = stat
-    	if active {
+    	clbkargprotect args_
+    
+    #define GTK_STOCK_FIND "gtk-find" ; GtkStockItem
+    #const GTK_ENTRY_ICON_PRIMARY 0 ; GtkEntryIconPosition
+    	gtk_toggle_button_get_active args_( 0 )
+    	if stat {
     		stock_id = GTK_STOCK_FIND
     	}
     	else {
     		stock_id = ""
     	}
-    	gtk_entry_set_icon_from_stock ety, GTK_ENTRY_ICON_PRIMARY, stock_id
+    	gtk_entry_set_icon_from_stock args_( 1 ), GTK_ENTRY_ICON_PRIMARY, stock_id
     	return
 ********************
 

@@ -4374,15 +4374,16 @@ GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによ
 ### 18.3.1　サンプルプログラムの全体
 
 ********************
-    // コールバック関数を使うための準備
-    #include "hscallbk.as"
-    #uselib ""
-    #func cb_window_delete_event ""
-    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    #func cb_label_drag_drop ""
-    	setcallbk cblabeldragdrop, cb_label_drag_drop, *on_label_drag_drop
+    *_コールバック関数を使うための準備
+    #include "modclbk.as"
+    	newclbk3 cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+    	newclbk3 cb_rbtn1_toggled, 2, *on_rbtn1_toggled, CLBKMODE_CDECL@
+    	newclbk3 cb_rbtn2_toggled, 2, *on_rbtn2_toggled, CLBKMODE_CDECL@
+    	newclbk3 cb_iview_drag_data_get, 6, *on_iview_drag_data_get, CLBKMODE_CDECL@
+    	newclbk3 cb_lbl_drag_data_received, 8, *on_lbl_drag_data_received, CLBKMODE_CDECL@
+    	newclbk3 cb_g_list_free_full, 1, *on_g_list_free_full, CLBKMODE_CDECL@
     
-    // GTK+の関数を使うための準備
+    *_GTKの関数を使うための準備
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
     
@@ -4402,6 +4403,18 @@ GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによ
     #func global gtk_list_store_new2 "gtk_list_store_new" int, int, int
     #func global gtk_list_store_append "gtk_list_store_append" sptr, sptr
     #func global gtk_list_store_set2 "gtk_list_store_set" sptr, sptr, sptr, sptr, sptr, sptr, int
+    #func global gtk_tree_model_get_iter "gtk_tree_model_get_iter" sptr, sptr, sptr
+    #func global gtk_tree_path_free "gtk_tree_path_free" sptr
+    #func global gtk_tree_model_get1 "gtk_tree_model_get" sptr, sptr, int, sptr, int
+    #func global gtk_tree_path_to_string "gtk_tree_path_to_string" sptr
+    #func global gtk_tree_path_new_from_string "gtk_tree_path_new_from_string" sptr
+    
+    #func global gtk_selection_data_set_text "gtk_selection_data_set_text" sptr, sptr, int
+    #func global gtk_selection_data_get_text "gtk_selection_data_get_text" sptr
+    #func global gtk_selection_data_set_pixbuf "gtk_selection_data_set_pixbuf" sptr, sptr
+    #func global gtk_selection_data_get_pixbuf "gtk_selection_data_get_pixbuf" sptr
+    #func global gtk_selection_data_get_length "gtk_selection_data_get_length" sptr
+    
     #func global gtk_image_new "gtk_image_new"
     #func global gtk_widget_render_icon_pixbuf "gtk_widget_render_icon_pixbuf" sptr, sptr, int
     
@@ -4411,17 +4424,28 @@ GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによ
     #func global gtk_icon_view_set_item_orientation "gtk_icon_view_set_item_orientation" sptr, int
     #func global gtk_icon_view_set_columns "gtk_icon_view_set_columns" sptr, int
     #func global gtk_icon_view_enable_model_drag_source "gtk_icon_view_enable_model_drag_source" sptr, int, sptr, int, int
+    #func global gtk_icon_view_get_selected_items "gtk_icon_view_get_selected_items" sptr
+    #func global gtk_icon_view_get_model "gtk_icon_view_get_model" sptr
+    #func global gtk_icon_view_set_selection_mode "gtk_icon_view_set_selection_mode" sptr, int
+    
+    #func global gtk_label_new "gtk_label_new" sptr
     
     #func global gtk_drag_dest_set "gtk_drag_dest_set" sptr, int, sptr, int, int
     #func global gtk_target_list_new "gtk_target_list_new" sptr, int
-    #enum TARGET_ENTRY_TEXT = 0
-    #enum TARGET_ENTRY_PIXBUF
-    #func global gtk_target_list_add_image_targets "gtk_target_list_add_image_targets" sptr, int, int
     #func global gtk_target_list_add_text_targets "gtk_target_list_add_text_targets" sptr, int
     #func global gtk_drag_dest_set_target_list "gtk_drag_dest_set_target_list" sptr, sptr
     #func global gtk_drag_source_set_target_list "gtk_drag_source_set_target_list" sptr, sptr
     
-    #func global gtk_label_new "gtk_label_new" sptr
+    #func global gtk_radio_button_new_with_label_from_widget "gtk_radio_button_new_with_label_from_widget"  sptr, str
+    #func global gtk_toggle_button_get_active "gtk_toggle_button_get_active" sptr
+    
+    #func global gtk_dialog_new "gtk_dialog_new"
+    #func global gtk_window_set_title "gtk_window_set_title" sptr, sptr
+    #func global gtk_dialog_get_content_area "gtk_dialog_get_content_area" sptr
+    #func global gtk_image_new_from_pixbuf "gtk_image_new_from_pixbuf" sptr
+    #func global gtk_dialog_add_button "gtk_dialog_add_button" sptr, sptr, int
+    #func global gtk_dialog_run "gtk_dialog_run" sptr
+    #func global gtk_widget_destroy "gtk_widget_destroy" sptr
     
     #uselib "libgobject-2.0-0.dll"
     #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
@@ -4431,7 +4455,13 @@ GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによ
     #uselib "libgdk_pixbuf-2.0-0.dll"
     #func global gdk_pixbuf_get_type "gdk_pixbuf_get_type"
     
-    // よく使う関数
+    #uselib "libglib-2.0-0.dll"
+    #func global g_list_length "g_list_length" sptr
+    #func global g_list_nth_data "g_list_nth_data"  sptr, int
+    #func global g_list_free_full "g_list_free_full" sptr, sptr
+    #func global g_free "g_free" sptr
+    
+    *_よく使う関数
     #include "hspinet.as"
     #module
     #defcfunc u str chars_ ; shift-jis文字列をutf-8に変換
@@ -4440,102 +4470,255 @@ GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによ
     	return chars
     #global
     
-    // よく使う定数
+    *_よく使う定数
     #const TRUE 1 ; 真
+    #const FALSE 0 ; 偽
     #const NULL 0 ; ヌルポインタ
     
-    	// GTK+初期化
+    *_GTK初期化
     	gtk_init NULL, NULL
     
-    	// GTK+のデフォルトGUIフォントを変更
+    *_GTKのデフォルトGUIフォントを変更
     	gtk_settings_get_default
     	gtk_settings_set_string_property stat, "gtk-font-name", "ms ui gothic, 10", NULL
     
-    	// ウィンドウ生成
-    #const GTK_WINDOW_TOPLEVEL 0
+    *_ウィンドウ生成
+    #const GTK_WINDOW_TOPLEVEL 0 ; GtkWindowType
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+    	g_signal_connect win, "delete-event", cb_win_delete_event, NULL
     
-    	// HBox生成
+    *_VBox生成
+    #const GTK_ORIENTATION_VERTICAL 1 ; GtkOrientation
+    	gtk_box_new GTK_ORIENTATION_VERTICAL, 12
+    	vbox = stat
+    
+    *_HBox1生成
     #const GTK_ORIENTATION_HORIZONTAL 0 ; GtkOrientation
     	gtk_box_new GTK_ORIENTATION_HORIZONTAL, 12
-    	hbox = stat
+    	hbox1 = stat
     
-    	// IconView用データ生成
+    *_IconView用データ生成
     	; GtkTreeIter格納用変数作成
     	sdim struct_itr, ( 4 * 4 ) ; 4*4 = GtkTreeIter構造体サイズ
     	itr = varptr( struct_itr )
     
     	; GtkListStore生成
-    #define G_TYPE_MAKE_FUNDAMENTAL(%1) (%1 << 2)
-    #define G_TYPE_STRING G_TYPE_MAKE_FUNDAMENTAL(16)
+    #enum COLUMN_NAME = 0 ; GtkListStoreデータの項目インデックス
+    #enum COLUMN_ICON
+    #enum NUM_COLUMN ; 項目数
+    #define G_TYPE_STRING G_TYPE_MAKE_FUNDAMENTAL(16) ; GObject - Type Information
+    #define ctype G_TYPE_MAKE_FUNDAMENTAL(%1) (%1 << 2)
     	gdk_pixbuf_get_type
-    	gtk_list_store_new2 2, stat, G_TYPE_STRING
-    	model = stat
+    	gtk_list_store_new2 NUM_COLUMN, G_TYPE_STRING, stat
+    	mdl = stat
     
     	; GtkListStoreにデータをセット
-    #define GTK_STOCK_ABOUT "gtk-about"
+    #define GTK_STOCK_ABOUT "gtk-about" ; GtkStockItem
     #define GTK_STOCK_CONVERT "gtk-convert"
     #define GTK_STOCK_COPY "gtk-copy"
-    #const GTK_ICON_SIZE_DND 5
-    #const COL_PIXBUF 0 ; GtkListStoreデータの項目インデックス
-    #const COL_TEXT 1
+    #const GTK_ICON_SIZE_DND 5 ; GtkIconSize
     	icons = GTK_STOCK_ABOUT, GTK_STOCK_CONVERT, GTK_STOCK_COPY
     	repeat length( icons )
-    		gtk_list_store_append model, itr
+    		gtk_list_store_append mdl, itr
     		gtk_image_new
     		gtk_widget_render_icon_pixbuf stat, icons( cnt ), GTK_ICON_SIZE_DND
     		pixbuf = stat
-    		gtk_list_store_set2 model, itr, COL_PIXBUF, pixbuf, COL_TEXT, "item " + ( cnt + 1 ), -1
+    		gtk_list_store_set2 mdl, itr, COLUMN_NAME, "item " + ( cnt + 1 ), COLUMN_ICON, pixbuf, -1
     		g_object_unref pixbuf
     	loop
     
-    	// IconView生成
-    #const GDK_BUTTON1_MASK  ( 1 << 8 ) ; GdkModifierType
+    *_IconView生成
+    #const GTK_SELECTION_MULTIPLE 3 ; GtkSelectionMode
+    #const GDK_MODIFIER_MASK ( 0x5c001fff ) ; GdkModifierType
     #const GDK_ACTION_COPY (1 << 1) ; GdkDragAction
-    #const GTK_ORIENTATION_VERTICAL 1 ; GtkOrientation
-    	gtk_icon_view_new_with_model model
+    #const GDK_ACTION_MOVE (1 << 2)
+    	gtk_icon_view_new_with_model mdl
     	iview = stat
-    	gtk_icon_view_set_pixbuf_column iview, COL_PIXBUF
-    	gtk_icon_view_set_text_column iview, COL_TEXT
+    	gtk_icon_view_set_text_column iview, COLUMN_NAME
+    	gtk_icon_view_set_pixbuf_column iview, COLUMN_ICON
     	gtk_icon_view_set_item_orientation iview, GTK_ORIENTATION_VERTICAL
     	gtk_icon_view_set_columns iview, 1
-    	gtk_icon_view_enable_model_drag_source iview, GDK_BUTTON1_MASK, NULL, 0, GDK_ACTION_COPY
+    	gtk_icon_view_set_selection_mode iview, GTK_SELECTION_MULTIPLE
+    /* 複数項目のドラッグ＆ドロップは一応可能だが、操作が少し面倒。
+       (1) アイコン選択時の最後のクリックで押したマウスボタンを放さずに
+           そのままドラッグ操作を始めなければならない。
+           ドラッグ操作開始のためのクリックを別に行うと、アイコンの選択
+           状態が変化してしまう。
+           ここは、例えばWindowsのエクスプローラとはまったく挙動が違う。
+       (2) actionsにGDK_ACTION_MOVEフラグを立てない（移動モード：オフ）
+           の場合、Shiftキーを押しながら選択したアイコンをドロップする
+           時には、Shiftキーを放さないとドロップできない。
+           GDK_ACTION_MOVEフラグを立てればドロップできるが、ドラッグ元の
+           アイコン削除が自動で実行されてしまう上に、最後に選択したアイコン
+           しか削除されない。
+           これを修正するには、残っている被選択アイコン（モデルデータ）を削除する
+           ために、drag-endシグナルのハンドラを書かなければならない？ */
+    	actions = GDK_ACTION_COPY | GDK_ACTION_MOVE
+    	gtk_icon_view_enable_model_drag_source iview, GDK_MODIFIER_MASK, NULL, 0, actions
+    	g_signal_connect iview, "drag-data-get", cb_iview_drag_data_get, NULL
     
-    	// Label生成
+    *_Label生成
     	gtk_label_new u( "ここにアイコンをドロップしてください。" )
     	lbl = stat
     #const GTK_DEST_DEFAULT_ALL 0x07 ; GtkDestDefaults
-    	gtk_drag_dest_set lbl, GTK_DEST_DEFAULT_ALL, NULL, 0, GDK_ACTION_COPY
-    	g_signal_connect lbl, "drag-drop", varptr( cblabeldragdrop ), NULL
+    	gtk_drag_dest_set lbl, GTK_DEST_DEFAULT_ALL, NULL, 0, actions
+    	g_signal_connect lbl, "drag-data-received", cb_lbl_drag_data_received, NULL
     
-    	// GtkTargetList初期化
-    #const TARGET_ENTRY_DUMMY 0
+    *_GtkTargetList初期化
+    #enum TARGET_TEXT = 0 ; ドラッグ＆ドロップで最終的にやりとりするデータの型のID
+    #enum TARGET_PIXBUF
     	gtk_target_list_new NULL, 0
-    	tlist = stat
-    	gtk_target_list_add_image_targets tlist, TARGET_ENTRY_DUMMY, TRUE
-    	gtk_drag_source_set_target_list iview, tlist
-    	gtk_drag_dest_set_target_list lbl, tlist
+    	tlist_text = stat
+    	gtk_target_list_add_text_targets tlist_text, TARGET_TEXT
+    	gtk_target_list_new NULL, 0
+    	tlist_pixbuf = stat
+    	gtk_target_list_add_text_targets tlist_pixbuf, TARGET_PIXBUF
+    	gtk_drag_source_set_target_list iview, tlist_pixbuf
+    	gtk_drag_dest_set_target_list lbl, tlist_pixbuf
     
-    	// ウィンドウの組み立て
-    	gtk_box_pack_start hbox, iview, TRUE, TRUE, 0
-    	gtk_box_pack_start hbox, lbl, TRUE, TRUE, 0
-    	gtk_container_add win, hbox
+    *_HBox2生成
+    	gtk_box_new GTK_ORIENTATION_HORIZONTAL, 12
+    	hbox2 = stat
     
-    	// ウィンドウの表示とメインループの開始
+    *_ターゲット切り替え用トグルボタン生成
+    	gtk_radio_button_new_with_label_from_widget  NULL, "Image"
+    	rbtn1 = stat
+    	g_signal_connect rbtn1, "toggled", cb_rbtn1_toggled, NULL
+    	gtk_radio_button_new_with_label_from_widget  rbtn1, "Text"
+    	rbtn2 = stat
+    	g_signal_connect rbtn2, "toggled", cb_rbtn2_toggled, NULL
+    
+    *_ウィンドウの組み立て
+    	gtk_box_pack_start hbox1, iview, TRUE, TRUE, 0
+    	gtk_box_pack_start hbox1, lbl, TRUE, TRUE, 0
+    	gtk_box_pack_start hbox2, rbtn1, TRUE, FALSE, 0
+    	gtk_box_pack_start hbox2, rbtn2, TRUE, FALSE, 0
+    	gtk_box_pack_start vbox, hbox1, TRUE, TRUE, 0
+    	gtk_box_pack_start vbox, hbox2, FALSE, FALSE, 0
+    	gtk_container_add win, vbox
+    
+    *_ウィンドウの表示とメインループの開始
     	gtk_widget_show_all win
     	gtk_main
     	end
     
-    /* シグナルハンドラ */
-    *on_window_delete_event
+    *_シグナルハンドラ
+    *on_win_delete_event
     	gtk_main_quit
     	return
     
-    *on_label_drag_drop
-    	mes "on_label_drag_drop"
-    	// ドロップされたアイコンとキャプションをダイアログで表示する
+    *on_rbtn1_toggled
+    	clbkargprotect args_
+    	gtk_toggle_button_get_active args_( 0 )
+    	if stat {
+    		gtk_drag_source_set_target_list iview, tlist_pixbuf
+    		gtk_drag_dest_set_target_list lbl, tlist_pixbuf
+    	}
+    	return
+    
+    *on_rbtn2_toggled
+    	clbkargprotect args_
+    	gtk_toggle_button_get_active args_( 0 )
+    	if stat {
+    		gtk_drag_source_set_target_list iview, tlist_text
+    		gtk_drag_dest_set_target_list lbl, tlist_text
+    	}
+    	return
+    
+    *on_iview_drag_data_get
+    	clbkargprotect args_
+    	widget = args_( 0 )
+    	data = args_( 2 )
+    	info = args_( 3 )
+    
+    	gtk_icon_view_get_selected_items widget
+    	treepaths = stat
+    	g_list_length treepaths
+    	len_list = stat
+    	itemlist = ""
+    
+    	repeat len_list
+    		g_list_nth_data treepaths, cnt
+    		path = stat
+    	
+    		if info = TARGET_PIXBUF {
+    			gtk_tree_path_to_string path
+    			ptr = stat
+    			dupptr str_path, ptr, 64, 2
+    			itemlist += str_path + "\n"
+    			g_free ptr
+    			goto *@f
+    		}
+    		if info = TARGET_TEXT {
+    			gtk_tree_model_get_iter mdl, itr, path
+    			gtk_tree_model_get1 mdl, itr, COLUMN_NAME, varptr( ptr ), -1
+    			dupptr name, ptr, 1024, 2
+    			itemlist += name + "\n"
+    			g_free ptr
+    			goto *@f
+    		}
+    *@
+    	loop
+    	gtk_selection_data_set_text data, varptr( itemlist ), -1
+    	g_list_free_full treepaths, cb_g_list_free_full
+    	return
+    
+    *on_lbl_drag_data_received
+    	clbkargprotect args_
+    	data = args_( 4 )
+    	info = args_( 5 )
+    
+    	gtk_selection_data_get_length data
+    	len = stat
+    	gtk_selection_data_get_text data
+    	dupptr text, stat, ( len + 1 ), 2
+    	split text, "\n", items
+    	num = stat
+    
+    	if info = TARGET_TEXT {
+    		repeat num
+    			if items(cnt) ! "" {
+    				mes "アイテム\"" + items(cnt) + "\"がドロップされました。"
+    			}
+    		loop
+    		goto *@f
+    	}
+    	if info = TARGET_PIXBUF {
+    		gtk_dialog_new
+    		dlg = stat
+    		gtk_window_set_title dlg, u( "ドロップされたアイコン" )
+    
+    		gtk_dialog_get_content_area dlg
+    		area = stat
+    		repeat num
+    			if items(cnt) ! "" {
+    				gtk_tree_path_new_from_string items(cnt)
+    				gtk_tree_model_get_iter mdl, itr, stat
+    				gtk_tree_model_get1 mdl, itr, COLUMN_ICON, varptr( pixbuf ), -1
+    				gtk_image_new_from_pixbuf pixbuf
+    				img = stat
+    				gtk_box_pack_start area, img, FALSE, FALSE, 10
+    				g_object_unref pixbuf
+    			}
+    		loop
+    
+    #define GTK_STOCK_OK "gtk-ok" ; GtkStockItem
+    #const GTK_RESPONSE_OK -5 ; GtkResponseType
+    		gtk_dialog_add_button dlg, GTK_STOCK_OK, GTK_RESPONSE_OK
+    
+    		gtk_widget_show_all dlg
+    		gtk_dialog_run dlg
+    		gtk_widget_destroy dlg
+    		goto *@f
+    	}
+    *@
+    	return
+    
+    *_GList開放用コールバック関数
+    *on_g_list_free_full
+    	clbkargprotect args_
+    	gtk_tree_path_free args_( 0 )
     	return
 ********************
 

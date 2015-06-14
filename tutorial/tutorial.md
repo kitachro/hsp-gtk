@@ -2606,10 +2606,9 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
 
 ********************
     // コールバック関数を使うための準備
-    #include "hscallbk.as"
-    #uselib ""
-    #func cb_win_delete_event ""
-    #func cb_btn_clicked ""
+    #include "modclbk.as"
+    	newclbk3 cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+    	newclbk3 cb_btn_clicked, 2, *on_btn_clicked, CLBKMODE_CDECL@
     
     // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
@@ -2617,7 +2616,6 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     #func global gtk_settings_get_default "gtk_settings_get_default"
     #func global gtk_settings_set_string_property "gtk_settings_set_string_property" sptr, sptr, sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
-    #const GTK_WINDOW_TOPLEVEL 0
     #func global gtk_container_add "gtk_container_add" sptr, sptr
     #func global gtk_widget_show_all "gtk_widget_show_all" sptr
     #func global gtk_widget_show "gtk_widget_show" sptr
@@ -2631,13 +2629,6 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     #func global gtk_dialog_add_button "gtk_dialog_add_button" sptr, sptr, int
     #func global gtk_dialog_run "gtk_dialog_run" sptr
     #func global gtk_widget_destroy "gtk_widget_destroy" sptr
-    ; GtkStockItem
-    #define GTK_STOCK_CANCEL           "gtk-cancel"
-    #define GTK_STOCK_OK               "gtk-ok"
-    ; GtkResponseType
-    #const GTK_RESPONSE_DELETE_EVENT -4
-    #const GTK_RESPONSE_OK           -5
-    #const GTK_RESPONSE_CANCEL       -6
     
     #uselib "libgobject-2.0-0.dll"
     #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
@@ -2667,16 +2658,15 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	gtk_settings_set_string_property stat, "gtk-font-name", "ms ui gothic, 10", NULL
     
     	// ウィンドウ生成
+    #const GTK_WINDOW_TOPLEVEL 0 ; GtkWindowType
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
-    	setcallbk cbwindeleteevent, cb_win_delete_event, *on_win_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindeleteevent ), NULL
+    	g_signal_connect win, "delete-event", cb_win_delete_event, NULL
     
     	// ボタン生成
     	gtk_button_new_with_label "Open Dialog"
     	btn = stat
-    	setcallbk cbbtnclicked, cb_btn_clicked, *on_btn_clicked
-    	g_signal_connect btn, "clicked", varptr( cbbtnclicked ), 0
+    	g_signal_connect btn, "clicked", cb_btn_clicked, 0
     
     	// ウィンドウの組み立て
     	gtk_container_add win, btn
@@ -2710,6 +2700,12 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	gtk_box_pack_start carea, lbl, FALSE, FALSE, 10
     	gtk_box_pack_start carea, lbl2, FALSE, FALSE, 10
     
+    
+    #define GTK_STOCK_CANCEL "gtk-cancel" ; GtkStockItem
+    #define GTK_STOCK_OK "gtk-ok"
+    #const GTK_RESPONSE_DELETE_EVENT -4  ; GtkResponseType
+    #const GTK_RESPONSE_OK -5
+    #const GTK_RESPONSE_CANCEL -6
     	// action areaにボタンを追加
     	gtk_dialog_add_button dlg, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL
     	gtk_dialog_add_button dlg, GTK_STOCK_OK, GTK_RESPONSE_OK

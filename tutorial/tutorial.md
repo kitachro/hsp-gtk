@@ -3475,21 +3475,17 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
 
 ********************
     // コールバック関数を使うための準備
-    #include "hscallbk.as"
-    #uselib ""
-    #func cb_window_delete_event ""
-    #func cb_btn_text_toggled ""
-    #func cb_btn_mode_toggled ""
-    #func cb_btn_direction_toggled ""
-    #func cb_timeout ""
+    #include "modclbk.as"
+    	newclbk3 cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+    	newclbk3 cb_btn_text_toggled, 2, *on_btn_text_toggled, CLBKMODE_CDECL@
+    	newclbk3 cb_btn_mode_toggled, 2, *on_btn_mode_toggled, CLBKMODE_CDECL@
+    	newclbk3 cb_btn_direction_toggled, 2, *on_btn_direction_toggled, CLBKMODE_CDECL@
+    	newclbk3 cb_timeout, 1, *on_timeout, CLBKMODE_CDECL@
     
     // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
-    #func global gtk_settings_get_default "gtk_settings_get_default"
-    #func global gtk_settings_set_string_property "gtk_settings_set_string_property" sptr, sptr, sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
-    #const GTK_WINDOW_TOPLEVEL 0
     #func global gtk_widget_show_all "gtk_widget_show_all" sptr
     #func global gtk_main "gtk_main"
     #func global gtk_main_quit "gtk_main_quit"
@@ -3527,11 +3523,11 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	gtk_init NULL, NULL
     
     	// ウィンドウ生成
+    #const GTK_WINDOW_TOPLEVEL 0 ; GtkwindowType
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
     	gtk_container_set_border_width win, 10
-    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+    	g_signal_connect win, "delete-event", cb_win_delete_event, NULL
     
     	// VBox生成
     	gtk_vbox_new FALSE, 6
@@ -3548,18 +3544,15 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	gtk_check_button_new_with_label "Show text"
     	btn_text = stat
     	gtk_toggle_button_set_active btn_text, TRUE
-    	setcallbk cbbtntexttoggled, cb_btn_text_toggled, *on_btn_text_toggled
-    	g_signal_connect btn_text, "toggled", varptr( cbbtntexttoggled ), NULL
+    	g_signal_connect btn_text, "toggled", cb_btn_text_toggled, NULL
     
     	gtk_check_button_new_with_label "Activity mode"
     	btn_mode = stat
-    	setcallbk cbbtnmodetoggled, cb_btn_mode_toggled, *on_btn_mode_toggled
-    	g_signal_connect btn_mode, "toggled", varptr( cbbtnmodetoggled ), NULL
+    	g_signal_connect btn_mode, "toggled", cb_btn_mode_toggled, NULL
     
     	gtk_check_button_new_with_label "Right to Left"
     	btn_direction = stat
-    	setcallbk cbbtndirectiontoggled, cb_btn_direction_toggled, *on_btn_direction_toggled
-    	g_signal_connect btn_direction, "toggled", varptr( cbbtndirectiontoggled ), NULL
+    	g_signal_connect btn_direction, "toggled", cb_btn_direction_toggled, NULL
     
     	// ウィンドウの組み立て
     	gtk_box_pack_start vbox, pbar, TRUE, TRUE, 0
@@ -3569,8 +3562,7 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	gtk_container_add win, vbox
     
     	// プログレスバー更新関数の登録
-    	setcallbk cbtimeout, cb_timeout, *on_timeout
-    	g_timeout_add 200, varptr( cbtimeout ), NULL
+    	g_timeout_add 200, cb_timeout, NULL
     
     	// ウィンドウの表示とメインループの開始
     	gtk_widget_show_all win
@@ -3578,7 +3570,7 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	end
     
     /* シグナルハンドラ */
-    *on_window_delete_event
+    *on_win_delete_event
     	gtk_main_quit
     	return
     

@@ -3301,19 +3301,17 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
 
 ********************
     // コールバック関数を使うための準備
-    #include "hscallbk.as"
-    #uselib ""
-    #func cb_win_delete_event ""
-    #func cb_btn_copy_text_clicked ""
-    #func cb_btn_paste_text_clicked ""
-    #func cb_btn_copy_image_clicked ""
-    #func cb_btn_paste_image_clicked ""
+    #include "modclbk.as"
+    	newclbk3 cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+    	newclbk3 cb_btn_copy_text_clicked, 2, *on_btn_copy_text_clicked, CLBKMODE_CDECL@
+    	newclbk3 cb_btn_paste_text_clicked, 2, *on_btn_paste_text_clicked, CLBKMODE_CDECL@
+    	newclbk3 cb_btn_copy_image_clicked, 2, *on_btn_copy_image_clicked, CLBKMODE_CDECL@
+    	newclbk3 cb_btn_paste_image_clicked, 2, *on_btn_paste_image_clicked, CLBKMODE_CDECL@
     
     // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
-    #const GTK_WINDOW_TOPLEVEL 0
     #func global gtk_widget_show_all "gtk_widget_show_all" sptr
     #func global gtk_main "gtk_main"
     #func global gtk_main_quit "gtk_main_quit"
@@ -3327,15 +3325,11 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     #func global gtk_entry_get_buffer "gtk_entry_get_buffer" sptr
     #func global gtk_entry_buffer_get_text "gtk_entry_buffer_get_text" sptr
     #func global gtk_image_new_from_stock "gtk_image_new_from_stock" str, int
-    #define GTK_STOCK_STOP "gtk-stop"
-    #const GTK_ICON_SIZE_MENU 1
     #func global gtk_image_get_storage_type "gtk_image_get_storage_type" sptr
-    #const GTK_IMAGE_PIXBUF 1
     #func global gtk_image_get_pixbuf "gtk_image_get_pixbuf" sptr
     #func global gtk_image_set_from_pixbuf "gtk_image_set_from_pixbuf" sptr, sptr
     #func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
     #func global gtk_clipboard_get "gtk_clipboard_get" int
-    #const GDK_SELECTION_CLIPBOARD  69
     #func global gtk_clipboard_set_text "gtk_clipboard_set_text" sptr, sptr, int
     #func global gtk_clipboard_wait_for_text "gtk_clipboard_wait_for_text" sptr
     #func global gtk_clipboard_set_image "gtk_clipboard_set_image" sptr, sptr
@@ -3356,10 +3350,10 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	gtk_init NULL, NULL
     
     	// ウィンドウ生成
+    #const GTK_WINDOW_TOPLEVEL 0 ; GtkWindowType
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
-    	setcallbk cbwindeleteevent, cb_win_delete_event, *on_win_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindeleteevent ), NULL
+    	g_signal_connect win, "delete-event", cb_win_delete_event, NULL
     
     	// テーブル生成
     	gtk_table_new 2, 3, FALSE
@@ -3370,31 +3364,30 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	ent = stat
     
     	// イメージ生成
+    #define GTK_STOCK_STOP "gtk-stop" ; GtkStockItem
+    #const GTK_ICON_SIZE_MENU 1 ; GtkIconSize
     	gtk_image_new_from_stock GTK_STOCK_STOP, GTK_ICON_SIZE_MENU
     	img = stat
     
     	// ボタン群生成
     	gtk_button_new_with_label "Copy Text"
     	btn_copy_text = stat
-    	setcallbk cbbtncopytextclicked, cb_btn_copy_text_clicked, *on_btn_copy_text_clicked
-    	g_signal_connect btn_copy_text, "clicked", varptr( cbbtncopytextclicked ), NULL
+    	g_signal_connect btn_copy_text, "clicked", cb_btn_copy_text_clicked, NULL
     
     	gtk_button_new_with_label "Paste Text"
     	btn_paste_text = stat
-    	setcallbk cbbtnpastetextclicked, cb_btn_paste_text_clicked, *on_btn_paste_text_clicked
-    	g_signal_connect btn_paste_text, "clicked", varptr( cbbtnpastetextclicked ), NULL
+    	g_signal_connect btn_paste_text, "clicked", cb_btn_paste_text_clicked, NULL
     
     	gtk_button_new_with_label "Copy Image"
     	btn_copy_image = stat
-    	setcallbk cbbtncopyimageclicked, cb_btn_copy_image_clicked, *on_btn_copy_image_clicked
-    	g_signal_connect btn_copy_image, "clicked", varptr( cbbtncopyimageclicked ), NULL
+    	g_signal_connect btn_copy_image, "clicked", cb_btn_copy_image_clicked, NULL
     
     	gtk_button_new_with_label "Paste Image"
     	btn_paste_image = stat
-    	setcallbk cbbtnpasteimageclicked, cb_btn_paste_image_clicked, *on_btn_paste_image_clicked
-    	g_signal_connect btn_paste_image, "clicked", varptr( cbbtnpasteimageclicked ), NULL
+    	g_signal_connect btn_paste_image, "clicked", cb_btn_paste_image_clicked, NULL
     
-    	// クリップボード取得
+    	// クリップボード生成
+    #const GDK_SELECTION_CLIPBOARD  69 ; GDK - Selection
     	gtk_clipboard_get GDK_SELECTION_CLIPBOARD
     	clp = stat
     
@@ -3433,6 +3426,7 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	}
     	return
     
+    #const GTK_IMAGE_PIXBUF 1 ; GtkImageType
     *on_btn_copy_image_clicked
     	gtk_image_get_storage_type img
     	type = stat

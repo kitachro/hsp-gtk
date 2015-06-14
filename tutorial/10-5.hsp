@@ -11,7 +11,6 @@
 #func global gtk_settings_get_default "gtk_settings_get_default"
 #func global gtk_settings_set_string_property "gtk_settings_set_string_property" sptr, sptr, sptr, sptr
 #func global gtk_window_new "gtk_window_new" int
-#const	GTK_WINDOW_TOPLEVEL	0
 #func global gtk_container_add "gtk_container_add" sptr, sptr
 #func global gtk_widget_show_all "gtk_widget_show_all" sptr
 #func global gtk_main "gtk_main"
@@ -23,18 +22,6 @@
 #func global gtk_window_set_modal "gtk_window_set_modal" sptr, int
 #func global gtk_file_chooser_set_current_name "gtk_file_chooser_set_current_name" sptr, sptr
 #func global gtk_file_chooser_set_do_overwrite_confirmation "gtk_file_chooser_set_do_overwrite_confirmation" sptr, int
-; GtkFileChooserAction
-#enum GTK_FILE_CHOOSER_ACTION_OPEN = 0
-#enum GTK_FILE_CHOOSER_ACTION_SAVE
-#enum GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER
-; GtkStockItem
-#define GTK_STOCK_CANCEL           "gtk-cancel"
-#define GTK_STOCK_OPEN             "gtk-open"
-#define GTK_STOCK_SAVE_AS          "gtk-save-as"
-; GtkResponseType
-;#const GTK_RESPONSE_DELETE_EVENT -4
-;#const GTK_RESPONSE_CANCEL       -6
-#const GTK_RESPONSE_APPLY        -10
 #func global gtk_dialog_run "gtk_dialog_run" sptr
 #func global gtk_widget_hide "gtk_widget_hide" sptr
 #func global gtk_file_chooser_get_filename "gtk_file_chooser_get_filename" sptr
@@ -71,6 +58,7 @@
 	gtk_settings_set_string_property	stat, "gtk-font-name", "ms ui gothic, 10 bold", NULL
 
 	// ウィンドウ生成
+#const	GTK_WINDOW_TOPLEVEL	0	; GtkWindowType
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	g_signal_connect	win, "delete-event", cb_win_delete_event, NULL
@@ -108,6 +96,8 @@
 	gtk_main_quit
 	return
 
+#const	GTK_FILE_CHOOSER_ACTION_OPEN	0	; GtkFileChooserAction
+#define GTK_STOCK_OPEN	"gtk-open"	; GtkStockItem
 *on_btn1_clicked
 	// ファイルオープンダイアログ
 	dlg		= dlg1
@@ -120,6 +110,7 @@
 	gosub	*run_dialog
 	return
 
+#const	GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER	2	; GtkFileChooserAction
 *on_btn2_clicked
 	// フォルダオープンダイアログ
 	dlg		= dlg2
@@ -132,6 +123,8 @@
 	gosub	*run_dialog
 	return
 
+#const	GTK_FILE_CHOOSER_ACTION_SAVE	1	; GtkFileChooserAction
+#define GTK_STOCK_SAVE_AS	"gtk-save-as"	; GtkStockItem
 *on_btn3_clicked
 	// ファイルセーブダイアログ
 	dlg		= dlg3
@@ -145,6 +138,9 @@
 	return
 
 /* サブルーチン */
+#define GTK_STOCK_CANCEL	"gtk-cancel"	; GtkStockItem
+#const	GTK_RESPONSE_CANCEL	-6	; GtkResponseType
+#const	GTK_RESPONSE_APPLY	-10	; GtkResponseType
 *create_dialog
 	if dlg = NULL {
 		gtk_file_chooser_dialog_new2	caption, win, action, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, btn_apply, GTK_RESPONSE_APPLY, NULL

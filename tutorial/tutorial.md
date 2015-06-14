@@ -2234,18 +2234,17 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
 
 ********************
     // コールバック関数を使うための準備
-    #include "hscallbk.as"
-    #uselib ""
-    #func cb_window_delete_event ""
-    #func cb_act_new_hoge ""
-    #func cb_act_new_fuga ""
-    #func cb_act_quit ""
-    #func cb_act_copy ""
-    #func cb_act_paste ""
-    #func cb_act_one ""
-    #func cb_act_two ""
-    #func cb_act_three ""
-    #func cb_ebox_button_release_event "" int, int
+    #include "modclbk.as"
+    	newclbk3 cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+    	newclbk3 cb_act_new_hoge, 2, *on_act_new_hoge, CLBKMODE_CDECL@
+    	newclbk3 cb_act_new_fuga, 2, *on_act_new_fuga, CLBKMODE_CDECL@
+    	newclbk3 cb_act_quit, 2, *on_act_quit, CLBKMODE_CDECL@
+    	newclbk3 cb_act_copy, 2, *on_act_copy, CLBKMODE_CDECL@
+    	newclbk3 cb_act_paste, 2, *on_act_paste, CLBKMODE_CDECL@
+    	newclbk3 cb_act_one, 2, *on_act_one, CLBKMODE_CDECL@
+    	newclbk3 cb_act_two, 2, *on_act_two, CLBKMODE_CDECL@
+    	newclbk3 cb_act_three, 2, *on_act_three, CLBKMODE_CDECL@
+    	newclbk3 cb_ebox_button_release_event, 3, *on_ebox_button_release_event, CLBKMODE_CDECL@
     
     // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
@@ -2253,7 +2252,6 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     #func global gtk_settings_get_default "gtk_settings_get_default"
     #func global gtk_settings_set_string_property "gtk_settings_set_string_property" sptr, sptr, sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
-    #const GTK_WINDOW_TOPLEVEL 0
     #func global gtk_window_add_accel_group "gtk_window_add_accel_group" sptr, sptr
     #func global gtk_container_add "gtk_container_add" sptr, sptr
     #func global gtk_widget_set_size_request "gtk_widget_set_size_request" sptr, int, int
@@ -2312,11 +2310,11 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	gtk_settings_set_string_property stat, "gtk-font-name", "meiryo, bold 11", NULL
     
     	// Window生成
+    #const GTK_WINDOW_TOPLEVEL 0 ; GtkWindowType
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
     	gtk_widget_set_size_request win, 300, 200
-    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+    	g_signal_connect win, "delete-event", cb_win_delete_event, NULL
     
     	// VBox生成
     	gtk_vbox_new FALSE, 2
@@ -2340,37 +2338,37 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     #define NAME_POPUPMENU "PopupMenu"
     
     	; UI構造定義
-    	ui_info  = "<ui>"
-    	ui_info  += "  <menubar name='" + NAME_MENUBAR + "'>"
-    	ui_info  += "    <menu action='" + NAME_FILEMENU + "'>"
-    	ui_info  += "      <menu action='" + NAME_NEWMENU + "'>"
-    	ui_info  += "        <menuitem action='" + NAME_NEWHOGE + "' />"
-    	ui_info  += "        <menuitem action='" + NAME_NEWFUGA + "' />"
-    	ui_info  += "      </menu>"
-    	ui_info  += "      <separator />"
-    	ui_info  += "      <menuitem action='" + NAME_QUIT + "' />"
-    	ui_info  += "    </menu>"
-    	ui_info  += "    <menu action='" + NAME_EDITMENU + "'>"
-    	ui_info  += "      <menuitem action='" + NAME_COPY + "' />"
-    	ui_info  += "      <menuitem action='" + NAME_PASTE + "' />"
-    	ui_info  += "    </menu>"
-    	ui_info  += "    <menu action='" + NAME_CHOICESMENU + "'>"
-    	ui_info  += "      <menuitem action='" + NAME_CHOICEONE + "'/>"
-    	ui_info  += "      <menuitem action='" + NAME_CHOICETWO + "'/>"
-    	ui_info  += "      <separator />"
-    	ui_info  += "      <menuitem action='" + NAME_CHOICETHREE + "'/>"
-    	ui_info  += "    </menu>"
-    	ui_info  += "  </menubar>"
-    	ui_info  += "  <toolbar name='" + NAME_TOOLBAR + "'>"
-    	ui_info  += "    <toolitem action='" + NAME_NEWHOGE + "' />"
-    	ui_info  += "    <toolitem action='" + NAME_NEWFUGA + "' />"
-    	ui_info  += "    <toolitem action='" + NAME_QUIT + "' />"
-    	ui_info  += "  </toolbar>"
-    	ui_info  += "  <popup name='" + NAME_POPUPMENU + "'>"
-    	ui_info  += "    <menuitem action='" + NAME_COPY + "' />"
-    	ui_info  += "    <menuitem action='" + NAME_PASTE + "' />"
-    	ui_info  += "  </popup>"
-    	ui_info  += "</ui>"
+    	ui_info = "<ui>"
+    	ui_info += "  <menubar name='" + NAME_MENUBAR + "'>"
+    	ui_info += "    <menu action='" + NAME_FILEMENU + "'>"
+    	ui_info += "      <menu action='" + NAME_NEWMENU + "'>"
+    	ui_info += "        <menuitem action='" + NAME_NEWHOGE + "' />"
+    	ui_info += "        <menuitem action='" + NAME_NEWFUGA + "' />"
+    	ui_info += "      </menu>"
+    	ui_info += "      <separator />"
+    	ui_info += "      <menuitem action='" + NAME_QUIT + "' />"
+    	ui_info += "    </menu>"
+    	ui_info += "    <menu action='" + NAME_EDITMENU + "'>"
+    	ui_info += "      <menuitem action='" + NAME_COPY + "' />"
+    	ui_info += "      <menuitem action='" + NAME_PASTE + "' />"
+    	ui_info += "    </menu>"
+    	ui_info += "    <menu action='" + NAME_CHOICESMENU + "'>"
+    	ui_info += "      <menuitem action='" + NAME_CHOICEONE + "'/>"
+    	ui_info += "      <menuitem action='" + NAME_CHOICETWO + "'/>"
+    	ui_info += "      <separator />"
+    	ui_info += "      <menuitem action='" + NAME_CHOICETHREE + "'/>"
+    	ui_info += "    </menu>"
+    	ui_info += "  </menubar>"
+    	ui_info += "  <toolbar name='" + NAME_TOOLBAR + "'>"
+    	ui_info += "    <toolitem action='" + NAME_NEWHOGE + "' />"
+    	ui_info += "    <toolitem action='" + NAME_NEWFUGA + "' />"
+    	ui_info += "    <toolitem action='" + NAME_QUIT + "' />"
+    	ui_info += "  </toolbar>"
+    	ui_info += "  <popup name='" + NAME_POPUPMENU + "'>"
+    	ui_info += "    <menuitem action='" + NAME_COPY + "' />"
+    	ui_info += "    <menuitem action='" + NAME_PASTE + "' />"
+    	ui_info += "  </popup>"
+    	ui_info += "</ui>"
     
     	; UIManager生成
     	gtk_ui_manager_new
@@ -2388,43 +2386,38 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	gtk_action_new NAME_NEWMENU, u( "新規作成(_N)" ), NULL, NULL
     	act_new = stat
     
-    #define GTK_STOCK_NEW "gtk-new"
+    #define GTK_STOCK_NEW "gtk-new" ; GtkStockItem
     	; NewHogeコマンドAction生成
     	gtk_action_new NAME_NEWHOGE, u( "_Hoge作成" ), u( "新しいHogeを作成します。" ), GTK_STOCK_NEW
     	act_new_hoge = stat
-    	setcallbk cbactnewhoge, cb_act_new_hoge, *on_act_new_hoge
-    	g_signal_connect act_new_hoge, "activate", varptr( cbactnewhoge ), NULL
+    	g_signal_connect act_new_hoge, "activate", cb_act_new_hoge, NULL
     
     	; NewFugaコマンドAction生成
     	gtk_action_new NAME_NEWFUGA, u( "_Fuga作成" ), u( "新しいfugaを作成します。" ), GTK_STOCK_NEW
     	act_new_fuga = stat
-    	setcallbk cbactnewfuga, cb_act_new_fuga, *on_act_new_fuga
-    	g_signal_connect act_new_fuga, "activate", varptr( cbactnewfuga ), NULL
+    	g_signal_connect act_new_fuga, "activate", cb_act_new_fuga, NULL
     
     	; QuitコマンドAction生成
-    #define GTK_STOCK_QUIT "gtk-quit"
+    #define GTK_STOCK_QUIT "gtk-quit" ; GtkStockItem
     	gtk_action_new NAME_QUIT, u( "終了(_Q)" ), NULL, GTK_STOCK_QUIT
     	act_quit = stat
-    	setcallbk cbactquit, cb_act_quit, *on_act_quit
-    	g_signal_connect act_quit, "activate", varptr( cbactquit ), NULL
+    	g_signal_connect act_quit, "activate", cb_act_quit, NULL
     
     	; EditメニューAction生成
     	gtk_action_new NAME_EDITMENU, u( "編集(_E)" ), NULL, NULL
     	act_edit = stat
     
     	; CopyコマンドAction生成
-    #define GTK_STOCK_COPY "gtk-copy"
+    #define GTK_STOCK_COPY "gtk-copy" ; GtkStockItem
     	gtk_action_new NAME_COPY, u( "コピー(_C)" ), NULL, GTK_STOCK_COPY
     	act_copy = stat
-    	setcallbk cbactcopy, cb_act_copy, *on_act_copy
-    	g_signal_connect act_copy, "activate", varptr( cbactcopy ), NULL
+    	g_signal_connect act_copy, "activate", cb_act_copy, NULL
     
     	; PasteコマンドAction生成
-    #define GTK_STOCK_PASTE "gtk-paste"
+    #define GTK_STOCK_PASTE "gtk-paste" ; GtkStockItem
     	gtk_action_new NAME_PASTE, u( "貼り付け(_P)" ), NULL, GTK_STOCK_PASTE
     	act_paste = stat
-    	setcallbk cbactpaste, cb_act_paste, *on_act_paste
-    	g_signal_connect act_paste, "activate", varptr( cbactpaste ), NULL
+    	g_signal_connect act_paste, "activate", cb_act_paste, NULL
     
     	; ChoicesメニューAction生成
     	gtk_action_new NAME_CHOICESMENU, u( "選択(_C)" ), NULL, NULL
@@ -2434,23 +2427,20 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     #const VALUE_CHOICE_ONE 1
     	gtk_radio_action_new NAME_CHOICEONE, u( "選択肢1(_1)" ), NULL, NULL, VALUE_CHOICE_ONE
     	act_choice_one = stat
-    	setcallbk cbactone, cb_act_one, *on_act_one
-    	g_signal_connect act_choice_one, "changed", varptr( cbactone ), NULL
     	gtk_radio_action_set_current_value act_choice_one, VALUE_CHOICE_ONE
+    	g_signal_connect act_choice_one, "changed", cb_act_one, NULL
     
     	; ChoiceTwoコマンドAction生成
     #const VALUE_CHOICE_TWO 2
     	gtk_radio_action_new NAME_CHOICETWO, u( "選択肢2(_2)" ), NULL, NULL, VALUE_CHOICE_TWO
     	act_choice_two = stat
-    	setcallbk cbacttwo, cb_act_two, *on_act_two
-    	g_signal_connect act_choice_two, "changed", varptr( cbacttwo ), NULL
+    	g_signal_connect act_choice_two, "changed", cb_act_two, NULL
     	gtk_radio_action_join_group act_choice_two, act_choice_one
     
     	; ChoiceThreeコマンドAction生成
     	gtk_toggle_action_new NAME_CHOICETHREE, u( "オプション(_3)" ), NULL, NULL
     	act_choice_three = stat
-    	setcallbk cbactthree, cb_act_three, *on_act_three
-    	g_signal_connect act_choice_three, "toggled", varptr( cbactthree ), NULL
+    	g_signal_connect act_choice_three, "toggled", cb_act_three, NULL
     
     	; Action群をActionGroupに登録
     	gtk_action_group_add_action acts, act_file
@@ -2492,8 +2482,7 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	// GtkEventBox生成
     	gtk_event_box_new
     	ebox = stat
-    	setcallbk cbeboxbuttonreleaseevent, cb_ebox_button_release_event, *on_ebox_button_release_event
-    	g_signal_connect ebox, "button-release-event", varptr( cbeboxbuttonreleaseevent ), NULL
+    	g_signal_connect ebox, "button-release-event", cb_ebox_button_release_event, NULL
     
     	// ウィンドウ組み立て
     	gtk_container_add win, vbox
@@ -2507,7 +2496,7 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	end
     
     /* シグナルハンドラ */
-    *on_window_delete_event
+    *on_win_delete_event
     	gtk_main_quit
     	return
     
@@ -2555,9 +2544,11 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	}
     	return
     
-    #define GDK_BUTTON_SECONDARY 3
     *on_ebox_button_release_event
-    	evt = callbkarg( 1 )
+    	clbkargprotect args_
+    	evt = args_( 1 )
+    
+    #define GDK_BUTTON_SECONDARY 3 ; GDK - Events
     	gdk_event_get_button evt, varptr( num )
     	if ( num = GDK_BUTTON_SECONDARY ) {
     		mes "GtkEventBoxが右クリックされました。"

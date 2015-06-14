@@ -43,7 +43,7 @@
 	gtk_init	NULL, NULL
 
 	// ウィンドウ生成
-#const	GTK_WINDOW_TOPLEVEL	0
+#const	GTK_WINDOW_TOPLEVEL	0	; GtkWindowType
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	g_signal_connect	win, "delete-event", cb_win_delete_event, NULL
@@ -54,7 +54,7 @@
 	itr	= varptr( struct_itr )
 
 	; モデル生成
-#define G_TYPE_STRING	G_TYPE_MAKE_FUNDAMENTAL(16)
+#define G_TYPE_STRING	G_TYPE_MAKE_FUNDAMENTAL(16)	; GObject - Type Information
 #define ctype	G_TYPE_MAKE_FUNDAMENTAL(%1)	(%1 << 2)
 	gdk_pixbuf_get_type
 	gtk_list_store_new2	2, stat, G_TYPE_STRING
@@ -64,7 +64,7 @@
 #define GTK_STOCK_CUT	"gtk-cut"	; GtkStockItem
 #define GTK_STOCK_COPY	"gtk-copy"
 #define GTK_STOCK_PASTE	"gtk-paste"
-#const GTK_ICON_SIZE_DND	5
+#const GTK_ICON_SIZE_DND	5	; GtkIconSize
 #const	COLUMN_ICON		0	; GtkListStoreデータの項目インデックス
 #const	COLUMN_NAME		1
 	icons	= GTK_STOCK_CUT, GTK_STOCK_COPY, GTK_STOCK_PASTE

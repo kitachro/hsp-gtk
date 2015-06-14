@@ -3810,20 +3810,18 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
 
 ********************
     // コールバック関数を使うための準備
-    #include "hscallbk.as"
-    #uselib ""
-    #func cb_window_delete_event ""
-    #func cb_combobox1_changed ""
-    #func cb_combobox2_changed ""
-    #func cb_combobox3_changed ""
-    #func cb_combobox4_changed ""
-    #func cb_combobox5_changed ""
+    #include "modclbk.as"
+    	newclbk3 cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+    	newclbk3 cb_cmb1_changed, 2, *on_cmb1_changed, CLBKMODE_CDECL@
+    	newclbk3 cb_cmb2_changed, 2, *on_cmb2_changed, CLBKMODE_CDECL@
+    	newclbk3 cb_cmb3_changed, 2, *on_cmb3_changed, CLBKMODE_CDECL@
+    	newclbk3 cb_cmb4_changed, 2, *on_cmb4_changed, CLBKMODE_CDECL@
+    	newclbk3 cb_cmb5_changed, 2, *on_cmb5_changed, CLBKMODE_CDECL@
     
     // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
-    #const GTK_WINDOW_TOPLEVEL 0
     #func global gtk_widget_show_all "gtk_widget_show_all" sptr
     #func global gtk_main "gtk_main"
     #func global gtk_main_quit "gtk_main_quit"
@@ -3852,6 +3850,8 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
     #func global gtk_combo_box_get_active_id "gtk_combo_box_get_active_id" sptr
     #func global gtk_combo_box_get_active_iter "gtk_combo_box_get_active_iter" sptr, sptr
     #func global gtk_combo_box_get_model "gtk_combo_box_get_model" sptr
+    #func global gtk_combo_box_set_wrap_width "gtk_combo_box_set_wrap_width" sptr, int
+    #func global gtk_combo_box_get_wrap_width "gtk_combo_box_get_wrap_width" sptr
     #func global gtk_cell_layout_pack_start "gtk_cell_layout_pack_start" sptr, sptr, int
     #func global gtk_cell_renderer_text_new "gtk_cell_renderer_text_new"
     #func global gtk_cell_renderer_pixbuf_new "gtk_cell_renderer_pixbuf_new"
@@ -3860,7 +3860,6 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
     #uselib "libgobject-2.0-0.dll"
     #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
     #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
-    #const G_TYPE_STRING 64
     
     #uselib "libgdk_pixbuf-2.0-0.dll"
     #func global gdk_pixbuf_get_type "gdk_pixbuf_get_type"
@@ -3880,32 +3879,30 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
     	gtk_init NULL, NULL
     
     	// ウィンドウ生成
+    #const GTK_WINDOW_TOPLEVEL 0 ; GtkWindowType
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
-    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+    	g_signal_connect win, "delete-event", cb_win_delete_event, NULL
     
     	// VBox生成
     	gtk_vbox_new FALSE, 5
     	vbx = stat
     
-    	// コンボボックス1（文字列専用）生成
+    	// コンボボックス1（テキスト専用）生成
     	gtk_combo_box_text_new
     	cmb1 = stat
     	gtk_combo_box_text_append cmb1, "1", "item1(1)"
     	gtk_combo_box_text_append cmb1, "2", "item2(1)"
     	gtk_combo_box_set_active cmb1, 0
-    	setcallbk cbcombobox1changed, cb_combobox1_changed, *on_combobox1_changed
-    	g_signal_connect cmb1, "changed", varptr( cbcombobox1changed ), NULL
+    	g_signal_connect cmb1, "changed", cb_cmb1_changed, NULL
     
-    	// コンボボックス2（文字列専用、エントリ付き）生成
+    	// コンボボックス2（テキスト専用、エントリ付き）生成
     	gtk_combo_box_text_new_with_entry
     	cmb2 = stat
     	gtk_combo_box_text_append_text cmb2, "item1(2)"
     	gtk_combo_box_text_append_text cmb2, "item2(2)"
     	gtk_combo_box_set_active cmb2, 0
-    	setcallbk cbcombobox2changed, cb_combobox2_changed, *on_combobox2_changed
-    	g_signal_connect cmb2, "changed", varptr( cbcombobox2changed ), NULL
+    	g_signal_connect cmb2, "changed", cb_cmb2_changed, NULL
     
     	// TreeIter格納用変数作成
     	sdim struct_itr, ( 4 * 4 ) ; 4*4 = GtkTreeIter構造体サイズ
@@ -3920,6 +3917,8 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
     	ren5_t = stat
     
     	// コンボボックス3用モデル（データ）生成
+    #define G_TYPE_STRING G_TYPE_MAKE_FUNDAMENTAL(16) ; GObject - Type Information
+    #define ctype G_TYPE_MAKE_FUNDAMENTAL(%1) (%1 << 2)
     #const COL_MODEL3_TEXT 0
     	gtk_list_store_new1 1, G_TYPE_STRING
     	mdl3 = stat
@@ -3934,8 +3933,7 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
     	gtk_cell_layout_pack_start cmb3, ren3, 0
     	gtk_cell_layout_add_attribute cmb3, ren3, "text", COL_MODEL3_TEXT
     	gtk_combo_box_set_active cmb3, 0
-    	setcallbk cbcombobox3changed, cb_combobox3_changed, *on_combobox3_changed
-    	g_signal_connect cmb3, "changed", varptr( cbcombobox3changed ), NULL
+    	g_signal_connect cmb3, "changed", cb_cmb3_changed, NULL
     
     	// コンボボックス4用モデル（データ）生成
     #const COL_MODEL4_TEXT 0
@@ -3951,8 +3949,7 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
     	cmb4 = stat
     	gtk_combo_box_set_entry_text_column cmb4, COL_MODEL4_TEXT
     	gtk_combo_box_set_active cmb4, 0
-    	setcallbk cbcombobox4changed, cb_combobox4_changed, *on_combobox4_changed
-    	g_signal_connect cmb4, "changed", varptr( cbcombobox4changed ), NULL
+    	g_signal_connect cmb4, "changed", cb_cmb4_changed, NULL
     
     	// コンボボックス5用モデル（データ）生成
     #const COL_MODEL5_PIXBUF 0
@@ -3974,9 +3971,9 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
     	gtk_cell_layout_add_attribute cmb5, ren5_p, "pixbuf", COL_MODEL5_PIXBUF
     	gtk_cell_layout_pack_start cmb5, ren5_t, 0
     	gtk_cell_layout_add_attribute cmb5, ren5_t, "text", COL_MODEL5_TEXT
+    ;	gtk_combo_box_set_wrap_width cmb5, 2
     	gtk_combo_box_set_active cmb5, 0
-    	setcallbk cbcombobox5changed, cb_combobox5_changed, *on_combobox5_changed
-    	g_signal_connect cmb5, "changed", varptr( cbcombobox5changed ), NULL
+    	g_signal_connect cmb5, "changed", cb_cmb5_changed, NULL
     
     	// ウィンドウの組み立て
     	gtk_box_pack_start vbx, cmb1, TRUE, TRUE, 0
@@ -3994,12 +3991,12 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
     /* シグナルハンドラ */
     #const VARTYPE_STRING 2
     
-    *on_window_delete_event
+    *on_win_delete_event
     	gtk_main_quit
     	return
     
     #const LEN_COMBOBOX_ID 5
-    *on_combobox1_changed
+    *on_cmb1_changed
     	gtk_combo_box_get_active_id cmb1
     	ptr = stat
     	dupptr txt, ptr, LEN_COMBOBOX_ID, VARTYPE_STRING
@@ -4010,7 +4007,7 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
     	gosub *print_active_text
     	return
     
-    *on_combobox2_changed
+    *on_cmb2_changed
     	gtk_combo_box_get_active cmb2
     	mes "active index: " + stat
     
@@ -4019,7 +4016,7 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
     	gosub *print_active_text
     	return
     
-    *on_combobox3_changed
+    *on_cmb3_changed
     	gtk_combo_box_get_active cmb3
     	mes "active index: " + stat
     
@@ -4029,7 +4026,7 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
     	gosub *print_active_text
     	return
     
-    *on_combobox4_changed
+    *on_cmb4_changed
     	gtk_combo_box_get_active cmb4
     	mes "active index: " + stat
     
@@ -4039,7 +4036,7 @@ gtk_text_buffer_create_tag関数で生成したGtkTextTagは、GtkTextBufferが�
     	gosub *print_active_text
     	return
     
-    *on_combobox5_changed
+    *on_cmb5_changed
     	gtk_combo_box_get_active cmb5
     	mes "active index: " + stat
     

@@ -4541,19 +4541,12 @@ GtkComboBoxウィジェットのように、GtkListStoreオブジェクトによ
     	gtk_icon_view_set_columns iview, 1
     	gtk_icon_view_set_selection_mode iview, GTK_SELECTION_MULTIPLE
     /* 複数項目のドラッグ＆ドロップは一応可能だが、操作が少し面倒。
-       (1) アイコン選択時の最後のクリックで押したマウスボタンを放さずに
-           そのままドラッグ操作を始めなければならない。
-           ドラッグ操作開始のためのクリックを別に行うと、アイコンの選択
-           状態が変化してしまう。
+       (1) アイコン選択時の最後のクリックで押したマウスボタンを放さずにそのままドラッグ操作を始めなければならない。
+           ドラッグ操作開始のためのクリックを別に行うと、アイコンの選択状態が変化してしまう。
            ここは、例えばWindowsのエクスプローラとはまったく挙動が違う。
-       (2) actionsにGDK_ACTION_MOVEフラグを立てない（移動モード：オフ）
-           の場合、Shiftキーを押しながら選択したアイコンをドロップする
-           時には、Shiftキーを放さないとドロップできない。
-           GDK_ACTION_MOVEフラグを立てればドロップできるが、ドラッグ元の
-           アイコン削除が自動で実行されてしまう上に、最後に選択したアイコン
-           しか削除されない。
-           これを修正するには、残っている被選択アイコン（モデルデータ）を削除する
-           ために、drag-endシグナルのハンドラを書かなければならない？ */
+       (2) actionsにGDK_ACTION_MOVEフラグを立てない（移動モード：オフ）の場合、Shiftキーを押しながら選択したアイコンをドロップする時には、Shiftキーを放さないとドロップできない。
+           GDK_ACTION_MOVEフラグを立てればドロップできるが、ドラッグ元のアイコン削除が自動で実行されてしまう上に、最後に選択したアイコンしか削除されない。
+           これを修正するには、残っている被選択アイコン（モデルデータ）を削除するために、drag-endシグナルのハンドラを書かなければならない？ */
     	actions = GDK_ACTION_COPY | GDK_ACTION_MOVE
     	gtk_icon_view_enable_model_drag_source iview, GDK_MODIFIER_MASK, NULL, 0, actions
     	g_signal_connect iview, "drag-data-get", cb_iview_drag_data_get, NULL

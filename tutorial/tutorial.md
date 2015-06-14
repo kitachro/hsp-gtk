@@ -643,7 +643,6 @@ GTK+には、組み込みのストックアイテムが多数用意されてお�
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
-    #const GTK_WINDOW_TOPLEVEL 0
     #func global gtk_container_set_border_width "gtk_container_set_border_width" sptr, int
     #func global gtk_container_add "gtk_container_add" sptr, sptr
     #func global gtk_widget_show_all "gtk_widget_show_all" sptr
@@ -654,7 +653,6 @@ GTK+には、組み込みのストックアイテムが多数用意されてお�
     #func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
     #func global gtk_button_new_from_stock "gtk_button_new_from_stock" sptr
     #func global gtk_button_new_with_mnemonic "gtk_button_new_with_mnemonic" sptr 
-    #define GTK_STOCK_OPEN "gtk-open"
     #func global gtk_container_get_children "gtk_container_get_children" sptr
     #func gtk_widget_override_font "gtk_widget_override_font" sptr, sptr
     
@@ -688,6 +686,7 @@ GTK+には、組み込みのストックアイテムが多数用意されてお�
     	gtk_init NULL, NULL
     
     	// ウィンドウ生成
+    #const GTK_WINDOW_TOPLEVEL 0 ; GtkWindowType
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
     	gtk_container_set_border_width win, 10
@@ -711,6 +710,7 @@ GTK+には、組み込みのストックアイテムが多数用意されてお�
     	gtk_widget_override_font lbl, stat
     
     	; ボタン2
+    #define GTK_STOCK_OPEN "gtk-open" ; GtkStockItem
     	gtk_button_new_from_stock GTK_STOCK_OPEN
     	btn2 = stat
     	g_signal_connect btn2, "clicked", cb_btn2_clicked, 0

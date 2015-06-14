@@ -1666,15 +1666,13 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
 
 ********************
     // コールバック関数を使うための準備
-    #include "hscallbk.as"
-    #uselib ""
-    #func cb_window_delete_event ""
+    #include "modclbk.as"
+    	newclbk3 cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
     
     // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
-    #const GTK_WINDOW_TOPLEVEL 0
     #func global gtk_table_new "gtk_table_new" int, int, int
     #func global gtk_table_set_col_spacings "gtk_table_set_col_spacings" sptr, int
     #func global gtk_table_set_row_spacings "gtk_table_set_row_spacings" sptr, int
@@ -1684,6 +1682,7 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
     #func global gtk_widget_show_all "gtk_widget_show_all" sptr
     #func global gtk_main "gtk_main"
     #func global gtk_main_quit "gtk_main_quit"
+    
     #uselib "libgobject-2.0-0.dll"
     #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
     #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
@@ -1698,10 +1697,10 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
     	gtk_init NULL, NULL
     
     	// ウィンドウ生成
+    #const GTK_WINDOW_TOPLEVEL 0 ; GtkWindowType
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
-    	setcallbk cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+    	g_signal_connect win, "delete-event", cb_win_delete_event, NULL
     
     	// テーブル生成
     	gtk_table_new 3, 3, TRUE
@@ -1738,7 +1737,7 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
     	end
     
     /* シグナルハンドラ */
-    *on_window_delete_event
+    *on_win_delete_event
     	gtk_main_quit
     	return
 ********************

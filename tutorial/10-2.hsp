@@ -12,7 +12,6 @@
 #func global gtk_settings_get_default "gtk_settings_get_default"
 #func global gtk_settings_set_string_property "gtk_settings_set_string_property" sptr, sptr, sptr, sptr
 #func global gtk_window_new "gtk_window_new" int
-#const	GTK_WINDOW_TOPLEVEL	0
 #func global gtk_container_add "gtk_container_add" sptr, sptr
 #func global gtk_widget_show_all "gtk_widget_show_all" sptr
 #func global gtk_main "gtk_main"
@@ -26,16 +25,6 @@
 #func global gtk_message_dialog_new0 "gtk_message_dialog_new" sptr, int, int, int, str
 #func global gtk_message_dialog_format_secondary_text0 "gtk_message_dialog_format_secondary_text" sptr, str
 #func global gtk_dialog_get_widget_for_response "gtk_dialog_get_widget_for_response" sptr, int
-; GtkMessageType
-#const	GTK_MESSAGE_INFO	0
-#const	GTK_MESSAGE_WARNING	1
-; GtkButtonsType
-#const	GTK_BUTTONS_OK	1
-#const	GTK_BUTTONS_CLOSE	2
-; GtkResponseType
-;#const GTK_RESPONSE_DELETE_EVENT -4
-;#const GTK_RESPONSE_OK           -5
-#const GTK_RESPONSE_CLOSE        -7
 
 #uselib "libgobject-2.0-0.dll"
 #func global g_signal_connect_data "g_signal_connect_data" sptr, str, sptr, sptr, int, int
@@ -65,6 +54,7 @@
 	gtk_settings_set_string_property	stat, "gtk-font-name", "ms ui gothic, 10", NULL
 
 	// ウィンドウ生成
+#const	GTK_WINDOW_TOPLEVEL	0	; GtkWindowType
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	g_signal_connect	win, "delete-event", cb_win_delete_event, NULL
@@ -99,6 +89,8 @@
 	gtk_main_quit
 	return
 
+#const	GTK_MESSAGE_INFO	0	; GtkMessageType
+#const	GTK_BUTTONS_OK	1	; GtkButtonsType
 *on_btn1_clicked
 	if dlg1 = NULL {
 		msg	= u( "これは、モーダルなINFO MessageDialogのメインテキストです。" )
@@ -108,10 +100,14 @@
 		gtk_message_dialog_format_secondary_text0	dlg1, u( "これはサブテキストです。" )
 	}
 	gtk_dialog_run	dlg1
-	response	= stat	: mes "response id: " + response
+	response	= stat
+	mes "response id: " + response
 	gtk_widget_hide	dlg1
 	return
 
+#const	GTK_MESSAGE_WARNING	1	; GtkMessageType
+#const	GTK_BUTTONS_CLOSE	2	; GtkButtonsType
+#const GTK_RESPONSE_CLOSE	-7	; GtkResponseType
 *on_btn2_clicked
 	if dlg2 = NULL {
 		msg	= u( "これは、ノンモーダルなWARNING MessageDialogのメインテキストです。" )

@@ -270,7 +270,6 @@ modclbk3b2を使用した場合、コールバック関数はラベルで始ま�
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
-    #const GTK_WINDOW_TOPLEVEL 0
     #func global gtk_widget_show_all "gtk_widget_show_all" sptr
     #func global gtk_main "gtk_main"
     #func global gtk_main_quit "gtk_main_quit"
@@ -286,6 +285,7 @@ modclbk3b2を使用した場合、コールバック関数はラベルで始ま�
     	gtk_init NULL, NULL
     
     	// ウィンドウ生成
+    #const GTK_WINDOW_TOPLEVEL 0 ; GtkWindowType
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
     	g_signal_connect win, "delete-event", cb_win_delete_event, NULL

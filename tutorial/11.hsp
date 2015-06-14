@@ -10,7 +10,6 @@
 #uselib "libgtk-3-0.dll"
 #func global gtk_init "gtk_init" sptr, sptr
 #func global gtk_window_new "gtk_window_new" int
-#const	GTK_WINDOW_TOPLEVEL	0
 #func global gtk_widget_show_all "gtk_widget_show_all" sptr
 #func global gtk_main "gtk_main"
 #func global gtk_main_quit "gtk_main_quit"
@@ -24,15 +23,11 @@
 #func global gtk_entry_get_buffer "gtk_entry_get_buffer" sptr
 #func global gtk_entry_buffer_get_text "gtk_entry_buffer_get_text" sptr
 #func global gtk_image_new_from_stock "gtk_image_new_from_stock" str, int
-#define	GTK_STOCK_STOP	"gtk-stop"
-#const	GTK_ICON_SIZE_MENU	1
 #func global gtk_image_get_storage_type "gtk_image_get_storage_type" sptr
-#const	GTK_IMAGE_PIXBUF	1
 #func global gtk_image_get_pixbuf "gtk_image_get_pixbuf" sptr
 #func global gtk_image_set_from_pixbuf "gtk_image_set_from_pixbuf" sptr, sptr
 #func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
 #func global gtk_clipboard_get "gtk_clipboard_get" int
-#const GDK_SELECTION_CLIPBOARD  69
 #func global gtk_clipboard_set_text "gtk_clipboard_set_text" sptr, sptr, int
 #func global gtk_clipboard_wait_for_text "gtk_clipboard_wait_for_text" sptr
 #func global gtk_clipboard_set_image "gtk_clipboard_set_image" sptr, sptr
@@ -53,6 +48,7 @@
 	gtk_init	NULL, NULL
 
 	// ウィンドウ生成
+#const	GTK_WINDOW_TOPLEVEL	0	; GtkWindowType
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	g_signal_connect	win, "delete-event", cb_win_delete_event, NULL
@@ -66,6 +62,8 @@
 	ent	= stat
 
 	// イメージ生成
+#define	GTK_STOCK_STOP	"gtk-stop"	; GtkStockItem
+#const	GTK_ICON_SIZE_MENU	1	; GtkIconSize
 	gtk_image_new_from_stock	GTK_STOCK_STOP, GTK_ICON_SIZE_MENU
 	img	= stat
 
@@ -87,6 +85,7 @@
 	g_signal_connect	btn_paste_image, "clicked", cb_btn_paste_image_clicked, NULL
 
 	// クリップボード生成
+#const GDK_SELECTION_CLIPBOARD  69	; GDK - Selection
 	gtk_clipboard_get	GDK_SELECTION_CLIPBOARD
 	clp	= stat
 
@@ -125,6 +124,7 @@
 	}
 	return
 
+#const	GTK_IMAGE_PIXBUF	1	; GtkImageType
 *on_btn_copy_image_clicked
 	gtk_image_get_storage_type	img
 	type	= stat

@@ -3002,10 +3002,9 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
 
 ********************
     // コールバック関数を使うための準備
-    #include "hscallbk.as"
-    #uselib ""
-    #func cb_win_delete_event ""
-    #func cb_btn_clicked ""
+    #include "modclbk.as"
+    	newclbk3 cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
+    	newclbk3 cb_btn_clicked, 2, *on_btn_clicked, CLBKMODE_CDECL@
     
     // GTK+の関数を使うための準備
     #uselib "libgtk-3-0.dll"
@@ -3013,17 +3012,12 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     #func global gtk_settings_get_default "gtk_settings_get_default"
     #func global gtk_settings_set_string_property "gtk_settings_set_string_property" sptr, sptr, sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
-    #const GTK_WINDOW_TOPLEVEL 0
     #func global gtk_container_add "gtk_container_add" sptr, sptr
     #func global gtk_widget_show_all "gtk_widget_show_all" sptr
     #func global gtk_main "gtk_main"
     #func global gtk_main_quit "gtk_main_quit"
     #func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
     #func global gtk_dialog_run "gtk_dialog_run" sptr
-    ; GtkResponseType
-    ;#const GTK_RESPONSE_DELETE_EVENT -4
-    #const GTK_RESPONSE_OK           -5
-    ;#const GTK_RESPONSE_CANCEL       -6
     #func global gtk_widget_hide "gtk_widget_hide" sptr
     #func global gtk_font_chooser_dialog_new "gtk_font_chooser_dialog_new" sptr, sptr
     #func global gtk_font_chooser_set_preview_text "gtk_font_chooser_set_preview_text" sptr, sptr
@@ -3063,16 +3057,15 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	gtk_settings_set_string_property stat, "gtk-font-name", "ms ui gothic, 10", NULL
     
     	// ウィンドウ生成
+    #const GTK_WINDOW_TOPLEVEL 0 ; GtkWindowType
     	gtk_window_new GTK_WINDOW_TOPLEVEL
     	win = stat
-    	setcallbk cbwindeleteevent, cb_win_delete_event, *on_win_delete_event
-    	g_signal_connect win, "delete-event", varptr( cbwindeleteevent ), NULL
+    	g_signal_connect win, "delete-event", cb_win_delete_event, NULL
     
     	// ボタン生成
     	gtk_button_new_with_label "Show Dialog"
     	btn = stat
-    	setcallbk cbbtnclicked, cb_btn_clicked, *on_btn_clicked
-    	g_signal_connect btn, "clicked", varptr( cbbtnclicked ), 0
+    	g_signal_connect btn, "clicked", cb_btn_clicked, 0
     
     	// ウィンドウの組み立て
     	gtk_container_add win, btn
@@ -3099,6 +3092,7 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	mes "response id: " + response
     	gtk_widget_hide dlg
     
+    #const GTK_RESPONSE_OK -5 ; GtkResponseType
     	if response = GTK_RESPONSE_OK {
     		gtk_font_chooser_get_font dlg
     		dupptr fontname, stat, 100, 2

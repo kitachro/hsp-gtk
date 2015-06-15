@@ -2700,7 +2700,6 @@ GtkUIManagerは、構造定義文字列と、GtkActionを登録済みのGtkActio
     	gtk_box_pack_start carea, lbl, FALSE, FALSE, 10
     	gtk_box_pack_start carea, lbl2, FALSE, FALSE, 10
     
-    
     #define GTK_STOCK_CANCEL "gtk-cancel" ; GtkStockItem
     #define GTK_STOCK_OK "gtk-ok"
     #const GTK_RESPONSE_DELETE_EVENT -4  ; GtkResponseType

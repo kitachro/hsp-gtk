@@ -13,7 +13,7 @@
 #func global gtk_widget_show_all "gtk_widget_show_all" sptr
 #func global gtk_main "gtk_main"
 #func global gtk_main_quit "gtk_main_quit"
-#func global gtk_hbox_new "gtk_hbox_new" int, int
+#func global gtk_box_new "gtk_box_new" int, int
 #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
 #func global gtk_adjustment_new "gtk_adjustment_new" double, double, double, double, double, double
 #func global gtk_spin_button_new "gtk_spin_button_new" sptr, double, int
@@ -44,7 +44,8 @@
 	g_signal_connect	win, "delete-event", cb_window_delete_event, NULL
 
 	// HBoxê∂ê¨
-	gtk_hbox_new	FALSE, 6
+#const GTK_ORIENTATION_HORIZONTAL	0	; GtkOrientation
+	gtk_box_new	GTK_ORIENTATION_HORIZONTAL, 6
 	hbox	= stat
 
 	// É{É^ÉìåQê∂ê¨

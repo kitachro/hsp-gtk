@@ -43,7 +43,7 @@
 	gtk_container_set_border_width	win, 10
 	g_signal_connect	win, "delete-event", cb_window_delete_event, NULL
 
-	// HBoxê∂ê¨
+	// Boxê∂ê¨
 #const GTK_ORIENTATION_HORIZONTAL	0	; GtkOrientation
 	gtk_box_new	GTK_ORIENTATION_HORIZONTAL, 6
 	hbox	= stat

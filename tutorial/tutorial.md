@@ -1479,16 +1479,16 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
 
 　GTK+には、様々な種類のレイアウトコンテナが用意されており、それぞれ、「縦または横方向に一直線に配置する」、「タイル形に配置する」、「すべて同じ位置に配置し、1度に1つだけ表示する」など、様々な配置パターンを持っています。さらに、レイアウトコンテナ同士を入れ子にして組み合わせることもできます。
 
-　この章では、それらのうち、ボックス（GtkHBoxおよびGtkVBox）とテーブル（GtkTable）を取り上げます。
+　この章では、それらのうち、ボックス（GtkBox）とテーブル（GtkTable）を取り上げます。
 
 ====================
-## 6.1　ボックス（GtkHBoxおよびGtkVBox）
+## 6.1　ボックス（GtkBox）
 
 ![サンプル6-1](6-1.png)
 
-　GtkHBoxおよびGtkVBoxウィジェットは、複数のウィジェットを横または縦方向に一直線に配置するための、目に見えないレイアウトコンテナです。GtkHBoxは横方向（horizontal）、GtkVBoxは縦方向（vertical）に配置することができます。
+　GtkBoxウィジェットは、複数のウィジェットを横（horizontal）または縦（vertical）方向に一直線に配置するための、目に見えないレイアウトコンテナです。横または縦どちらの方向に並べるかは、GtkBoxの生成時に引数で指定します。GtkBoxは、ウィジェットを並べる方向で区別して、GtkHBox（horizontal）またはGtkVBox（vertical）と呼ぶ場合があります。
 
-　ウィジェットの配置には、両ボックス共に、gtk_box_pack_startまたはgtk_box_pack_end関数を用います。gtk_box_pack_startを実行すると、引数に指定したウィジェットが、配置済みウィジェットの右側もしくは下側に追加され、gtk_box_pack_endを実行すると、左側もしくは上側に追加されます。
+　ウィジェットの配置には、gtk_box_pack_startまたはgtk_box_pack_end関数を用います。gtk_box_pack_startを実行すると、引数に指定したウィジェットが、配置済みウィジェットの右側もしくは下側に追加され、gtk_box_pack_endを実行すると、左側もしくは上側に追加されます。
 
 　次のページから、サンプルプログラムを挙げて、各部分について説明します。
 
@@ -1593,39 +1593,51 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
 　次のページから、各部分について説明します。今までの章で既出の事は省略します。
 
 ====================
-### 6.1.2　GtkHBoxウィジェットの生成
+### 6.1.2　GtkBoxウィジェットの生成
 
 ********************
-    gtk_hbox_new FALSE, 5
-    hbox = stat
+    #enum GTK_ORIENTATION_HORIZONTAL = 0 ; GtkOrientation
+    #enum GTK_ORIENTATION_VERTICAL
+    	// HBox生成
+    	gtk_box_new GTK_ORIENTATION_HORIZONTAL, 5
+    	hbox = stat
+    
+    	// VBox生成
+    	gtk_box_new GTK_ORIENTATION_VERTICAL, 5
+    	vbox = stat
 ********************
 
-　ここでは、gtk_hbox_new関数を実行して、GtkHBoxウィジェットを生成しています。
+　ここでは、gtk_box_new関数を実行して、GtkHBoxおよびGtkVBoxウィジェットを生成しています。
 
-　1つ目の引数には、GtkHBoxの上に並べるウィジェットをすべて同じ大きさで表示するかどうかを、真偽値（1か0）で指定します。TRUE(1)を指定するとサイズが統一されます。FALSE(0)を指定すると個々のウィジェットが必要最低限のサイズで表示されます。
-
-元々、GTK+のウィジェットは、明示的にサイズを指定しなくても、自動で必要最低限のサイズに調整されるのがデフォルトなので、特に必要がない限り、FALSE(0)にしておいて問題はないでしょう。
+　1つ目の引数には、GtkBox上にウィジェットを並べる方向を指定します。組み込みの定数のGTK_ORIENTATION_HORIZONTAL、あるいはGTK_ORIENTATION_VERTICALのどちらかを渡してください。
 
 　2つ目の引数には、GtkHBoxの上に並べるウィジェット同士の間にどれくらいの間隔をあけるかを、ピクセル単位で指定します。
 
-　gtk_hbox_new関数の戻り値は、ウィジェットのインスタンスを表す値になっているので、後で利用できるように、変数に保存しています。
+　gtk_box_new関数の戻り値は、ウィジェットのインスタンスを表す値になっているので、後で利用できるように、変数に保存しています。
 
 ====================
 ### 6.1.3　ウィンドウの組み立て
 
 ********************
-    gtk_container_add win, hbox
+    gtk_box_pack_start vbox, btn2, TRUE, TRUE, 0
+    gtk_box_pack_start vbox, btn3, TRUE, TRUE, 0
     gtk_box_pack_start hbox, btn1, TRUE, TRUE, 0
-    gtk_box_pack_start hbox, btn2, TRUE, TRUE, 0
+    gtk_box_pack_start hbox, vbox, TRUE, TRUE, 0
+    gtk_container_add win, hbox
 ********************
 
 　メインウィンドウ（トップレベルウィンドウ）に、その他ウィジェットを配置する処理です。
 
-　gtk_container_add関数については、3.2.4で説明しました。
-
 　gtk_box_pack_start関数は、GtkHBoxまたはGtkVBoxの上に、他のウィジェットを1つ追加するための関数の1つです。ここでは、GtkHBoxに対して実行しているので、追加済みのウィジェットの右側に追加されます。
 
 引数には、まず、「GtkHBoxまたはGtkVBox」、「それに載せるウィジェット」、の順でインスタンスを指定します。
+
+　次の3つ目の引数は、追加するウィジェットの配置スペースを、可能な限り大きく確保するかどうかを表します。
+
+これはどういうことかと言うと、例えば、GtkBoxを載せたウィンドウのサイズが大きめに設定されているなどの理由で、GtkBox上に載せたウィジェットすべてを必要最低限のサイズで表示すると、GtkBox上のスペースが余る場合があります。
+
+この時、gtk_box_pack_start関数の3つ目の引数にTRUE（C言語で真になる値）を指定すると、
+
 
 その次の2つの引数については、言葉で説明するのは難しいので、まず、下の画像を見てください。
 
@@ -1646,6 +1658,8 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
 いずれにせよ、このチュートリアルの説明だけでは、なかなか完璧に把握することは難しいと思いますので、実際にスクリプトを書く時には、シンプルな引数のバリエーションから試していき、それで実現できる表示パターンに満足できなければ、少しずつ複雑なものを試していく、というやり方がいいのではないでしょうか。
 
 なお、今回画像を使用したデモプログラムのソースは、<https://github.com/kitachro/hsp-gtk/tree/master/demo>で、hbox_pack.hspという名前で公開しています。
+
+　gtk_container_add関数については、3.2.4で説明しました。
 
 ====================
 ## 6.2　テーブル（GtkTable）

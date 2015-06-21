@@ -650,7 +650,7 @@ GTK+には、組み込みのストックアイテムが多数用意されてお�
     #func global gtk_widget_show_all "gtk_widget_show_all" sptr
     #func global gtk_main "gtk_main"
     #func global gtk_main_quit "gtk_main_quit"
-    #func global gtk_hbox_new "gtk_hbox_new" int, int
+    #func global gtk_box_new "gtk_box_new" int, int
     #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
     #func global gtk_button_new_with_label "gtk_button_new_with_label" sptr
     #func global gtk_button_new_from_stock "gtk_button_new_from_stock" sptr
@@ -694,8 +694,9 @@ GTK+には、組み込みのストックアイテムが多数用意されてお�
     	gtk_container_set_border_width win, 10
     	g_signal_connect win, "delete-event", cb_win_delete_event, NULL
     
-    	// HBox生成
-    	gtk_hbox_new FALSE, 6
+    	// Box生成
+    #const GTK_ORIENTATION_HORIZONTAL 0 ; GtkOrientation
+    	gtk_box_new GTK_ORIENTATION_HORIZONTAL, 6
     	hbox = stat
     
     	// ボタン群生成
@@ -778,16 +779,17 @@ GTK+には、組み込みのストックアイテムが多数用意されてお�
 　よくあるプロパティ設定関数の例によって、1つ目の引数には、対象のウィジェットのインスタンスを指定します。2つ目の引数には、枠の幅をピクセル単位で指定します。
 
 ====================
-### 5.1.4　GtkHBoxウィジェットの生成
+### 5.1.4　GtkBoxウィジェットの生成
 
 ********************
-    gtk_hbox_new FALSE, 6
-    hbox = stat
+    #const GTK_ORIENTATION_HORIZONTAL 0 ; GtkOrientation
+    	gtk_box_new GTK_ORIENTATION_HORIZONTAL, 6
+    	hbox = stat
 ********************
 
-　複数のウィジェットを横方向に一直線に並べるためのGtkHBoxウィジェットを生成して、それを表す値を変数に保存しています。詳しくは、6.1.2の説明を参照してください。
+　複数のウィジェットを一直線に並べるためのGtkBoxウィジェットを生成して、それを表す値を変数に保存しています。詳しくは、6.1.2の説明を参照してください。
 
-　GtkHBoxをはじめとする、他のウィジェットのレイアウト専門のウィジェットについては、6章で詳しく説明しています。
+　GtkBoxをはじめとする、他のウィジェットのレイアウト専門のウィジェットについては、6章で詳しく説明しています。
 
 ====================
 ### 5.1.5　ボタンの生成(1)
@@ -903,7 +905,7 @@ pango_font_description_from_string関数の引数には、フォント名・フ�
     #func global gtk_widget_show_all "gtk_widget_show_all" sptr
     #func global gtk_main "gtk_main"
     #func global gtk_main_quit "gtk_main_quit"
-    #func global gtk_hbox_new "gtk_hbox_new" int, int
+    #func global gtk_box_new "gtk_box_new" int, int
     #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
     #func global gtk_toggle_button_new_with_label "gtk_toggle_button_new_with_label" sptr
     #func global gtk_toggle_button_new_with_mnemonic "gtk_toggle_button_new_with_mnemonic" sptr
@@ -930,8 +932,9 @@ pango_font_description_from_string関数の引数には、フォント名・フ�
     	gtk_container_set_border_width win, 10
     	g_signal_connect win, "delete-event", cb_win_delete_event, 0
     
-    	// HBox生成
-    	gtk_hbox_new FALSE, 6
+    	// Box生成
+    #const GTK_ORIENTATION_HORIZONTAL 0 ; GtkOrientation
+    	gtk_box_new GTK_ORIENTATION_HORIZONTAL, 6
     	hbox = stat
     
     	// ボタン群生成
@@ -1038,7 +1041,7 @@ pango_font_description_from_string関数の引数には、フォント名・フ�
     #func global gtk_widget_show_all "gtk_widget_show_all" sptr
     #func global gtk_main "gtk_main"
     #func global gtk_main_quit "gtk_main_quit"
-    #func global gtk_hbox_new "gtk_hbox_new" int, int
+    #func global gtk_box_new "gtk_box_new" int, int
     #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
     #func global gtk_radio_button_new_with_label_from_widget "gtk_radio_button_new_with_label_from_widget" sptr, sptr
     #func global gtk_radio_button_new_with_mnemonic_from_widget "gtk_radio_button_new_with_mnemonic_from_widget" sptr, sptr
@@ -1065,8 +1068,9 @@ pango_font_description_from_string関数の引数には、フォント名・フ�
     	gtk_container_set_border_width win, 10
     	g_signal_connect win, "delete-event", cb_win_delete_event, NULL
     
-    	// HBox生成
-    	gtk_hbox_new FALSE, 6
+    	// Box生成
+    #const GTK_ORIENTATION_HORIZONTAL 0 ; GtkOrientation
+    	gtk_box_new GTK_ORIENTATION_HORIZONTAL, 6
     	hbox = stat
     
     	// ボタン群生成
@@ -1260,7 +1264,7 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
     #func global gtk_widget_show_all "gtk_widget_show_all" sptr
     #func global gtk_main "gtk_main"
     #func global gtk_main_quit "gtk_main_quit"
-    #func global gtk_hbox_new "gtk_hbox_new" int, int
+    #func global gtk_box_new "gtk_box_new" int, int
     #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
     #func global gtk_adjustment_new "gtk_adjustment_new" double, double, double, double, double, double
     #func global gtk_spin_button_new "gtk_spin_button_new" sptr, double, int
@@ -1290,8 +1294,9 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
     	gtk_container_set_border_width win, 10
     	g_signal_connect win, "delete-event", cb_window_delete_event, NULL
     
-    	// HBox生成
-    	gtk_hbox_new FALSE, 6
+    	// Box生成
+    #const GTK_ORIENTATION_HORIZONTAL 0 ; GtkOrientation
+    	gtk_box_new GTK_ORIENTATION_HORIZONTAL, 6
     	hbox = stat
     
     	// ボタン群生成
@@ -1374,7 +1379,7 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
     #func global gtk_widget_show_all "gtk_widget_show_all" sptr
     #func global gtk_main "gtk_main"
     #func global gtk_main_quit "gtk_main_quit"
-    #func global gtk_hbox_new "gtk_hbox_new" int, int
+    #func global gtk_box_new "gtk_box_new" int, int
     #func global gtk_box_pack_start "gtk_box_pack_start" sptr, sptr, int, int, int
     #func global gtk_switch_new "gtk_switch_new"
     #func global gtk_switch_set_active "gtk_switch_set_active" sptr, int
@@ -1401,8 +1406,9 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
     	gtk_container_set_border_width win, 10
     	g_signal_connect win, "delete-event", cb_win_delete_event, NULL
     
-    	// HBox生成
-    	gtk_hbox_new FALSE, 6
+    	// Box生成
+    #const GTK_ORIENTATION_HORIZONTAL 0 ; GtkOrientation
+    	gtk_box_new GTK_ORIENTATION_HORIZONTAL, 6
     	hbox = stat
     
     	// ボタン群生成

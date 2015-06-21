@@ -505,7 +505,7 @@ GTK_WINDOW_POPUPは、ポップアップメニューやポップアップのツ�
 ### 3.2.2　コメントアウト部分
 
 ********************
-    ;#func global g_signal_handler_disconnect "g_signal_handler_disconnect" sptr, int 
+    ;#func global g_signal_handler_disconnect "g_signal_handler_disconnect" sptr, int
     （中略）
     ;	id = stat
     ;	g_signal_handler_disconnect btn, id

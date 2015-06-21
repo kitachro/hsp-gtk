@@ -328,7 +328,6 @@ modclbk3b2を使用した場合、コールバック関数はラベルで始ま�
     #uselib "libgtk-3-0.dll"
     #func global gtk_init "gtk_init" sptr, sptr
     #func global gtk_window_new "gtk_window_new" int
-    #const GTK_WINDOW_TOPLEVEL 0
     #func global gtk_widget_show_all "gtk_widget_show_all" sptr
     #func global gtk_main "gtk_main"
     #func global gtk_main_quit "gtk_main_quit"
@@ -342,11 +341,9 @@ modclbk3b2を使用した場合、コールバック関数はラベルで始ま�
 
 　#uselib命令と#func命令の行は、HSPから一般的なDLLを利用するためのスクリプトとしてはありふれたものなので、その意味では難しいことはないと思います。関数の引数の型については、リファレンスで調べて指定しています。
 
-　#const命令と#define命令の行は、GTK+3のアーカイブに添付されているC言語用ヘッダファイルの内容をHSP向けに書き直したものです。
+　#define命令の行は、GTK+3のアーカイブに添付されているC言語用ヘッダファイルの内容をHSP向けに書き直したものです。
 
-GTK_WINDOW_TOPLEVEL定数は、添付マニュアルの"\share\gtk-doc\html\gtk3\gtk3-Standard-Enumerations.html"のページにC言語での定義が載っていますが、値は0です。値さえわかれば、マクロは絶対に必要なものではありませんが、毎度、調べたり思い出したりする手間を考えれば、（再利用することを前提に）書いておくのが得策です。
-
-g_signal_connect関数は、添付マニュアルには載っていますが、DLLには実装されておらず、C言語用ヘッダファイル内のマクロで定義されているので、HSPで書き直してやる必要があります。このマクロについても、g_signal_connect_data関数を使うのが面倒でなければ、省略してしまってもかまいませんが、まあ書いておいた方が後々楽だと思います。
+g_signal_connect関数は、添付マニュアルには載っていますが、DLLには実装されておらず、C言語用ヘッダファイル内のマクロで定義されているので、HSPで書き直してやる必要があります。このマクロは、g_signal_connect_data関数を使うのが面倒でなければ、省略してしまってもかまいませんが、まあ書いておいた方が後々楽だと思います。
 
 ====================
 ### 3.1.4　ヌルポインタ定数
@@ -372,13 +369,18 @@ gtk_init関数に渡す2つの引数は、C言語の場合であれば、main関
 ### 3.1.6　ウィンドウの生成
 
 ********************
-    gtk_window_new GTK_WINDOW_TOPLEVEL
-    win = stat
+    #const GTK_WINDOW_TOPLEVEL 0 ; GtkWindowType
+    	gtk_window_new GTK_WINDOW_TOPLEVEL
+    	win = stat
 ********************
 
 　GTK+のgtk_window_new関数で空のウィンドウを生成して、それを表す値を変数に保存しています。
 
-gtk_window_new関数の引数には、GTK_WINDOW_TOPLEVEL（既に説明したように、値は0です）、または、GTK_WINDOW_POPUP（こちらも添付マニュアルに載っていますが、値は1です）を指定します。
+　定数GTK_WINDOW_TOPLEVELは、GTK+3のアーカイブに添付されているC言語用ヘッダファイルに定義されているので、HSPであらためて書き直しています。
+
+GTK_WINDOW_TOPLEVEL定数は、添付マニュアルの"\share\gtk-doc\html\gtk3\gtk3-Standard-Enumerations.html"のページにもC言語での定義が載っていますが、値は0です。値さえわかれば、マクロは絶対に必要なものではありませんが、毎度、調べたり思い出したりする手間を考えれば、（再利用することを前提に）書いておくのが得策です。
+
+　gtk_window_new関数の引数には、GTK_WINDOW_TOPLEVEL、または、GTK_WINDOW_POPUP（こちらも添付マニュアルに載っていますが、値は1です）を指定します。
 
 GTK_WINDOW_TOPLEVELを指定すると、いわゆるメインウィンドウ、トップレベルウィンドウを生成することができます。
 

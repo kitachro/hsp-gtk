@@ -321,7 +321,7 @@ http://opensource.org/licenses/mit-license.php
 ;#func global gtk_box_query_child_packing "" 
 ;#func global gtk_box_reorder_child "" 
 ;#func global gtk_box_set_child_packing "" 
-;#func global gtk_box_set_homogeneous "" 
+#func global gtk_box_set_homogeneous "gtk_box_set_homogeneous" sptr, int
 ;#func global gtk_box_set_spacing "" 
 ;#func global gtk_buildable_add_child "" 
 ;#func global gtk_buildable_construct_child "" 

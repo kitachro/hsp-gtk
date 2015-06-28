@@ -48,13 +48,13 @@
 	hboxes( 2 )	= stat
 	gtk_box_new	GTK_ORIENTATION_HORIZONTAL@, 0
 	hboxes( 3 )	= stat
-gtk_box_set_homogeneous	hboxes( 3 ), TRUE
+	gtk_box_set_homogeneous	hboxes( 3 ), TRUE
 	gtk_box_new	GTK_ORIENTATION_HORIZONTAL@, 0
 	hboxes( 4 )	= stat
-gtk_box_set_homogeneous	hboxes( 4 ), TRUE
+	gtk_box_set_homogeneous	hboxes( 4 ), TRUE
 	gtk_box_new	GTK_ORIENTATION_HORIZONTAL@, 0
 	hboxes( 5 )	= stat
-gtk_box_set_homogeneous	hboxes( 5 ), TRUE
+	gtk_box_set_homogeneous	hboxes( 5 ), TRUE
 
 	// ButtonåQê∂ê¨
 	repeat	6

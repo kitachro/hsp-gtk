@@ -1486,7 +1486,7 @@ gtk_spin_button_new_with_range関数は、「スピンボタンの挙動を細�
 
 ![サンプル6-1](6-1.png)
 
-　GtkBoxウィジェットは、複数のウィジェットを横（horizontal）または縦（vertical）方向に一直線に配置するための、目に見えないレイアウトコンテナです。横または縦どちらの方向に並べるかは、GtkBoxの生成時に引数で指定します。GtkBoxは、ウィジェットを並べる方向で区別して、GtkHBox（horizontal）またはGtkVBox（vertical）と呼ぶ場合があります。
+　GtkBoxウィジェットは、複数のウィジェットを横（horizontal）または縦（vertical）方向に一直線に配置するための、目に見えないレイアウトコンテナです。横または縦どちらの方向に並べるかは、GtkBoxの生成時に引数で指定します。このチュートリアルでは、GtkBoxをウィジェットを並べる方向で区別して、GtkHBox（horizontal）またはGtkVBox（vertical）と呼ぶ場合があります。
 
 　ウィジェットの配置には、gtk_box_pack_startまたはgtk_box_pack_end関数を用います。gtk_box_pack_startを実行すると、引数に指定したウィジェットが、配置済みウィジェットの右側もしくは下側に追加され、gtk_box_pack_endを実行すると、左側もしくは上側に追加されます。
 

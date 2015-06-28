@@ -8,18 +8,8 @@
 
 #include "libgtk-3-0.as"
 #include "libgobject-2.0-0.as"
-#include "hscallbk.as"
-#uselib ""
-#func cb_window_delete_event ""
-
-// よく使う関数
-#include "hspinet.as"
-#module
-#defcfunc u str chars_	// shift-jis文字列をutf-8に変換
-	chars	= chars_
-	nkfcnv@	chars, chars, "Sw"
-	return	chars
-#global
+#include "modclbk.as"
+	newclbk3	cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
 
 // よく使う定数
 ; 真偽値
@@ -34,35 +24,37 @@
 	// Window生成
 	gtk_window_new	GTK_WINDOW_TOPLEVEL@
 	win = stat
-	setcallbk			cbwindowdeleteevent, cb_window_delete_event, *on_window_delete_event
-	g_signal_connect	win, "delete-event", varptr( cbwindowdeleteevent ), NULL
+	g_signal_connect	win, "delete-event", cb_win_delete_event, NULL
 
-	gtk_window_set_title  win, u( "HBox packing デモ" )
+	gtk_window_set_title  win, "HBox packing demo"
 	gtk_widget_set_size_request		win, 850, 0
 
 	// VBox生成
-	gtk_vbox_new	FALSE, 10
-	vbx	= stat
+	gtk_box_new	GTK_ORIENTATION_VERTICAL@, 10
+	vbox	= stat
 
 	// Label群生成
-	gtk_label_new	"gtk_hbox_new FALSE, 0"
+	gtk_label_new	"gtk_box_new	GTK_ORIENTATION_HORIZONTAL, 0 (homogeneous: FALSE)"
 	lbl1	= stat
-	gtk_label_new	"gtk_hbox_new TRUE, 0"
+	gtk_label_new	"gtk_box_new	GTK_ORIENTATION_HORIZONTAL, 0 (homogeneous: TRUE)"
 	lbl2	= stat
 
 	// HBox群生成
-	gtk_hbox_new	FALSE, 0
+	gtk_box_new	GTK_ORIENTATION_HORIZONTAL@, 0
 	hboxes( 0 )	= stat
-	gtk_hbox_new	FALSE, 0
+	gtk_box_new	GTK_ORIENTATION_HORIZONTAL@, 0
 	hboxes( 1 )	= stat
-	gtk_hbox_new	FALSE, 0
+	gtk_box_new	FALSEGTK_ORIENTATION_HORIZONTAL@, 0
 	hboxes( 2 )	= stat
-	gtk_hbox_new	TRUE, 0
+	gtk_box_new	GTK_ORIENTATION_HORIZONTAL@, 0
 	hboxes( 3 )	= stat
-	gtk_hbox_new	TRUE, 0
+gtk_box_set_homogeneous	hboxes( 3 ), TRUE
+	gtk_box_new	GTK_ORIENTATION_HORIZONTAL@, 0
 	hboxes( 4 )	= stat
-	gtk_hbox_new	TRUE, 0
+gtk_box_set_homogeneous	hboxes( 4 ), TRUE
+	gtk_box_new	GTK_ORIENTATION_HORIZONTAL@, 0
 	hboxes( 5 )	= stat
+gtk_box_set_homogeneous	hboxes( 5 ), TRUE
 
 	// Button群生成
 	repeat	6
@@ -113,16 +105,16 @@
 	gtk_box_pack_start	hboxes( 5 ), btn_trues( 5 ), TRUE, TRUE, 0
 	gtk_box_pack_start	hboxes( 5 ), btn_0s( 5 ), TRUE, TRUE, 0
 
-	gtk_box_pack_start	vbx, lbl1, FALSE, FALSE, 0
-	gtk_box_pack_start	vbx, hboxes( 0 ), FALSE, FALSE, 0
-	gtk_box_pack_start	vbx, hboxes( 1 ), FALSE, FALSE, 0
-	gtk_box_pack_start	vbx, hboxes( 2 ), FALSE, FALSE, 0
-	gtk_box_pack_start	vbx, lbl2, FALSE, FALSE, 0
-	gtk_box_pack_start	vbx, hboxes( 3 ), FALSE, FALSE, 0
-	gtk_box_pack_start	vbx, hboxes( 4 ), FALSE, FALSE, 0
-	gtk_box_pack_start	vbx, hboxes( 5 ), FALSE, FALSE, 0
+	gtk_box_pack_start	vbox, lbl1, FALSE, FALSE, 0
+	gtk_box_pack_start	vbox, hboxes( 0 ), FALSE, FALSE, 0
+	gtk_box_pack_start	vbox, hboxes( 1 ), FALSE, FALSE, 0
+	gtk_box_pack_start	vbox, hboxes( 2 ), FALSE, FALSE, 0
+	gtk_box_pack_start	vbox, lbl2, FALSE, FALSE, 0
+	gtk_box_pack_start	vbox, hboxes( 3 ), FALSE, FALSE, 0
+	gtk_box_pack_start	vbox, hboxes( 4 ), FALSE, FALSE, 0
+	gtk_box_pack_start	vbox, hboxes( 5 ), FALSE, FALSE, 0
 
-	gtk_container_add	win, vbx
+	gtk_container_add	win, vbox
 
 	// ウィンドウの表示とメインループの開始
 	gtk_widget_show_all	win
@@ -130,6 +122,6 @@
 	end
 
 /* シグナルハンドラ */
-*on_window_delete_event
+*on_win_delete_event
 	gtk_main_quit
 	return

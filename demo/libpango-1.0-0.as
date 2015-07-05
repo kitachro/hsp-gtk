@@ -1,8 +1,3 @@
-/*
-Copyright (c) 2015 chrono
-This software is released under the MIT License.
-http://opensource.org/licenses/mit-license.php
-*/
 #ifndef	__LIBPANGO_100__
 #define	global	__LIBPANGO_100__
 

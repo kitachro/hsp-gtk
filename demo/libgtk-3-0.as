@@ -1163,8 +1163,8 @@
 ;#func global gtk_gradient_resolve_for_context "" 
 ;#func global gtk_gradient_to_string "" 
 ;#func global gtk_gradient_unref "" 
-;#func global gtk_grid_attach "" 
-;#func global gtk_grid_attach_next_to "" 
+#func global gtk_grid_attach "gtk_grid_attach" sptr, sptr, int, int, int, int
+#func global gtk_grid_attach_next_to "gtk_grid_attach_next_to" sptr, sptr, sptr, int, int, int
 ;#func global gtk_grid_get_child_at "" 
 ;#func global gtk_grid_get_column_homogeneous "" 
 ;#func global gtk_grid_get_column_spacing "" 
@@ -1174,7 +1174,7 @@
 ;#func global gtk_grid_insert_column "" 
 ;#func global gtk_grid_insert_next_to "" 
 ;#func global gtk_grid_insert_row "" 
-;#func global gtk_grid_new "" 
+#func global gtk_grid_new "gtk_grid_new"
 ;#func global gtk_grid_set_column_homogeneous "" 
 ;#func global gtk_grid_set_column_spacing "" 
 ;#func global gtk_grid_set_row_homogeneous "" 
@@ -4027,5 +4027,12 @@
 #const GTK_DEST_DEFAULT_HIGHLIGHT  ( 1 << 1 ) /* auto-highlight */
 #const GTK_DEST_DEFAULT_DROP       ( 1 << 2 ) /* respond to "drag_drop" */
 #const GTK_DEST_DEFAULT_ALL        0x07
+
+// GtkPositionType
+#enum GTK_POS_LEFT = 0
+#enum GTK_POS_RIGHT
+#enum GTK_POS_TOP
+#enum GTK_POS_BOTTOM
+
 
 #endif

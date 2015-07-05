@@ -1,8 +1,3 @@
-/*
-Copyright (c) 2015 chrono
-This software is released under the MIT License.
-http://opensource.org/licenses/mit-license.php
-*/
 #ifndef	__LIBGOBJECT_200__
 #define	global	__LIBGOBJECT_200__
 

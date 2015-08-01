@@ -1631,7 +1631,7 @@
 ;#func global gtk_menu_set_tearoff_state "" 
 ;#func global gtk_menu_set_title "" 
 ;#func global gtk_menu_shell_activate_item "" 
-;#func global gtk_menu_shell_append "" 
+#func global gtk_menu_shell_append "gtk_menu_shell_append" sptr, sptr
 ;#func global gtk_menu_shell_bind_model "" 
 ;#func global gtk_menu_shell_cancel "" 
 ;#func global gtk_menu_shell_deactivate "" 
@@ -3750,7 +3750,7 @@
 ;#func global gtk_window_list_toplevels "" 
 ;#func global gtk_window_maximize "" 
 ;#func global gtk_window_mnemonic_activate "" 
-;#func global gtk_window_move "" 
+#func global gtk_window_move "gtk_window_move" sptr, int, int
 #func global gtk_window_new "gtk_window_new" int
 ;#func global gtk_window_parse_geometry "" 
 ;#func global gtk_window_position_get_type "" 
@@ -3767,7 +3767,7 @@
 ;#func global gtk_window_set_application "" 
 ;#func global gtk_window_set_attached_to "" 
 ;#func global gtk_window_set_auto_startup_notification "" 
-;#func global gtk_window_set_decorated "" 
+#func global gtk_window_set_decorated "gtk_window_set_decorated" sptr, int
 ;#func global gtk_window_set_default "" 
 ;#func global gtk_window_set_default_geometry "" 
 ;#func global gtk_window_set_default_icon "" 

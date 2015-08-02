@@ -10,6 +10,7 @@
 	newclbk3	cb_act_two, 2, *on_act_two, CLBKMODE_CDECL@
 	newclbk3	cb_act_three, 2, *on_act_three, CLBKMODE_CDECL@
 	newclbk3	cb_ebox_button_release_event, 3, *on_ebox_button_release_event, CLBKMODE_CDECL@
+	newclbk3	cb_menu_position, 5, *on_menu_position, CLBKMODE_CDECL@
 
 // GTK+の関数を使うための準備
 #uselib "libgtk-3-0.dll"
@@ -42,6 +43,7 @@
 #func global gtk_ui_manager_get_accel_group "gtk_ui_manager_get_accel_group" sptr
 #func global gtk_event_box_new "gtk_event_box_new"
 #func global gtk_menu_popup "gtk_menu_popup" sptr, sptr, sptr, sptr, sptr, int, int
+#func global gtk_menu_set_monitor "gtk_menu_set_monitor" sptr, int
 
 #uselib "libgobject-2.0-0.dll"
 #define g_signal_connect(%1, %2, %3, %4) g_signal_connect_data %1, %2, %3, %4, 0, 0
@@ -50,6 +52,9 @@
 #uselib "libgdk-3-0.dll"
 #func global gdk_event_get_button "gdk_event_get_button" sptr, sptr
 #func global gdk_event_get_time "gdk_event_get_time" sptr
+#func global gdk_event_get_screen "gdk_event_get_screen" sptr
+#func global gdk_event_get_root_coords "gdk_event_get_root_coords" sptr, sptr, sptr
+#func global gdk_screen_get_monitor_at_point "gdk_screen_get_monitor_at_point" sptr, int, int
 
 // よく使う関数
 #include "hspinet.as"
@@ -311,13 +316,37 @@
 
 *on_ebox_button_release_event
 	clbkargprotect	args_
-	evt	= args_( 1 )
+	evt_	= args_( 1 )
 
-#define	GDK_BUTTON_SECONDARY	3	; GDK - Events
-	gdk_event_get_button	evt, varptr( num )
+#const	GDK_BUTTON_SECONDARY	3	; GDK - Events
+	gdk_event_get_button	evt_, varptr( num )
 	if ( num = GDK_BUTTON_SECONDARY ) {
 		mes	"GtkEventBoxが右クリックされました。"
-		gdk_event_get_time	evt
-		gtk_menu_popup	pum, NULL, NULL, NULL, NULL, 0, stat
+		x_event	= 0.0
+		y_event	= 0.0
+		gdk_event_get_root_coords	evt_, varptr( x_event ), varptr( y_event )
+		mes	"x_event: " + x_event
+		mes	"y_event: " + y_event
+		gdk_event_get_screen	evt_
+		scr	= stat
+
+		gdk_event_get_time	evt_
+		gtk_menu_popup	pum, NULL, NULL, cb_menu_position, NULL, 0, stat
 	}
+	return
+
+*on_menu_position
+#const	SIZE_GINT	4
+	clbkargprotect	args_
+	menu_	= args_( 0 )
+	x_		= args_( 1 )
+	y_		= args_( 2 )
+	dupptr	x_menu, x_, SIZE_GINT
+	dupptr	y_menu, y_, SIZE_GINT
+	x_menu	= int( x_event )
+	y_menu	= int( y_event )
+
+	gdk_screen_get_monitor_at_point		scr, x_menu, y_menu
+	mon	= stat	: mes	"mon: " + mon
+	gtk_menu_set_monitor	menu_, mon
 	return

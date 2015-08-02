@@ -1,4 +1,4 @@
-// コールバック関数を使うための準備
+*_コールバック関数を使うための準備
 #include "modclbk.as"
 	newclbk3	cb_win_delete_event, 3, *on_win_delete_event, CLBKMODE_CDECL@
 	newclbk3	cb_act_new_hoge, 2, *on_act_new_hoge, CLBKMODE_CDECL@
@@ -12,7 +12,7 @@
 	newclbk3	cb_ebox_button_release_event, 3, *on_ebox_button_release_event, CLBKMODE_CDECL@
 	newclbk3	cb_menu_position, 5, *on_menu_position, CLBKMODE_CDECL@
 
-// GTK+の関数を使うための準備
+*_GTKの関数を使うための準備
 #uselib "libgtk-3-0.dll"
 #func global gtk_init "gtk_init" sptr, sptr
 #func global gtk_settings_get_default "gtk_settings_get_default"
@@ -56,7 +56,7 @@
 #func global gdk_event_get_root_coords "gdk_event_get_root_coords" sptr, sptr, sptr
 #func global gdk_screen_get_monitor_at_point "gdk_screen_get_monitor_at_point" sptr, int, int
 
-// よく使う関数
+*_よく使う関数
 #include "hspinet.as"
 #module
 #defcfunc u str chars_ // shift-jis文字列をutf-8に変換
@@ -65,32 +65,32 @@
 	return	chars
 #global
 
-// よく使う定数
+*_よく使う定数
 ; 真偽値
 #const	TRUE	1
 #const	FALSE	0
 ; ヌルポインタ
 #const	NULL	0
 
-	// GTK+初期化
+*_GTK初期化
 	gtk_init	NULL, NULL
 
-	// GTK+のデフォルトGUIフォントを変更
+*_GTKのデフォルトGUIフォントを変更
 	gtk_settings_get_default
 	gtk_settings_set_string_property	stat, "gtk-font-name", "meiryo, bold 11", NULL
 
-	// Window生成
+*_Window生成
 #const	GTK_WINDOW_TOPLEVEL	0	; GtkWindowType
 	gtk_window_new	GTK_WINDOW_TOPLEVEL
 	win	= stat
 	gtk_widget_set_size_request	win, 300, 200
 	g_signal_connect	win, "delete-event", cb_win_delete_event, NULL
 
-	// VBox生成
+*_VBox生成
 	gtk_vbox_new	FALSE, 2
 	vbox	= stat
 
-	// コマンド系UI生成
+*_コマンド系UI生成
 #define	NAME_MENUBAR	"MenuBar"
 #define	NAME_FILEMENU	"FileMenu"
 #define	NAME_NEWMENU	"NewMenu"
@@ -249,23 +249,23 @@
 	gtk_ui_manager_get_widget	uim, path
 	pum	= stat
 
-	// GtkEventBox生成
+*_GtkEventBox生成
 	gtk_event_box_new
 	ebox	= stat
 	g_signal_connect	ebox, "button-release-event", cb_ebox_button_release_event, NULL
 
-	// ウィンドウ組み立て
+*_ウィンドウ組み立て
 	gtk_container_add	win, vbox
 	gtk_box_pack_start	vbox, mbar, FALSE, FALSE, 0
 	gtk_box_pack_start	vbox, tbar, FALSE, FALSE, 0
 	gtk_box_pack_start	vbox, ebox, TRUE, TRUE, 0
 
-	// ウィンドウの表示とメインループの開始
+*_ウィンドウの表示とメインループの開始
 	gtk_widget_show_all	win
 	gtk_main
 	end
 
-/* シグナルハンドラ */
+*_シグナルハンドラ
 *on_win_delete_event
 	gtk_main_quit
 	return

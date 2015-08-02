@@ -84,7 +84,7 @@
 ;#func global gdk_display_device_is_grabbed "" 
 ;#func global gdk_display_flush "" 
 ;#func global gdk_display_get_app_launch_context "" 
-;#func global gdk_display_get_default "" 
+#func global gdk_display_get_default "gdk_display_get_default"
 ;#func global gdk_display_get_default_cursor_size "" 
 ;#func global gdk_display_get_default_group "" 
 ;#func global gdk_display_get_default_screen "" 
@@ -93,7 +93,7 @@
 ;#func global gdk_display_get_maximal_cursor_size "" 
 ;#func global gdk_display_get_n_screens "" 
 ;#func global gdk_display_get_name "" 
-;#func global gdk_display_get_pointer "" 
+#func global gdk_display_get_pointer "gdk_display_get_pointer" sptr, sptr, sptr, sptr, sptr
 ;#func global gdk_display_get_screen "" 
 ;#func global gdk_display_get_type "" 
 ;#func global gdk_display_get_window_at_pointer "" 
@@ -159,13 +159,13 @@
 ;#func global gdk_event_get_axis "" 
 #func global gdk_event_get_button "gdk_event_get_button" sptr, sptr
 ;#func global gdk_event_get_click_count "" 
-;#func global gdk_event_get_coords "" 
+#func global gdk_event_get_coords "gdk_event_get_coords" sptr, sptr, sptr
 ;#func global gdk_event_get_device "" 
 ;#func global gdk_event_get_event_sequence "" 
 ;#func global gdk_event_get_keycode "" 
 ;#func global gdk_event_get_keyval "" 
-;#func global gdk_event_get_root_coords "" 
-;#func global gdk_event_get_screen "" 
+#func global gdk_event_get_root_coords "gdk_event_get_root_coords" sptr, sptr, sptr
+#func global gdk_event_get_screen "gdk_event_get_screen" sptr
 ;#func global gdk_event_get_scroll_deltas "" 
 ;#func global gdk_event_get_scroll_direction "" 
 ;#func global gdk_event_get_source_device "" 
@@ -267,19 +267,19 @@
 #func global gdk_rgba_to_string "gdk_rgba_to_string" sptr
 ;#func global gdk_screen_get_active_window "" 
 ;#func global gdk_screen_get_default "" 
-;#func global gdk_screen_get_display "" 
+#func global gdk_screen_get_display "gdk_screen_get_display" sptr
 ;#func global gdk_screen_get_font_options "" 
 ;#func global gdk_screen_get_height "" 
 ;#func global gdk_screen_get_height_mm "" 
-;#func global gdk_screen_get_monitor_at_point "" 
-;#func global gdk_screen_get_monitor_at_window "" 
-;#func global gdk_screen_get_monitor_geometry "" 
+#func global gdk_screen_get_monitor_at_point "gdk_screen_get_monitor_at_point" sptr, int, int
+#func global gdk_screen_get_monitor_at_window "gdk_screen_get_monitor_at_window" sptr, sptr
+#func global gdk_screen_get_monitor_geometry "gdk_screen_get_monitor_geometry" sptr, int, sptr
 ;#func global gdk_screen_get_monitor_height_mm "" 
 ;#func global gdk_screen_get_monitor_plug_name "" 
 ;#func global gdk_screen_get_monitor_width_mm "" 
 ;#func global gdk_screen_get_monitor_workarea "" 
 ;#func global gdk_screen_get_n_monitors "" 
-;#func global gdk_screen_get_number "" 
+#func global gdk_screen_get_number "gdk_screen_get_number" sptr
 ;#func global gdk_screen_get_primary_monitor "" 
 ;#func global gdk_screen_get_resolution "" 
 ;#func global gdk_screen_get_rgba_visual "" 
